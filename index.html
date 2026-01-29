@@ -9,98 +9,30 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     
     <style>
-        :root {
-            --primary: #006437; 
-            --primary-light: #008f4f;
-            --accent: #2ecc71;  
-            --bg: #f8faf8;      
-            --white: #ffffff;
-            --text: #1a2a1f;
-            --danger: #d63031;
-            --gray: #636e72;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; background-color: var(--bg); color: var(--text);
-            padding-bottom: 90px;
-        }
-
-        /* Header Moderno */
-        header { 
-            background: var(--white); padding: 20px 15px; text-align: center; 
-            border-bottom: 4px solid var(--primary);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        header h2 { margin: 0; font-size: 1rem; color: var(--primary); letter-spacing: 1px; }
+        :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+        
+        /* HEADER COM LOGO */
+        header { background: var(--white); padding: 15px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto 5px; }
+        header h2 { margin: 0; font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; }
 
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .section { display: none; animation: fadeIn 0.4s ease-out; }
         .section.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards Estilizados */
-        .card { 
-            background: var(--white); padding: 20px; border-radius: 18px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px;
-            border: 1px solid rgba(0,0,0,0.02);
-        }
+        .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
+        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 
-        .livro-item { 
-            background: var(--white); padding: 16px; border-radius: 14px; 
-            margin-bottom: 12px; display: flex; justify-content: space-between; 
-            align-items: center; border-left: 6px solid var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
+        .btn-principal { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,100,55,0.2); margin-top: 10px; }
+        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+        .btn-outline-danger { background: transparent; color: var(--danger); border: 2px solid var(--danger); padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; }
 
-        /* Botões Otimizados */
-        .btn-principal { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white; border: none; padding: 16px; border-radius: 12px; 
-            font-weight: 700; width: 100%; cursor: pointer; font-size: 1rem;
-            transition: transform 0.2s; box-shadow: 0 4px 15px rgba(0,100,55,0.2);
-        }
-        .btn-principal:active { transform: scale(0.98); }
-
-        .btn-acao {
-            background: var(--white); color: var(--primary); border: 2px solid var(--primary);
-            padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem;
-            cursor: pointer; transition: 0.2s;
-        }
-        .btn-acao:disabled { border-color: #dfe6e9; color: #b2bec3; cursor: not-allowed; }
-
-        .btn-outline-danger {
-            background: transparent; color: var(--danger); border: 2px solid var(--danger);
-            padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 15px;
-            cursor: pointer;
-        }
-
-        input { 
-            width: 100%; padding: 14px; margin: 10px 0; 
-            border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; 
-            font-size: 16px; outline: none; transition: border-color 0.3s;
-        }
-        input:focus { border-color: var(--primary); }
-
-        /* Menu Inferior Estilo App */
-        nav { 
-            display: flex; background: rgba(255,255,255,0.95); 
-            backdrop-filter: blur(10px); position: fixed; bottom: 0; width: 100%;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000;
-        }
-        nav button { 
-            flex: 1; padding: 18px 0; border: none; background: none; 
-            font-weight: 700; color: #a4b0be; font-size: 0.75rem; cursor: pointer;
-            transition: 0.3s;
-        }
-        nav button.active { color: var(--primary); }
-
-        .status-badge {
-            font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; font-weight: bold;
-            text-transform: uppercase;
-        }
-        .bg-warning { background: #ffeaa7; color: #d35400; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
+        nav { display: flex; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; }
+        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.75rem; cursor: pointer; }
+        nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
 
         footer { text-align: center; padding: 20px; font-size: 0.8rem; color: var(--gray); }
     </style>
@@ -108,29 +40,29 @@
 <body>
 
 <header>
+    <div class="logo-container">
+        <img src="imagem.png" alt="Logo IPB"> </div>
     <h2>BIBLIOTECA IPB PETRÓPOLIS</h2>
 </header>
 
 <div class="container">
     
     <section id="catalogo" class="section active">
-        <h3 style="margin-bottom: 20px;">📖 Livros Disponíveis</h3>
-        <div id="lista-catalogo">Carregando acervo...</div>
+        <h3 style="margin-bottom: 20px;">📖 Acervo Disponível</h3>
+        <div id="lista-catalogo">Carregando...</div>
     </section>
 
     <section id="conta" class="section">
         <div id="area-login">
             <div class="card">
                 <h3>Minha Conta</h3>
-                <p style="color: var(--gray); font-size: 0.9rem;">Entre com seu nome para reservar livros.</p>
-                <input type="text" id="login-nome" placeholder="Nome Completo">
+                <input type="text" id="login-nome" placeholder="Seu Nome Completo">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
             </div>
         </div>
-
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3 style="margin-top:0">Bem-vindo, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
                 <div id="meus-livros"></div>
                 <button onclick="logout()" class="btn-outline-danger">Sair da Conta</button>
             </div>
@@ -139,41 +71,46 @@
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Painel do Diácono</h3>
-            <input type="password" id="adm-pass" placeholder="Digite a Senha ADM">
-            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
+            <h3>Painel Administrativo</h3>
+            <input type="password" id="adm-pass" placeholder="Senha ADM">
+            <button class="btn-principal" onclick="loginAdmin()">ACESSAR</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
             <div class="card" style="background: #eef7f2;">
-                <h4 style="margin-top:0">➕ Novo Livro</h4>
-                <input type="text" id="novo-titulo" placeholder="Título da Obra">
-                <button class="btn-principal" onclick="addLivro()">CADASTRAR</button>
+                <h4>➕ Cadastrar Livro</h4>
+                <input type="text" id="novo-titulo" placeholder="Título">
+                <button class="btn-principal" onclick="addLivro()">SALVAR LIVRO</button>
             </div>
 
             <div class="card">
-                <h4>📊 Gestão de Empréstimos</h4>
+                <h4>📊 Empréstimos Atuais</h4>
                 <div id="lista-adm"></div>
             </div>
 
-            <button onclick="logoutAdmin()" class="btn-outline-danger" style="margin-bottom: 20px;">SAIR DO MODO ADM</button>
+            <div class="card" style="border: 1px dashed var(--primary);">
+                <h4>👥 Gerenciar Administradores</h4>
+                <p style="font-size: 0.75rem; color: var(--gray);">Apenas outros administradores verão esta parte.</p>
+                <input type="text" id="novo-adm-nome" placeholder="Nome do Diácono">
+                <input type="password" id="novo-adm-pass" placeholder="Definir Senha dele">
+                <button class="btn-acao" style="width:100%" onclick="addNovoAdm()">CADASTRAR ADM</button>
+                <div id="lista-outros-adms" style="margin-top:10px; font-size:0.8rem;"></div>
+            </div>
+
+            <button onclick="logoutAdmin()" class="btn-outline-danger">SAIR DO MODO ADM</button>
         </div>
     </section>
-
 </div>
 
 <nav>
     <button onclick="mudarAba('catalogo')" id="nav-catalogo" class="active">ACERVO</button>
     <button onclick="mudarAba('conta')" id="nav-conta">MINHA CONTA</button>
-    <button onclick="mudarAba('admin')" id="nav-admin">PAINEL ADM</button>
+    <button onclick="mudarAba('admin')" id="nav-admin">ADM</button>
 </nav>
 
-<footer>
-    📍 Rua Dr. Francisco Silveira, 500
-</footer>
+<footer>📍 Rua Dr. Francisco Silveira, 500</footer>
 
 <script>
-    // --- CONFIGURAÇÃO ---
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -187,7 +124,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- NAVEGAÇÃO ---
     function mudarAba(aba) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -196,138 +132,129 @@
         window.scrollTo(0,0);
     }
 
-    // --- FUNÇÕES ADM ---
+    // --- LOGIN ADM MULTI-USUÁRIO ---
     function loginAdmin() {
-        const pass = document.getElementById('adm-pass').value;
-        if(pass === "ipb123") {
-            document.getElementById('area-adm-login').style.display = 'none';
-            document.getElementById('painel-adm').style.display = 'block';
-            sessionStorage.setItem('adm_logado', 'true');
-        } else {
-            alert("Senha incorreta!");
+        const senhaDigitada = document.getElementById('adm-pass').value;
+        
+        // Senha Mestra (Sempre funciona)
+        if(senhaDigitada === "ipb123") {
+            liberarPainel();
+            return;
         }
+
+        // Verifica outros ADMs no banco
+        db.ref('administradores').once('value', (snap) => {
+            const adms = snap.val();
+            let autorizado = false;
+            for(let id in adms) {
+                if(adms[id].senha === senhaDigitada) { autorizado = true; break; }
+            }
+            if(autorizado) liberarPainel();
+            else alert("Senha Administrativa Inválida!");
+        });
+    }
+
+    function liberarPainel() {
+        document.getElementById('area-adm-login').style.display = 'none';
+        document.getElementById('painel-adm').style.display = 'block';
+        sessionStorage.setItem('adm_logado', 'true');
+        carregarAdms();
     }
 
     function logoutAdmin() {
         sessionStorage.removeItem('adm_logado');
-        document.getElementById('area-adm-login').style.display = 'block';
-        document.getElementById('painel-adm').style.display = 'none';
-        document.getElementById('adm-pass').value = '';
-    }
-
-    function addLivro() {
-        const t = document.getElementById('novo-titulo').value.trim();
-        if(t) {
-            db.ref('livros').push({ titulo: t, status: 'disponivel' });
-            document.getElementById('novo-titulo').value = '';
-        }
-    }
-
-    // --- SINCRONIZAÇÃO EM TEMPO REAL ---
-    db.ref('livros').on('value', (snap) => {
-        const livros = snap.val();
-        const lista = document.getElementById('lista-catalogo');
-        lista.innerHTML = '';
-        if(!livros) { lista.innerHTML = "<p style='text-align:center'>Nenhum livro cadastrado.</p>"; return; }
-        
-        for(let id in livros) {
-            const l = livros[id];
-            lista.innerHTML += `
-                <div class="livro-item">
-                    <div style="font-weight:700; max-width:65%">${l.titulo}</div>
-                    <button class="btn-acao" onclick="reservar('${id}', '${l.titulo}')" ${l.status !== 'disponivel' ? 'disabled' : ''}>
-                        ${l.status === 'disponivel' ? 'RESERVAR' : 'LOCADO'}
-                    </button>
-                </div>`;
-        }
-    });
-
-    // --- RESERVAS E CONTA ---
-    function loginMembro() {
-        const nome = document.getElementById('login-nome').value.trim();
-        if(nome.length > 3) {
-            localStorage.setItem('ipb_user', nome);
-            verificarLogin();
-        }
-    }
-
-    function verificarLogin() {
-        const user = localStorage.getItem('ipb_user');
-        if(user) {
-            document.getElementById('area-login').style.display = 'none';
-            document.getElementById('perfil-membro').style.display = 'block';
-            document.getElementById('nome-exibicao').innerText = user;
-        }
-    }
-
-    function logout() {
-        localStorage.removeItem('ipb_user');
         location.reload();
     }
 
+    function addNovoAdm() {
+        const nome = document.getElementById('novo-adm-nome').value;
+        const senha = document.getElementById('novo-adm-pass').value;
+        if(nome && senha) {
+            db.ref('administradores').push({ nome, senha });
+            alert("Novo administrador cadastrado!");
+            document.getElementById('novo-adm-nome').value = '';
+            document.getElementById('novo-adm-pass').value = '';
+        }
+    }
+
+    function carregarAdms() {
+        db.ref('administradores').on('value', snap => {
+            const adms = snap.val();
+            const lista = document.getElementById('lista-outros-adms');
+            lista.innerHTML = '<strong>ADMs Ativos:</strong><br>';
+            for(let id in adms) { lista.innerHTML += `• ${adms[id].nome}<br>`; }
+        });
+    }
+
+    // --- FUNÇÕES DE LIVROS ---
+    function addLivro() {
+        const t = document.getElementById('novo-titulo').value.trim();
+        if(t) { db.ref('livros').push({ titulo: t, status: 'disponivel' }); document.getElementById('novo-titulo').value = ''; }
+    }
+
+    db.ref('livros').on('value', snap => {
+        const livros = snap.val();
+        const lista = document.getElementById('lista-catalogo');
+        lista.innerHTML = '';
+        for(let id in livros) {
+            lista.innerHTML += `<div class="livro-item">
+                <div style="font-weight:700; max-width:65%">${livros[id].titulo}</div>
+                <button class="btn-acao" onclick="reservar('${id}', '${livros[id].titulo}')" ${livros[id].status !== 'disponivel' ? 'disabled' : ''}>
+                    ${livros[id].status === 'disponivel' ? 'RESERVAR' : 'LOCADO'}
+                </button>
+            </div>`;
+        }
+    });
+
     function reservar(id, titulo) {
         const user = localStorage.getItem('ipb_user');
-        if(!user) { alert("Acesse a aba 'CONTA' primeiro!"); mudarAba('conta'); return; }
-        
+        if(!user) { alert("Acesse 'MINHA CONTA' primeiro!"); mudarAba('conta'); return; }
         db.ref('livros/' + id).update({ status: 'locado' });
-        db.ref('locacoes').push({
-            livroId: id,
-            livroNome: titulo,
-            membro: user,
-            data: new Date().toLocaleDateString('pt-BR')
-        });
-        alert("Reserva enviada com sucesso!");
+        db.ref('locacoes').push({ livroId: id, livroNome: titulo, membro: user, data: new Date().toLocaleDateString('pt-BR') });
+        alert("Reserva concluída!");
         mudarAba('conta');
     }
 
-    // Gestão de Locações no ADM
-    db.ref('locacoes').on('value', (snap) => {
+    db.ref('locacoes').on('value', snap => {
         const locs = snap.val();
         const listaAdm = document.getElementById('lista-adm');
         const listaMembro = document.getElementById('meus-livros');
-        listaAdm.innerHTML = ''; 
-        if(listaMembro) listaMembro.innerHTML = '';
-
-        if(!locs) { listaAdm.innerHTML = "<p>Sem locações ativas.</p>"; return; }
-
+        listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '';
+        if(!locs) { listaAdm.innerHTML = "Sem empréstimos."; return; }
         for(let id in locs) {
             const l = locs[id];
-            // Para o ADM
-            listaAdm.innerHTML += `
-                <div style="padding:12px 0; border-bottom:1px solid #eee;">
-                    <div style="font-weight:bold">${l.membro}</div>
-                    <div style="font-size:0.85rem; color:var(--gray)">${l.livroNome}</div>
-                    <button class="btn-acao" style="margin-top:8px; border-color:var(--primary)" onclick="confirmarDevolucao('${id}', '${l.livroId}')">Dar Baixa</button>
+            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;">
+                <strong>${l.membro}</strong> - ${l.livroNome}
+                <button class="btn-acao" style="display:block; margin-top:5px;" onclick="darBaixa('${id}', '${l.livroId}')">Confirmar Devolução</button>
+            </div>`;
+            if(localStorage.getItem('ipb_user') === l.membro) {
+                listaMembro.innerHTML += `<div class="livro-item" style="border-left-color: var(--accent)">
+                    <div><strong>${l.livroNome}</strong><br><small>Retirado em: ${l.data}</small></div>
                 </div>`;
-            
-            // Para o Membro
-            const user = localStorage.getItem('ipb_user');
-            if(user && l.membro === user) {
-                listaMembro.innerHTML += `
-                    <div class="livro-item" style="border-left-color: var(--accent)">
-                        <div>
-                            <div style="font-weight:bold">${l.livroNome}</div>
-                            <small style="color:var(--gray)">Retirado em: ${l.data}</small>
-                        </div>
-                        <span class="status-badge bg-warning">Com você</span>
-                    </div>`;
             }
         }
     });
 
-    function confirmarDevolucao(locId, livroId) {
-        if(confirm("Confirmar recebimento do livro?")) {
+    function darBaixa(locId, livroId) {
+        if(confirm("Confirmar devolução?")) {
             db.ref('locacoes/' + locId).remove();
             db.ref('livros/' + livroId).update({ status: 'disponivel' });
         }
     }
 
-    // Mantém logado se apenas trocar de aba
-    if(sessionStorage.getItem('adm_logado')) {
-        document.getElementById('area-adm-login').style.display = 'none';
-        document.getElementById('painel-adm').style.display = 'block';
+    function loginMembro() {
+        const n = document.getElementById('login-nome').value.trim();
+        if(n.length > 3) { localStorage.setItem('ipb_user', n); location.reload(); }
     }
-    verificarLogin();
+
+    if(localStorage.getItem('ipb_user')) {
+        document.getElementById('area-login').style.display = 'none';
+        document.getElementById('perfil-membro').style.display = 'block';
+        document.getElementById('nome-exibicao').innerText = localStorage.getItem('ipb_user');
+    }
+
+    if(sessionStorage.getItem('adm_logado')) liberarPainel();
+    function logout() { localStorage.removeItem('ipb_user'); location.reload(); }
 </script>
 </body>
 </html>
