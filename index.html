@@ -21,11 +21,12 @@
         .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
         .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .livro-topo { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .titulo-livro { font-weight: 700; cursor: help; text-decoration: underline dotted var(--gray); position: relative; }
         .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; }
         .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
         .btn-danger-small { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
         .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; }
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; }
         nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; }
         nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; }
         nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
@@ -50,6 +51,7 @@
 
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
+        <p style="font-size: 0.7rem; color: var(--gray);">Dica: Passe o mouse no título para ler o resumo.</p>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
@@ -92,13 +94,14 @@
             <div class="card">
                 <h4>➕ Cadastrar Livro</h4>
                 <input type="text" id="novo-titulo" placeholder="Título">
+                <textarea id="novo-resumo" placeholder="Breve resumo sobre o livro..." rows="2"></textarea>
                 <input type="number" id="novo-qtd" placeholder="Quantidade" value="1">
                 <button class="btn-principal" onclick="addLivro()">SALVAR</button>
             </div>
             
             <div class="card">
-                <h4>👥 Gestão de Membros (Bloqueio)</h4>
-                <div id="lista-membros-adm">Carregando membros...</div>
+                <h4>👥 Gestão de Membros</h4>
+                <div id="lista-membros-adm"></div>
             </div>
 
             <div class="card">
@@ -141,17 +144,15 @@
         document.getElementById('nav-' + aba).classList.add('active');
     }
 
-    // --- GESTÃO DE BLOQUEIO ---
-    function alternarBloqueio(user, statusAtual) {
-        const novoStatus = !statusAtual;
-        db.ref('membros/' + user).update({ bloqueado: novoStatus });
-    }
-
-    // --- LIVROS E LOGICA ---
     function addLivro() {
         const t = document.getElementById('novo-titulo').value;
+        const r = document.getElementById('novo-resumo').value;
         const q = parseInt(document.getElementById('novo-qtd').value) || 1;
-        if(t) db.ref('livros').push({ titulo: t, qtdTotal: q, qtdAtual: q });
+        if(t) {
+            db.ref('livros').push({ titulo: t, resumo: r, qtdTotal: q, qtdAtual: q });
+            document.getElementById('novo-titulo').value = '';
+            document.getElementById('novo-resumo').value = '';
+        }
     }
 
     function excluirLivro(id) {
@@ -164,44 +165,44 @@
         const locacoes = dados.locacoes || {};
         const membros = dados.membros || {};
         
-        // Renderizar Acervo
         const listaCatalogo = document.getElementById('lista-catalogo');
         listaCatalogo.innerHTML = '';
+        const listaGestao = document.getElementById('gestao-livros-lista');
+        if(listaGestao) listaGestao.innerHTML = '';
+
         for(let id in livros) {
             const l = livros[id];
-            let infoExtra = l.qtdAtual <= 0 ? '<small style="color:var(--danger)">Esgotado</small>' : `<small>Disponível: ${l.qtdAtual}</small>`;
+            const resumoTxt = l.resumo || "Sem resumo disponível.";
+            
+            // Acervo Usuário
             listaCatalogo.innerHTML += `
                 <div class="livro-item">
                     <div class="livro-topo">
-                        <div style="font-weight:700">${l.titulo}</div>
+                        <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
                         <button class="btn-acao" onclick="reservar('${id}', '${l.titulo}')" ${l.qtdAtual <= 0 ? 'disabled' : ''}>RESERVAR</button>
                     </div>
-                    ${infoExtra}
+                    <small>${l.qtdAtual <= 0 ? 'Esgotado' : 'Disponível: ' + l.qtdAtual}</small>
                 </div>`;
-        }
-
-        // Renderizar Gestão de Livros (ADM)
-        const listaGestao = document.getElementById('gestao-livros-lista');
-        if(listaGestao) {
-            listaGestao.innerHTML = '';
-            for(let id in livros) {
-                listaGestao.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                    ${livros[id].titulo} <button class="btn-danger-small" onclick="excluirLivro('${id}')">X</button>
+            
+            // Gestão ADM
+            if(listaGestao) {
+                listaGestao.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <div title="${resumoTxt}"><strong>${l.titulo}</strong></div>
+                    <button class="btn-danger-small" onclick="excluirLivro('${id}')">X</button>
                 </div>`;
             }
         }
 
-        // Renderizar Gestão de Membros (ADM)
+        // Gestão Membros ADM
         const listaMembrosAdm = document.getElementById('lista-membros-adm');
         if(listaMembrosAdm) {
             listaMembrosAdm.innerHTML = '';
             for(let u in membros) {
                 const m = membros[u];
-                const corBotao = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
-                const textoBotao = m.bloqueado ? 'Desbloquear' : 'Bloquear';
-                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                    <div><strong>${m.nome}</strong><br><small>${u}</small></div>
-                    <button class="btn-acao" style="color:${corBotao}; border-color:${corBotao}" onclick="alternarBloqueio('${u}', ${m.bloqueado || false})">${textoBotao}</button>
+                const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
+                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                    <div>${m.nome}</div>
+                    <button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${u}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button>
                 </div>`;
             }
         }
@@ -211,45 +212,24 @@
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
-
-        // Verifica se está bloqueado no banco
         db.ref('membros/' + mLocal.user).once('value', snap => {
             const mDb = snap.val();
-            if(mDb.bloqueado) {
-                alert("Atenção: Sua conta está temporariamente suspensa para novos alugueres. Por favor, contacte os diáconos.");
-                return;
-            }
-
+            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
             const prazo = prompt("Prazo: 15, 20 ou 30 dias?", "15");
             if(!["15","20","30"].includes(prazo)) return;
-
             const dataDev = new Date(); dataDev.setDate(dataDev.getDate() + parseInt(prazo));
-            db.ref('livros/' + id).transaction(l => {
-                if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; }
-            }).then(result => {
-                if(result.committed) {
-                    db.ref('locacoes').push({
-                        livroId: id, livroNome: titulo, membroNome: mDb.nome, 
-                        membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR')
-                    });
-                    alert("Reservado!");
-                }
+            db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
+                if(result.committed) db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR') });
             });
         });
     }
 
-    // --- ADM E LOGIN ---
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
-        if(u === "ipb" && p === "ipbbrasil") { 
-            sessionStorage.setItem('adm_ativo', "IPB"); 
-            document.getElementById('area-adm-login').style.display='none'; 
-            document.getElementById('painel-adm').style.display='block'; 
-        }
+        if(u === "ipb" && p === "ipbbrasil") { sessionStorage.setItem('adm_ativo', "IPB"); location.reload(); }
     }
     function logoutAdmin() { sessionStorage.clear(); location.reload(); }
-    
     function darBaixa(locId, livroId) {
         db.ref('livros/' + livroId).transaction(l => { if(l) { l.qtdAtual = Math.min(l.qtdAtual + 1, l.qtdTotal); return l; } });
         db.ref('locacoes/' + locId).remove();
