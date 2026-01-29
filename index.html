@@ -12,7 +12,6 @@
         :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
         
-        /* HEADER COM LOGO */
         header { background: var(--white); padding: 15px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto 5px; }
         header h2 { margin: 0; font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; }
@@ -40,8 +39,7 @@
 <body>
 
 <header>
-    <div class="logo-container">
-        <img src="imagem.png" alt="Logo IPB"> </div>
+    <div class="logo-container"><img src="imagem.png" alt="Logo IPB"></div>
     <h2>BIBLIOTECA IPB PETRÓPOLIS</h2>
 </header>
 
@@ -49,7 +47,7 @@
     
     <section id="catalogo" class="section active">
         <h3 style="margin-bottom: 20px;">📖 Acervo Disponível</h3>
-        <div id="lista-catalogo">Carregando...</div>
+        <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
     <section id="conta" class="section">
@@ -72,29 +70,33 @@
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
             <h3>Painel Administrativo</h3>
-            <input type="password" id="adm-pass" placeholder="Senha ADM">
+            <input type="text" id="adm-user" placeholder="Usuário">
+            <input type="password" id="adm-pass" placeholder="Senha">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
             <div class="card" style="background: #eef7f2;">
+                <h4>Bem-vindo, <span id="adm-logado-nome"></span></h4>
+                <p style="font-size:0.8rem">Você está no modo de gestão.</p>
+            </div>
+
+            <div class="card">
                 <h4>➕ Cadastrar Livro</h4>
-                <input type="text" id="novo-titulo" placeholder="Título">
+                <input type="text" id="novo-titulo" placeholder="Título do Livro">
                 <button class="btn-principal" onclick="addLivro()">SALVAR LIVRO</button>
             </div>
 
             <div class="card">
-                <h4>📊 Empréstimos Atuais</h4>
+                <h4>📊 Gestão de Empréstimos</h4>
                 <div id="lista-adm"></div>
             </div>
 
             <div class="card" style="border: 1px dashed var(--primary);">
-                <h4>👥 Gerenciar Administradores</h4>
-                <p style="font-size: 0.75rem; color: var(--gray);">Apenas outros administradores verão esta parte.</p>
+                <h4>👥 Cadastrar Outro ADM</h4>
                 <input type="text" id="novo-adm-nome" placeholder="Nome do Diácono">
-                <input type="password" id="novo-adm-pass" placeholder="Definir Senha dele">
+                <input type="password" id="novo-adm-pass" placeholder="Senha para ele">
                 <button class="btn-acao" style="width:100%" onclick="addNovoAdm()">CADASTRAR ADM</button>
-                <div id="lista-outros-adms" style="margin-top:10px; font-size:0.8rem;"></div>
             </div>
 
             <button onclick="logoutAdmin()" class="btn-outline-danger">SAIR DO MODO ADM</button>
@@ -129,61 +131,52 @@
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.getElementById(aba).classList.add('active');
         document.getElementById('nav-' + aba).classList.add('active');
-        window.scrollTo(0,0);
     }
 
-    // --- LOGIN ADM MULTI-USUÁRIO ---
+    // --- SISTEMA DE LOGIN ADM ---
     function loginAdmin() {
-        const senhaDigitada = document.getElementById('adm-pass').value;
-        
-        // Senha Mestra (Sempre funciona)
-        if(senhaDigitada === "ipb123") {
-            liberarPainel();
+        const u = document.getElementById('adm-user').value;
+        const p = document.getElementById('adm-pass').value;
+
+        // Login Padrão
+        if(u === "ipb" && p === "ipbbrasil") {
+            liberarPainel("IPB Central");
             return;
         }
 
-        // Verifica outros ADMs no banco
-        db.ref('administradores').once('value', (snap) => {
+        // Verifica no Banco
+        db.ref('administradores').once('value', snap => {
             const adms = snap.val();
-            let autorizado = false;
+            let userEncontrado = null;
             for(let id in adms) {
-                if(adms[id].senha === senhaDigitada) { autorizado = true; break; }
+                if(adms[id].nome === u && adms[id].senha === p) {
+                    userEncontrado = adms[id].nome;
+                    break;
+                }
             }
-            if(autorizado) liberarPainel();
-            else alert("Senha Administrativa Inválida!");
+            if(userEncontrado) liberarPainel(userEncontrado);
+            else alert("Usuário ou Senha ADM incorretos.");
         });
     }
 
-    function liberarPainel() {
+    function liberarPainel(nome) {
+        sessionStorage.setItem('adm_nome', nome);
         document.getElementById('area-adm-login').style.display = 'none';
         document.getElementById('painel-adm').style.display = 'block';
-        sessionStorage.setItem('adm_logado', 'true');
-        carregarAdms();
+        document.getElementById('adm-logado-nome').innerText = nome;
     }
 
-    function logoutAdmin() {
-        sessionStorage.removeItem('adm_logado');
-        location.reload();
-    }
+    function logoutAdmin() { sessionStorage.clear(); location.reload(); }
 
     function addNovoAdm() {
         const nome = document.getElementById('novo-adm-nome').value;
         const senha = document.getElementById('novo-adm-pass').value;
         if(nome && senha) {
             db.ref('administradores').push({ nome, senha });
-            alert("Novo administrador cadastrado!");
+            alert("ADM Cadastrado!");
             document.getElementById('novo-adm-nome').value = '';
             document.getElementById('novo-adm-pass').value = '';
         }
-    }
-
-    function carregarAdms() {
-        db.ref('administradores').on('value', snap => {
-            const adms = snap.val();
-            const lista = document.getElementById('lista-outros-adms');
-            lista.innerHTML = '<strong>ADMs Ativos:</strong><br>';
-            for(let id in adms) { lista.innerHTML += `• ${adms[id].nome}<br>`; }
-        });
     }
 
     // --- FUNÇÕES DE LIVROS ---
@@ -208,10 +201,10 @@
 
     function reservar(id, titulo) {
         const user = localStorage.getItem('ipb_user');
-        if(!user) { alert("Acesse 'MINHA CONTA' primeiro!"); mudarAba('conta'); return; }
+        if(!user) { alert("Acesse 'CONTA'!"); mudarAba('conta'); return; }
         db.ref('livros/' + id).update({ status: 'locado' });
         db.ref('locacoes').push({ livroId: id, livroNome: titulo, membro: user, data: new Date().toLocaleDateString('pt-BR') });
-        alert("Reserva concluída!");
+        alert("Reservado!");
         mudarAba('conta');
     }
 
@@ -220,12 +213,12 @@
         const listaAdm = document.getElementById('lista-adm');
         const listaMembro = document.getElementById('meus-livros');
         listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '';
-        if(!locs) { listaAdm.innerHTML = "Sem empréstimos."; return; }
+        if(!locs) return;
         for(let id in locs) {
             const l = locs[id];
             listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;">
-                <strong>${l.membro}</strong> - ${l.livroNome}
-                <button class="btn-acao" style="display:block; margin-top:5px;" onclick="darBaixa('${id}', '${l.livroId}')">Confirmar Devolução</button>
+                <strong>${l.membro}</strong> - ${l.livroNome}<br>
+                <button class="btn-acao" style="margin-top:5px" onclick="darBaixa('${id}', '${l.livroId}')">Dar Baixa</button>
             </div>`;
             if(localStorage.getItem('ipb_user') === l.membro) {
                 listaMembro.innerHTML += `<div class="livro-item" style="border-left-color: var(--accent)">
@@ -236,7 +229,14 @@
     });
 
     function darBaixa(locId, livroId) {
-        if(confirm("Confirmar devolução?")) {
+        const admResponsavel = sessionStorage.getItem('adm_nome');
+        if(confirm(`Confirmar baixa por ${admResponsavel}?`)) {
+            // Aqui registramos quem deu baixa no banco antes de deletar (opcional) ou apenas confirmamos a ação
+            db.ref('historico_baixas').push({
+                livroId: livroId,
+                adm: admResponsavel,
+                data: new Date().toLocaleString()
+            });
             db.ref('locacoes/' + locId).remove();
             db.ref('livros/' + livroId).update({ status: 'disponivel' });
         }
@@ -253,7 +253,7 @@
         document.getElementById('nome-exibicao').innerText = localStorage.getItem('ipb_user');
     }
 
-    if(sessionStorage.getItem('adm_logado')) liberarPainel();
+    if(sessionStorage.getItem('adm_nome')) liberarPainel(sessionStorage.getItem('adm_nome'));
     function logout() { localStorage.removeItem('ipb_user'); location.reload(); }
 </script>
 </body>
