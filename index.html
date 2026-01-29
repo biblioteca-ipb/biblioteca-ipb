@@ -21,19 +21,16 @@
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .home-hero { text-align: center; padding: 30px 10px; }
-        .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; text-transform: uppercase; }
-
         .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
-        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); }
+        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
 
         .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; }
-        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; }
-        .btn-link { background: none; border: none; color: var(--primary); text-decoration: underline; cursor: pointer; margin-top: 15px; font-size: 0.9rem; }
+        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+        .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; }
 
-        input { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
-        nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
+        nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; }
+        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; }
         nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
     </style>
 </head>
@@ -47,16 +44,16 @@
 <div class="container">
     
     <section id="inicio" class="section active">
-        <div class="home-hero">
+        <div style="text-align: center; padding: 30px 10px;">
             <h1>Bem-vindo!</h1>
-            <p>Explore nosso acervo e gerencie seus empréstimos de forma simples.</p>
+            <p>Acesse o acervo para edificar sua vida com nossas obras disponíveis.</p>
             <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
     </section>
 
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
-        <div id="lista-catalogo">Carregando...</div>
+        <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
     <section id="conta" class="section">
@@ -66,27 +63,27 @@
                 <input type="text" id="log-user" placeholder="Usuário">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button class="btn-link" onclick="mostrarCadastro(true)">Não tem conta? Cadastre-se</button></center>
+                <center><button onclick="document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block';" style="background:none; border:none; color:var(--primary); margin-top:15px; text-decoration:underline;">Criar nova conta</button></center>
             </div>
         </div>
 
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
-                <h3>Criar Cadastro</h3>
+                <h3>Cadastro de Membro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="Escolha um Usuário">
-                <input type="password" id="cad-pass" placeholder="Defina uma Senha">
-                <input type="tel" id="cad-tel" placeholder="Telefone (WhatsApp)">
+                <input type="text" id="cad-user" placeholder="Nome de Usuário">
+                <input type="password" id="cad-pass" placeholder="Senha">
+                <input type="tel" id="cad-tel" placeholder="WhatsApp (com DDD)">
                 <input type="email" id="cad-email" placeholder="E-mail">
-                <button class="btn-principal" onclick="cadastrarMembro()">FINALIZAR CADASTRO</button>
-                <center><button class="btn-link" onclick="mostrarCadastro(false)">Já tenho conta. Fazer Login</button></center>
+                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
+                <center><button onclick="location.reload()" style="background:none; border:none; margin-top:15px;">Voltar ao Login</button></center>
             </div>
         </div>
 
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao"></span></h3>
-                <h4>📚 Meus Livros</h4>
+                <h3>Olá, <span id="nome-exibicao" style="color:var(--primary)"></span></h3>
+                <h4>📚 Meus Empréstimos</h4>
                 <div id="meus-livros"></div>
                 <button onclick="logout()" class="btn-principal" style="background:var(--danger)">SAIR</button>
             </div>
@@ -95,15 +92,32 @@
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Painel ADM</h3>
+            <h3>Painel Administrativo</h3>
             <input type="text" id="adm-user" placeholder="Usuário">
             <input type="password" id="adm-pass" placeholder="Senha">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR</button>
         </div>
+        
         <div id="painel-adm" style="display:none;">
-            <div class="card"><h4>➕ Cadastrar Livro</h4><input type="text" id="novo-titulo"><button class="btn-principal" onclick="addLivro()">SALVAR</button></div>
-            <div class="card"><h4>📊 Empréstimos</h4><div id="lista-adm"></div></div>
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray)">SAIR ADM</button>
+            <div class="card">
+                <h4>➕ Cadastrar Livro</h4>
+                <input type="text" id="novo-titulo" placeholder="Título">
+                <button class="btn-principal" onclick="addLivro()">SALVAR</button>
+            </div>
+
+            <div class="card">
+                <h4>📊 Empréstimos e Devoluções</h4>
+                <div id="lista-adm"></div>
+            </div>
+
+            <div class="card" style="border: 1px dashed var(--primary);">
+                <h4>👥 Gerenciar Equipe ADM</h4>
+                <input type="text" id="novo-adm-nome" placeholder="Nome do Diácono">
+                <input type="password" id="novo-adm-pass" placeholder="Senha para ele">
+                <button class="btn-acao" style="width:100%" onclick="addNovoAdm()">CADASTRAR NOVO ADM</button>
+            </div>
+
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray)">LOGOUT ADM</button>
         </div>
     </section>
 </div>
@@ -136,61 +150,72 @@
         document.getElementById('nav-' + aba).classList.add('active');
     }
 
-    // --- SISTEMA DE MEMBROS ---
-    function mostrarCadastro(show) {
-        document.getElementById('tela-login').style.display = show ? 'none' : 'block';
-        document.getElementById('tela-cadastro').style.display = show ? 'block' : 'none';
-    }
-
+    // --- LOGICA DE MEMBROS ---
     function cadastrarMembro() {
         const dados = {
             nome: document.getElementById('cad-nome').value,
-            user: document.getElementById('cad-user').value.toLowerCase(),
+            user: document.getElementById('cad-user').value.toLowerCase().trim(),
             pass: document.getElementById('cad-pass').value,
             tel: document.getElementById('cad-tel').value,
             email: document.getElementById('cad-email').value
         };
-        if(!dados.user || !dados.pass) return alert("Preencha usuário e senha!");
-        
+        if(!dados.user || !dados.pass) return alert("Usuário e senha são obrigatórios!");
         db.ref('membros/' + dados.user).set(dados).then(() => {
-            alert("Cadastro realizado! Agora faça login.");
-            mostrarCadastro(false);
+            alert("Cadastro concluído! Faça login.");
+            location.reload();
         });
     }
 
     function loginMembro() {
-        const u = document.getElementById('log-user').value.toLowerCase();
+        const u = document.getElementById('log-user').value.toLowerCase().trim();
         const p = document.getElementById('log-pass').value;
         db.ref('membros/' + u).once('value', snap => {
             const m = snap.val();
             if(m && m.pass === p) {
-                localStorage.setItem('ipb_session', JSON.stringify(m));
-                verificarSessao();
-            } else alert("Usuário ou Senha incorretos.");
+                localStorage.setItem('ipb_membro', JSON.stringify(m));
+                verificarMembro();
+            } else alert("Dados inválidos!");
         });
     }
 
-    function verificarSessao() {
-        const s = localStorage.getItem('ipb_session');
-        if(s) {
-            const m = JSON.parse(s);
-            document.getElementById('tela-login').style.display = 'none';
-            document.getElementById('tela-cadastro').style.display = 'none';
-            document.getElementById('perfil-membro').style.display = 'block';
-            document.getElementById('nome-exibicao').innerText = m.nome;
+    function verificarMembro() {
+        const m = localStorage.getItem('ipb_membro');
+        if(m) {
+            const dados = JSON.parse(m);
+            document.getElementById('tela-login').style.display='none';
+            document.getElementById('perfil-membro').style.display='block';
+            document.getElementById('nome-exibicao').innerText = dados.nome;
         }
     }
 
-    function logout() { localStorage.removeItem('ipb_session'); location.reload(); }
+    function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
 
-    // --- ACERVO E RESERVAS ---
+    // --- ACERVO E PRAZOS ---
     function reservar(id, titulo) {
-        const s = localStorage.getItem('ipb_session');
-        if(!s) { alert("Faça login para reservar!"); mudarAba('conta'); return; }
-        const m = JSON.parse(s);
+        const m = localStorage.getItem('ipb_membro');
+        if(!m) { alert("Faça login primeiro!"); mudarAba('conta'); return; }
+        
+        const prazo = prompt("Escolha o prazo de devolução (15, 20 ou 30 dias):", "15");
+        if(prazo != "15" && prazo != "20" && prazo != "30") {
+            alert("Prazo inválido! Escolha 15, 20 ou 30.");
+            return;
+        }
+
+        const dadosMembro = JSON.parse(m);
+        const dataDevolucao = new Date();
+        dataDevolucao.setDate(dataDevolucao.getDate() + parseInt(prazo));
+
         db.ref('livros/' + id).update({ status: 'locado' });
-        db.ref('locacoes').push({ livroId: id, livroNome: titulo, membro: m.nome, user: m.user, tel: m.tel });
-        alert("Livro reservado com sucesso!");
+        db.ref('locacoes').push({
+            livroId: id,
+            livroNome: titulo,
+            membroNome: dadosMembro.nome,
+            membroUser: dadosMembro.user,
+            membroTel: dadosMembro.tel,
+            dataLocacao: new Date().toLocaleDateString('pt-BR'),
+            dataDevolucao: dataDevolucao.toLocaleDateString('pt-BR')
+        });
+        alert("Reserva efetuada para devolução em " + dataDevolucao.toLocaleDateString('pt-BR'));
     }
 
     db.ref('livros').on('value', snap => {
@@ -201,27 +226,45 @@
             lista.innerHTML += `<div class="livro-item">
                 <div style="font-weight:700">${livros[id].titulo}</div>
                 <button class="btn-acao" onclick="reservar('${id}', '${livros[id].titulo}')" ${livros[id].status !== 'disponivel' ? 'disabled' : ''}>
-                    ${livros[id].status === 'disponivel' ? 'Reservar' : 'Locado'}
+                    ${livros[id].status === 'disponivel' ? 'RESERVAR' : 'LOCADO'}
                 </button>
             </div>`;
         }
     });
 
-    // --- ADMIN ---
+    // --- ADMINISTRAÇÃO ---
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
-        if(u === "ipb" && p === "ipbbrasil") liberarAdm("IPB Central");
-        else alert("Acesso Negado.");
+        if(u === "ipb" && p === "ipbbrasil") { liberarAdm("IPB Principal"); return; }
+        
+        db.ref('administradores').once('value', snap => {
+            const adms = snap.val();
+            let logado = false;
+            for(let id in adms) {
+                if(adms[id].nome === u && adms[id].senha === p) {
+                    liberarAdm(adms[id].nome);
+                    logado = true;
+                    break;
+                }
+            }
+            if(!logado) alert("Acesso negado.");
+        });
     }
 
-    function liberarAdm(n) {
-        sessionStorage.setItem('adm_n', n);
+    function liberarAdm(nome) {
+        sessionStorage.setItem('adm_ativo', nome);
         document.getElementById('area-adm-login').style.display = 'none';
         document.getElementById('painel-adm').style.display = 'block';
     }
 
     function logoutAdmin() { sessionStorage.clear(); location.reload(); }
+
+    function addNovoAdm() {
+        const n = document.getElementById('novo-adm-nome').value;
+        const s = document.getElementById('novo-adm-pass').value;
+        if(n && s) { db.ref('administradores').push({ nome: n, senha: s }); alert("ADM cadastrado!"); }
+    }
 
     function addLivro() {
         const t = document.getElementById('novo-titulo').value;
@@ -234,29 +277,37 @@
         const listaMembro = document.getElementById('meus-livros');
         listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '';
         if(!locs) return;
-        const sessao = localStorage.getItem('ipb_session');
-        const userAtual = sessao ? JSON.parse(sessao).user : null;
+
+        const mSessao = localStorage.getItem('ipb_membro');
+        const userAtual = mSessao ? JSON.parse(mSessao).user : null;
 
         for(let id in locs) {
             const l = locs[id];
-            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;">
-                <strong>${l.membro}</strong> (${l.tel})<br>${l.livroNome}
-                <button class="btn-acao" onclick="darBaixa('${id}', '${l.livroId}')">Baixa</button>
+            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
+                <strong>${l.membroNome}</strong> (${l.membroTel})<br>
+                Livro: ${l.livroNome}<br>
+                <small>Devolver em: <b>${l.dataDevolucao}</b></small><br>
+                <button class="btn-acao" style="margin-top:5px" onclick="darBaixa('${id}', '${l.livroId}')">Confirmar Devolução</button>
             </div>`;
-            if(userAtual === l.user) {
-                listaMembro.innerHTML += `<div class="livro-item"><div>${l.livroNome}</div></div>`;
+            
+            if(userAtual === l.membroUser) {
+                listaMembro.innerHTML += `<div class="livro-item">
+                    <div><b>${l.livroNome}</b><br><small>Devolução: ${l.dataDevolucao}</small></div>
+                </div>`;
             }
         }
     });
 
     function darBaixa(locId, livroId) {
-        if(confirm("Confirmar devolução?")) {
+        const adm = sessionStorage.getItem('adm_ativo');
+        if(confirm("Confirmar baixa realizada por " + adm + "?")) {
             db.ref('locacoes/' + locId).remove();
             db.ref('livros/' + livroId).update({ status: 'disponivel' });
         }
     }
 
-    verificarSessao();
+    verificarMembro();
+    if(sessionStorage.getItem('adm_ativo')) liberarAdm(sessionStorage.getItem('adm_ativo'));
 </script>
 </body>
 </html>
