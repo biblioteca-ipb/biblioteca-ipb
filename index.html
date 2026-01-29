@@ -11,23 +11,19 @@
     <style>
         :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-        
         header { background: var(--white); padding: 15px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto 5px; }
         header h2 { margin: 0; font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; }
-
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .section { display: none; animation: fadeIn 0.4s ease-out; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
-        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-
+        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .livro-topo { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; }
         .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
         .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; }
-
         input, select { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
         nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; }
         nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; }
@@ -45,8 +41,8 @@
     
     <section id="inicio" class="section active">
         <div style="text-align: center; padding: 30px 10px;">
-            <h1>Bem-vindo!</h1>
-            <p>Acesse o acervo para edificar sua vida com nossas obras disponíveis.</p>
+            <h2 style="color: var(--primary);">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
+            <p style="font-style: italic; color: var(--gray); margin-bottom: 30px;">2 Pedro 3:18</p>
             <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
     </section>
@@ -66,24 +62,19 @@
                 <center><button onclick="document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block';" style="background:none; border:none; color:var(--primary); margin-top:15px; text-decoration:underline;">Criar nova conta</button></center>
             </div>
         </div>
-
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
-                <h3>Cadastro de Membro</h3>
+                <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="Nome de Usuário">
+                <input type="text" id="cad-user" placeholder="Usuário">
                 <input type="password" id="cad-pass" placeholder="Senha">
-                <input type="tel" id="cad-tel" placeholder="WhatsApp (com DDD)">
-                <input type="email" id="cad-email" placeholder="E-mail">
+                <input type="tel" id="cad-tel" placeholder="WhatsApp">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
-                <center><button onclick="location.reload()" style="background:none; border:none; margin-top:15px;">Voltar ao Login</button></center>
             </div>
         </div>
-
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color:var(--primary)"></span></h3>
-                <h4>📚 Meus Empréstimos</h4>
+                <h3>Olá, <span id="nome-exibicao"></span></h3>
                 <div id="meus-livros"></div>
                 <button onclick="logout()" class="btn-principal" style="background:var(--danger)">SAIR</button>
             </div>
@@ -92,32 +83,25 @@
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Painel Administrativo</h3>
-            <input type="text" id="adm-user" placeholder="Usuário">
-            <input type="password" id="adm-pass" placeholder="Senha">
+            <input type="text" id="adm-user" placeholder="Usuário ADM">
+            <input type="password" id="adm-pass" placeholder="Senha ADM">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR</button>
         </div>
-        
         <div id="painel-adm" style="display:none;">
             <div class="card">
                 <h4>➕ Cadastrar Livro</h4>
                 <input type="text" id="novo-titulo" placeholder="Título">
+                <input type="number" id="novo-qtd" placeholder="Quantidade de exemplares" value="1">
                 <button class="btn-principal" onclick="addLivro()">SALVAR</button>
             </div>
-
-            <div class="card">
-                <h4>📊 Empréstimos e Devoluções</h4>
-                <div id="lista-adm"></div>
-            </div>
-
+            <div class="card"><h4>📊 Empréstimos</h4><div id="lista-adm"></div></div>
             <div class="card" style="border: 1px dashed var(--primary);">
-                <h4>👥 Gerenciar Equipe ADM</h4>
-                <input type="text" id="novo-adm-nome" placeholder="Nome do Diácono">
-                <input type="password" id="novo-adm-pass" placeholder="Senha para ele">
-                <button class="btn-acao" style="width:100%" onclick="addNovoAdm()">CADASTRAR NOVO ADM</button>
+                <h4>👥 Novo ADM</h4>
+                <input type="text" id="novo-adm-nome" placeholder="Nome">
+                <input type="password" id="novo-adm-pass" placeholder="Senha">
+                <button class="btn-acao" style="width:100%" onclick="addNovoAdm()">CADASTRAR ADM</button>
             </div>
-
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray)">LOGOUT ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray)">SAIR ADM</button>
         </div>
     </section>
 </div>
@@ -150,163 +134,118 @@
         document.getElementById('nav-' + aba).classList.add('active');
     }
 
-    // --- LOGICA DE MEMBROS ---
-    function cadastrarMembro() {
-        const dados = {
-            nome: document.getElementById('cad-nome').value,
-            user: document.getElementById('cad-user').value.toLowerCase().trim(),
-            pass: document.getElementById('cad-pass').value,
-            tel: document.getElementById('cad-tel').value,
-            email: document.getElementById('cad-email').value
-        };
-        if(!dados.user || !dados.pass) return alert("Usuário e senha são obrigatórios!");
-        db.ref('membros/' + dados.user).set(dados).then(() => {
-            alert("Cadastro concluído! Faça login.");
-            location.reload();
-        });
+    // --- LIVROS E LOGICA DE QUANTIDADE ---
+    function addLivro() {
+        const t = document.getElementById('novo-titulo').value;
+        const q = parseInt(document.getElementById('novo-qtd').value) || 1;
+        if(t) db.ref('livros').push({ titulo: t, qtdTotal: q, qtdAtual: q });
     }
 
-    function loginMembro() {
-        const u = document.getElementById('log-user').value.toLowerCase().trim();
-        const p = document.getElementById('log-pass').value;
-        db.ref('membros/' + u).once('value', snap => {
-            const m = snap.val();
-            if(m && m.pass === p) {
-                localStorage.setItem('ipb_membro', JSON.stringify(m));
-                verificarMembro();
-            } else alert("Dados inválidos!");
-        });
-    }
-
-    function verificarMembro() {
-        const m = localStorage.getItem('ipb_membro');
-        if(m) {
-            const dados = JSON.parse(m);
-            document.getElementById('tela-login').style.display='none';
-            document.getElementById('perfil-membro').style.display='block';
-            document.getElementById('nome-exibicao').innerText = dados.nome;
-        }
-    }
-
-    function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
-
-    // --- ACERVO E PRAZOS ---
-    function reservar(id, titulo) {
-        const m = localStorage.getItem('ipb_membro');
-        if(!m) { alert("Faça login primeiro!"); mudarAba('conta'); return; }
-        
-        const prazo = prompt("Escolha o prazo de devolução (15, 20 ou 30 dias):", "15");
-        if(prazo != "15" && prazo != "20" && prazo != "30") {
-            alert("Prazo inválido! Escolha 15, 20 ou 30.");
-            return;
-        }
-
-        const dadosMembro = JSON.parse(m);
-        const dataDevolucao = new Date();
-        dataDevolucao.setDate(dataDevolucao.getDate() + parseInt(prazo));
-
-        db.ref('livros/' + id).update({ status: 'locado' });
-        db.ref('locacoes').push({
-            livroId: id,
-            livroNome: titulo,
-            membroNome: dadosMembro.nome,
-            membroUser: dadosMembro.user,
-            membroTel: dadosMembro.tel,
-            dataLocacao: new Date().toLocaleDateString('pt-BR'),
-            dataDevolucao: dataDevolucao.toLocaleDateString('pt-BR')
-        });
-        alert("Reserva efetuada para devolução em " + dataDevolucao.toLocaleDateString('pt-BR'));
-    }
-
-    db.ref('livros').on('value', snap => {
-        const livros = snap.val();
+    db.ref().on('value', snap => {
+        const dados = snap.val() || {};
+        const livros = dados.livros || {};
+        const locacoes = dados.locacoes || {};
         const lista = document.getElementById('lista-catalogo');
         lista.innerHTML = '';
+
         for(let id in livros) {
-            lista.innerHTML += `<div class="livro-item">
-                <div style="font-weight:700">${livros[id].titulo}</div>
-                <button class="btn-acao" onclick="reservar('${id}', '${livros[id].titulo}')" ${livros[id].status !== 'disponivel' ? 'disabled' : ''}>
-                    ${livros[id].status === 'disponivel' ? 'RESERVAR' : 'LOCADO'}
-                </button>
-            </div>`;
+            const l = livros[id];
+            let infoExtra = '';
+            let btnDisabled = l.qtdAtual <= 0 ? 'disabled' : '';
+
+            if(l.qtdAtual <= 0) {
+                // Busca a data de devolução mais próxima para este livro
+                let datas = [];
+                for(let locId in locacoes) {
+                    if(locacoes[locId].livroId === id) datas.push(locacoes[locId].dataDevolucao);
+                }
+                if(datas.length > 0) {
+                    datas.sort((a,b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
+                    infoExtra = `<small style="color:var(--danger)">Esgotado. Disponível em: ${datas[0]}</small>`;
+                }
+            } else {
+                infoExtra = `<small style="color:var(--primary-light)">Disponível: ${l.qtdAtual} de ${l.qtdTotal} exemplares</small>`;
+            }
+
+            lista.innerHTML += `
+                <div class="livro-item">
+                    <div class="livro-topo">
+                        <div style="font-weight:700">${l.titulo}</div>
+                        <button class="btn-acao" onclick="reservar('${id}', '${l.titulo}')" ${btnDisabled}>RESERVAR</button>
+                    </div>
+                    ${infoExtra}
+                </div>`;
         }
     });
 
-    // --- ADMINISTRAÇÃO ---
+    function reservar(id, titulo) {
+        const m = localStorage.getItem('ipb_membro');
+        if(!m) { alert("Faça login!"); mudarAba('conta'); return; }
+        const prazo = prompt("Prazo: 15, 20 ou 30 dias?", "15");
+        if(!["15","20","30"].includes(prazo)) return alert("Prazo inválido.");
+
+        const dadosMembro = JSON.parse(m);
+        const dataDev = new Date(); dataDev.setDate(dataDev.getDate() + parseInt(prazo));
+
+        // Decrementar quantidade
+        db.ref('livros/' + id).transaction(l => {
+            if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; }
+        }).then(result => {
+            if(result.committed) {
+                db.ref('locacoes').push({
+                    livroId: id, livroNome: titulo, membroNome: dadosMembro.nome, 
+                    membroUser: dadosMembro.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR')
+                });
+                alert("Reservado até " + dataDev.toLocaleDateString('pt-BR'));
+            }
+        });
+    }
+
+    // --- ADM E LOGIN (Mesma lógica anterior) ---
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
         if(u === "ipb" && p === "ipbbrasil") { liberarAdm("IPB Principal"); return; }
-        
         db.ref('administradores').once('value', snap => {
             const adms = snap.val();
-            let logado = false;
-            for(let id in adms) {
-                if(adms[id].nome === u && adms[id].senha === p) {
-                    liberarAdm(adms[id].nome);
-                    logado = true;
-                    break;
-                }
-            }
-            if(!logado) alert("Acesso negado.");
+            for(let id in adms) { if(adms[id].nome === u && adms[id].senha === p) return liberarAdm(adms[id].nome); }
+            alert("Erro!");
         });
     }
-
-    function liberarAdm(nome) {
-        sessionStorage.setItem('adm_ativo', nome);
-        document.getElementById('area-adm-login').style.display = 'none';
-        document.getElementById('painel-adm').style.display = 'block';
-    }
-
+    function liberarAdm(n) { sessionStorage.setItem('adm_ativo', n); document.getElementById('area-adm-login').style.display = 'none'; document.getElementById('painel-adm').style.display = 'block'; }
     function logoutAdmin() { sessionStorage.clear(); location.reload(); }
-
-    function addNovoAdm() {
-        const n = document.getElementById('novo-adm-nome').value;
-        const s = document.getElementById('novo-adm-pass').value;
-        if(n && s) { db.ref('administradores').push({ nome: n, senha: s }); alert("ADM cadastrado!"); }
-    }
-
-    function addLivro() {
-        const t = document.getElementById('novo-titulo').value;
-        if(t) db.ref('livros').push({ titulo: t, status: 'disponivel' });
+    function addNovoAdm() { const n = document.getElementById('novo-adm-nome').value; const s = document.getElementById('novo-adm-pass').value; if(n && s) db.ref('administradores').push({ nome: n, senha: s }); }
+    
+    function darBaixa(locId, livroId) {
+        if(confirm("Confirmar devolução?")) {
+            db.ref('livros/' + livroId).transaction(l => { if(l) { l.qtdAtual = Math.min(l.qtdAtual + 1, l.qtdTotal); return l; } });
+            db.ref('locacoes/' + locId).remove();
+        }
     }
 
     db.ref('locacoes').on('value', snap => {
-        const locs = snap.val();
-        const listaAdm = document.getElementById('lista-adm');
+        const locs = snap.val(); const listaAdm = document.getElementById('lista-adm');
         const listaMembro = document.getElementById('meus-livros');
-        listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '';
+        listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '<h4>📚 Meus Livros</h4>';
         if(!locs) return;
-
-        const mSessao = localStorage.getItem('ipb_membro');
-        const userAtual = mSessao ? JSON.parse(mSessao).user : null;
-
+        const userAtual = localStorage.getItem('ipb_membro') ? JSON.parse(localStorage.getItem('ipb_membro')).user : null;
         for(let id in locs) {
             const l = locs[id];
-            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
-                <strong>${l.membroNome}</strong> (${l.membroTel})<br>
-                Livro: ${l.livroNome}<br>
-                <small>Devolver em: <b>${l.dataDevolucao}</b></small><br>
-                <button class="btn-acao" style="margin-top:5px" onclick="darBaixa('${id}', '${l.livroId}')">Confirmar Devolução</button>
-            </div>`;
-            
-            if(userAtual === l.membroUser) {
-                listaMembro.innerHTML += `<div class="livro-item">
-                    <div><b>${l.livroNome}</b><br><small>Devolução: ${l.dataDevolucao}</small></div>
-                </div>`;
-            }
+            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;"><strong>${l.membroNome}</strong> - ${l.livroNome}<br><small>Devolver: ${l.dataDevolucao}</small><br><button class="btn-acao" onclick="darBaixa('${id}', '${l.livroId}')">Baixa</button></div>`;
+            if(userAtual === l.membroUser) listaMembro.innerHTML += `<div class="livro-item">${l.livroNome}<br><small>Devolver: ${l.dataDevolucao}</small></div>`;
         }
     });
 
-    function darBaixa(locId, livroId) {
-        const adm = sessionStorage.getItem('adm_ativo');
-        if(confirm("Confirmar baixa realizada por " + adm + "?")) {
-            db.ref('locacoes/' + locId).remove();
-            db.ref('livros/' + livroId).update({ status: 'disponivel' });
-        }
+    function cadastrarMembro() {
+        const d = { nome: document.getElementById('cad-nome').value, user: document.getElementById('cad-user').value.toLowerCase(), pass: document.getElementById('cad-pass').value, tel: document.getElementById('cad-tel').value };
+        db.ref('membros/' + d.user).set(d).then(() => { alert("OK!"); location.reload(); });
     }
-
-    verificarMembro();
+    function loginMembro() {
+        const u = document.getElementById('log-user').value.toLowerCase(); const p = document.getElementById('log-pass').value;
+        db.ref('membros/' + u).once('value', snap => { const m = snap.val(); if(m && m.pass === p) { localStorage.setItem('ipb_membro', JSON.stringify(m)); location.reload(); } });
+    }
+    function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
+    if(localStorage.getItem('ipb_membro')) { document.getElementById('tela-login').style.display='none'; document.getElementById('perfil-membro').style.display='block'; document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome; }
     if(sessionStorage.getItem('adm_ativo')) liberarAdm(sessionStorage.getItem('adm_ativo'));
 </script>
 </body>
