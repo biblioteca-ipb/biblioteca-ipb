@@ -2,307 +2,161 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca da Igreja Presbiteriana do Bairro Petrópolis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Biblioteca IPB Petrópolis</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    
     <style>
-        :root {
-            --primary: #006437; /* Verde IPB */
-            --accent: #2ecc71;  /* Verde Suave */
-            --bg: #f9fbf9;      
-            --white: #ffffff;
-            --text: #2c3e50;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --gray: #95a5a6;
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: var(--bg); color: var(--text); }
-
-        header { background: var(--white); padding: 25px 15px; text-align: center; border-bottom: 4px solid var(--primary); }
-        .logo-container img { max-width: 140px; height: auto; margin-bottom: 10px; }
-        header h2 { margin: 0; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; }
-
-        nav { display: flex; background: var(--primary); position: sticky; top: 0; z-index: 1000; }
-        nav button { flex: 1; padding: 15px 0; border: none; background: none; font-weight: bold; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 0.75rem; }
-        nav button.active { color: var(--white); background: rgba(255,255,255,0.15); border-bottom: 4px solid var(--accent); }
-
-        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; padding-bottom: 120px; }
+        :root { --primary: #006437; --accent: #2ecc71; --bg: #f4f7f4; --white: #ffffff; --text: #2c3e50; --danger: #e74c3c; }
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        header { background: var(--white); padding: 15px; text-align: center; border-bottom: 3px solid var(--primary); }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
         .section { display: none; }
         .section.active { display: block; }
-
-        .card { background: var(--white); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eef2ee; }
-
-        .livro-item { background: var(--white); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.03); }
-
-        .btn-principal { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
-        .btn-acao { background: var(--white); color: var(--primary); border: 1px solid var(--primary); padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .btn-devolver { background: var(--warning); color: #000; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.75rem; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; }
-        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
-
-        .status-tag { padding: 4px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; }
-        .status-pendente { background: #d1ecf1; color: #0c5460; }
-        .status-aguardando { background: #fff3cd; color: #856404; }
-
-        /* Rodapé com Endereço */
-        footer { 
-            background: #f1f1f1; 
-            text-align: center; 
-            padding: 20px; 
-            font-size: 0.85rem; 
-            border-top: 1px solid #ddd;
-            color: #666;
-        }
-        footer a { color: var(--primary); text-decoration: none; font-weight: bold; }
-
-        .cart-fab { position: fixed; bottom: 90px; right: 25px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 999; }
-        .cart-badge { position: absolute; top: 0; right: 0; background: var(--danger); color: white; border-radius: 50%; padding: 2px 7px; font-size: 0.7rem; }
-        
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .card { background: var(--white); padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; }
+        .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        nav { display: flex; background: var(--white); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        nav button { flex: 1; padding: 15px; border: none; background: none; font-weight: bold; color: #7f8c8d; cursor: pointer; }
+        nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
+        .livro-item { background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container"><img src="imagem.png" alt="Logo IPB"></div>
-    <h2>Biblioteca da Igreja Presbiteriana do Bairro Petrópolis</h2>
+    <h2>Biblioteca IPB Bairro Petrópolis</h2>
 </header>
 
-<nav>
-    <button onclick="mudarAba('catalogo')" id="btn-catalogo" class="active">ACERVO</button>
-    <button onclick="mudarAba('login-membro')" id="btn-login-membro">MINHA CONTA</button>
-    <button onclick="mudarAba('admin')" id="btn-admin">ADM</button>
-</nav>
-
 <div class="container">
-    
     <section id="catalogo" class="section active">
         <h3 style="color: var(--primary);">🌿 Livros Disponíveis</h3>
-        <div id="lista-catalogo"></div>
+        <div id="lista-catalogo">Conectando ao banco de dados...</div>
     </section>
 
-    <section id="login-membro" class="section">
-        <div id="membro-logado" style="display:none;">
-            <div class="card">
-                <h3>Olá, <span id="nome-perfil" style="color: var(--primary);"></span></h3>
-                <h4>📚 Meus Empréstimos</h4>
-                <div id="minhas-locacoes"></div>
-                <button onclick="logoutMembro()" class="btn-principal" style="background:var(--danger); margin-top:20px;">Sair da Conta</button>
-            </div>
-        </div>
-
+    <section id="conta" class="section">
         <div id="area-login">
             <div class="card">
-                <h3>Acessar</h3>
+                <h3>Acessar Conta</h3>
                 <input type="text" id="login-nome" placeholder="Seu Nome Completo">
-                <input type="tel" id="login-tel" placeholder="Seu WhatsApp">
                 <button class="btn-principal" onclick="loginMembro()">Entrar</button>
             </div>
-            <button class="btn-principal" style="background:var(--accent)" onclick="cadastrarMembro()">Criar Novo Cadastro</button>
         </div>
-    </section>
-
-    <section id="carrinho" class="section">
-        <div class="card">
-            <h3>🛒 Confirmar Reserva</h3>
-            <div id="itens-carrinho"></div>
-            <p><small>Os livros devem ser retirados pessoalmente após o culto.</small></p>
-            <button class="btn-principal" onclick="finalizarPedido()">Confirmar e Reservar</button>
+        <div id="perfil-membro" style="display:none;">
+            <div class="card">
+                <h3>Olá, <span id="nome-exibicao"></span></h3>
+                <div id="meus-livros"></div>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top:20px;">Sair</button>
+            </div>
         </div>
     </section>
 
     <section id="admin" class="section">
-        <div id="login-admin" class="card">
-            <h3>Painel ADM</h3>
-            <input type="text" id="adm-user" placeholder="Usuário">
-            <input type="password" id="adm-pass" placeholder="Senha">
-            <button class="btn-principal" onclick="fazerLoginAdmin()">Entrar</button>
+        <div id="area-adm-login" class="card">
+            <h3>Painel do Diácono</h3>
+            <input type="password" id="adm-pass" placeholder="Senha (padrão: ipb123)">
+            <button class="btn-principal" onclick="loginAdmin()">Entrar no Painel</button>
         </div>
-        
-        <div id="admin-panel" style="display:none;">
+        <div id="painel-adm" style="display:none;">
             <div class="card">
                 <h4>➕ Novo Livro</h4>
-                <input type="text" id="novo-livro-titulo" placeholder="Título do Livro">
-                <button class="btn-principal" onclick="adminAddLivro()">Adicionar ao Acervo</button>
+                <input type="text" id="novo-titulo" placeholder="Título do Livro">
+                <button class="btn-principal" onclick="addLivro()">Salvar Livro</button>
             </div>
-
-            <div class="card">
-                <h4>👥 Gestão de Locações</h4>
-                <div style="overflow-x: auto;">
-                    <table id="tabela-gestao">
-                        <thead>
-                            <tr>
-                                <th>Membro</th>
-                                <th>Livro</th>
-                                <th>Status</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
+            <div id="lista-adm" class="card"><h4>Locações</h4></div>
         </div>
     </section>
 </div>
 
-<div class="cart-fab" onclick="mudarAba('carrinho')">
-    🛒 <span class="cart-badge" id="cart-count">0</span>
-</div>
-
-<footer>
-    <strong>Igreja Presbiteriana do Bairro Petrópolis</strong><br>
-    <a href="https://www.google.com/maps/search/?api=1&query=Rua+Dr.+Francisco+Silveira,+500+-+Petropolis" target="_blank">
-        📍 Rua Dr. Francisco Silveira, 500 - Petrópolis
-    </a><br>
-    <small>© 2024 - Sistema de Biblioteca Eclesiástica</small>
-</footer>
+<nav>
+    <button onclick="mudarAba('catalogo')" id="nav-catalogo" class="active">LIVROS</button>
+    <button onclick="mudarAba('conta')" id="nav-conta">CONTA</button>
+    <button onclick="mudarAba('admin')" id="nav-admin">ADM</button>
+</nav>
 
 <script>
-    // [O MESMO SCRIPT ANTERIOR COM A LÓGICA DE DEVOLUÇÃO E GESTÃO]
-    let livros = JSON.parse(localStorage.getItem('ipb_livros')) || [
-        {id: 1, titulo: "O Peregrino", status: 'disponivel'},
-        {id: 2, titulo: "Institutas de Calvino", status: 'disponivel'},
-        {id: 3, titulo: "Em Seus Passos o Que Faria Jesus?", status: 'disponivel'}
-    ];
-    let membros = JSON.parse(localStorage.getItem('ipb_membros')) || [];
-    let locacoes = JSON.parse(localStorage.getItem('ipb_locacoes')) || [];
-    let cart = [];
-    let userLogado = null;
+    // Configurações do seu Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
+        authDomain: "biblioteca-ipb.firebaseapp.com",
+        databaseURL: "https://biblioteca-ipb-default-rtdb.firebaseio.com",
+        projectId: "biblioteca-ipb",
+        storageBucket: "biblioteca-ipb.firebasestorage.app",
+        messagingSenderId: "140869477812",
+        appId: "1:140869477812:web:d4a57845136c2958403ee1"
+    };
+
+    // Inicialização segura
+    try {
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
+        console.log("Firebase conectado com sucesso.");
+    } catch (e) {
+        console.error("Erro ao conectar Firebase:", e);
+        alert("Erro de conexão. Verifique se o Firebase está configurado corretamente.");
+    }
 
     function mudarAba(aba) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.getElementById(aba).classList.add('active');
-        if(document.getElementById('btn-'+aba)) document.getElementById('btn-'+aba).classList.add('active');
-        renderizar();
+        document.getElementById('nav-' + aba).classList.add('active');
     }
 
-    function cadastrarMembro() {
-        const nome = prompt("Nome Completo:");
-        const tel = prompt("WhatsApp:");
-        if(nome && tel) {
-            membros.push({nome, tel});
-            localStorage.setItem('ipb_membros', JSON.stringify(membros));
-            alert("Membro cadastrado com sucesso!");
+    function loginAdmin() {
+        const pass = document.getElementById('adm-pass').value;
+        console.log("Tentativa de login ADM...");
+        if(pass === "ipb123") {
+            document.getElementById('area-adm-login').style.display = 'none';
+            document.getElementById('painel-adm').style.display = 'block';
+        } else {
+            alert("Senha Incorreta! Tente 'ipb123'");
         }
     }
+
+    function addLivro() {
+        const t = document.getElementById('novo-titulo').value;
+        if(t) {
+            db.ref('livros').push({ titulo: t, status: 'disponivel' })
+            .then(() => { alert("Livro Salvo!"); document.getElementById('novo-titulo').value = ''; })
+            .catch((e) => alert("Erro ao salvar: " + e.message));
+        }
+    }
+
+    // Listener de livros
+    db.ref('livros').on('value', (snap) => {
+        const livros = snap.val();
+        const lista = document.getElementById('lista-catalogo');
+        lista.innerHTML = '';
+        if(!livros) { lista.innerHTML = "Nenhum livro cadastrado."; return; }
+        for(let id in livros) {
+            lista.innerHTML += `<div class="livro-item">
+                ${livros[id].titulo} 
+                <button class="btn-principal" style="width:auto; padding:5px 10px;" onclick="reservar('${id}', '${livros[id].titulo}')" ${livros[id].status !== 'disponivel' ? 'disabled' : ''}>
+                    ${livros[id].status === 'disponivel' ? 'Pegar' : 'Locado'}
+                </button>
+            </div>`;
+        }
+    });
 
     function loginMembro() {
-        const nome = document.getElementById('login-nome').value;
-        const user = membros.find(m => m.nome.toLowerCase() === nome.toLowerCase());
-        if(user) {
-            userLogado = user;
-            document.getElementById('area-login').style.display = 'none';
-            document.getElementById('membro-logado').style.display = 'block';
-            document.getElementById('nome-perfil').innerText = user.nome;
-            mudarAba('catalogo');
-        } else { alert("Membro não encontrado!"); }
-    }
-
-    function logoutMembro() { userLogado = null; location.reload(); }
-
-    function addCarrinho(id) {
-        if(!userLogado) { alert("Acesse 'Minha Conta' para reservar!"); mudarAba('login-membro'); return; }
-        const livro = livros.find(l => l.id === id);
-        if(!cart.includes(livro)) { cart.push(livro); renderizar(); }
-    }
-
-    function finalizarPedido() {
-        if(cart.length === 0) return;
-        const dev = new Date(); dev.setDate(dev.getDate() + 15);
-        cart.forEach(l => {
-            locacoes.push({
-                id: Date.now() + Math.random(),
-                membro: userLogado.nome,
-                livro: l.titulo,
-                livroId: l.id,
-                dataDev: dev.toLocaleDateString('pt-BR'),
-                status: 'com_membro'
-            });
-            livros.find(liv => liv.id === l.id).status = 'locado';
-        });
-        localStorage.setItem('ipb_locacoes', JSON.stringify(locacoes));
-        localStorage.setItem('ipb_livros', JSON.stringify(livros));
-        cart = [];
-        alert("Reserva concluída! Retire seu livro na igreja.");
-        mudarAba('login-membro');
-    }
-
-    function membroSolicitarDevolucao(locId) {
-        const idx = locacoes.findIndex(l => l.id === locId);
-        locacoes[idx].status = 'aguardando_confirmacao';
-        localStorage.setItem('ipb_locacoes', JSON.stringify(locacoes));
-        alert("Sinalizado! Entregue o livro ao responsável na igreja para confirmação.");
-        renderizar();
-    }
-
-    function admConfirmarRecebimento(locId, livroId) {
-        locacoes = locacoes.filter(loc => loc.id !== locId);
-        const idx = livros.findIndex(l => l.id === livroId);
-        if(idx !== -1) livros[idx].status = 'disponivel';
-        localStorage.setItem('ipb_locacoes', JSON.stringify(locacoes));
-        localStorage.setItem('ipb_livros', JSON.stringify(livros));
-        renderizar();
-    }
-
-    function fazerLoginAdmin() {
-        if(document.getElementById('adm-user').value === "ipb" && document.getElementById('adm-pass').value === "ipbbrasil") {
-            document.getElementById('login-admin').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
-            renderizar();
+        const n = document.getElementById('login-nome').value;
+        if(n) {
+            localStorage.setItem('ipb_user', n);
+            location.reload();
         }
     }
 
-    function adminAddLivro() {
-        const t = document.getElementById('novo-livro-titulo').value;
-        if(!t) return;
-        livros.push({id: Date.now(), titulo: t, status: 'disponivel'});
-        localStorage.setItem('ipb_livros', JSON.stringify(livros));
-        document.getElementById('novo-livro-titulo').value = "";
-        renderizar();
+    const user = localStorage.getItem('ipb_user');
+    if(user) {
+        document.getElementById('area-login').style.display = 'none';
+        document.getElementById('perfil-membro').style.display = 'block';
+        document.getElementById('nome-exibicao').innerText = user;
     }
 
-    function renderizar() {
-        const list = document.getElementById('lista-catalogo');
-        list.innerHTML = livros.map(l => `
-            <div class="livro-item">
-                <strong>${l.titulo}</strong>
-                <button class="btn-acao" onclick="${l.status==='disponivel'?`addCarrinho(${l.id})`:''}" ${l.status!=='disponivel'?'disabled':''}>
-                    ${l.status==='disponivel'?'RESERVAR':'LOCADO'}
-                </button>
-            </div>`).join('');
-
-        document.getElementById('cart-count').innerText = cart.length;
-        document.getElementById('itens-carrinho').innerHTML = cart.map(c => `<p>📖 ${c.titulo}</p>`).join('');
-
-        if(userLogado) {
-            const mLocs = locacoes.filter(loc => loc.membro === userLogado.nome);
-            document.getElementById('minhas-locacoes').innerHTML = mLocs.map(m => `
-                <div class="card" style="border-left: 5px solid ${m.status === 'aguardando_confirmacao' ? 'var(--warning)' : 'var(--accent)'}">
-                    <p><strong>${m.livro}</strong><br><small>Devolução: ${m.dataDev}</small></p>
-                    ${m.status === 'com_membro' 
-                        ? `<button class="btn-devolver" onclick="membroSolicitarDevolucao(${m.id})">Entreguei o Livro</button>` 
-                        : `<span class="status-tag status-aguardando">Aguardando Validação</span>`}
-                </div>`).join('') || "<p>Nenhum empréstimo ativo.</p>";
-        }
-
-        const tab = document.querySelector('#tabela-gestao tbody');
-        tab.innerHTML = locacoes.map(loc => `
-            <tr>
-                <td>${loc.membro}</td>
-                <td>${loc.livro}</td>
-                <td><span class="status-tag ${loc.status === 'aguardando_confirmacao' ? 'status-aguardando' : 'status-pendente'}">
-                    ${loc.status === 'aguardando_confirmacao' ? 'VALIDAR' : 'Com Membro'}
-                </span></td>
-                <td>
-                    <button class="btn-acao" onclick="admConfirmarRecebimento(${loc.id}, ${loc.livroId})">Baixa</button>
-                </td>
-            </tr>`).join('') || "<tr><td colspan='4'>Nenhuma locação ativa.</td></tr>";
-    }
-
-    renderizar();
+    function logout() { localStorage.removeItem('ipb_user'); location.reload(); }
 </script>
 </body>
 </html>
