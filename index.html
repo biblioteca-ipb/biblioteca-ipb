@@ -265,6 +265,22 @@
             border-color: var(--gray);
             color: var(--text);
         }
+        
+        /* Estilos dos botões pequenos de ação (edit/danger) MANTIDOS */
+        .btn-edit-small, .btn-danger-small {
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--white);
+            transition: background 0.2s;
+        }
+        .btn-edit-small { background-color: var(--accent); }
+        .btn-edit-small:hover { background-color: var(--primary-light); }
+        .btn-danger-small { background-color: var(--danger); }
+        .btn-danger-small:hover { background-color: #b71c1c; }
 
         /* --- NAVEGAÇÃO FLUTUANTE ESTILO APP (MANTIDO) --- */
         nav { 
@@ -653,7 +669,7 @@
             }
         }
 
-        // Gestão Membros ADM (CORRIGIDO PARA USAR CHAVE SANITIZADA NO BLOQUEIO)
+        // Gestão Membros ADM - MANTIDO COM NOVA EXCLUSÃO MESTRE
         const listaMembrosAdm = document.getElementById('lista-membros-adm');
         if(listaMembrosAdm) {
             listaMembrosAdm.innerHTML = '';
@@ -666,8 +682,22 @@
             membrosArr.forEach(m => {
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
                 const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
-                // O botão de bloqueio usa a chave sanitizada direta do DB (chaveDb)
-                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><strong>${m.nome}</strong><br><small>${m.user} | ${m.tel || ''}</small>${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem;">Whats</a>` : ''}</div><button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button></div>`;
+                
+                // O container do membro agora tem layout flex para os botões mestre
+                listaMembrosAdm.innerHTML += `
+                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                        <div>
+                            <strong>${m.nome}</strong><br>
+                            <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
+                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats</a>` : ''}
+                        </div>
+                        <div style="display:flex; gap: 5px; align-items:center;">
+                            <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
+                                ${m.bloqueado ? 'Desbloquear' : 'Bloquear'}
+                            </button>
+                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X</button>
+                        </div>
+                    </div>`;
             });
         }
     });
@@ -688,7 +718,11 @@
             if(!["15","20","30"].includes(prazo)) return;
             const dataDev = new Date(); dataDev.setDate(dataDev.getDate() + parseInt(prazo));
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
-                if(result.committed) db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR') });
+                if(result.committed) {
+                    db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR') });
+                    // NOVO MESTRE: Mensagem de retirada mestre
+                    alert("Mestre, reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
+                }
             });
         });
     }
@@ -722,6 +756,17 @@
     
     function removerAdmin(id) {
         if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
+    }
+    
+    // NOVO MESTRE: Função ADM para excluir conta de usuário mestre
+    function excluirMembroMestre(chaveDb, nomeMembro) {
+        if(confirm("Mestre, tem certeza que deseja excluir permanentemente a conta e TODOS os dados de '" + nomeMembro + "'? Esta ação não pode ser desfeita mestre.")) {
+            db.ref('membros/' + chaveDb).remove().then(() => {
+                alert("Mestre, conta de '" + nomeMembro + "' excluída com sucesso.");
+            }).catch(err => {
+                alert("Erro mestre ao excluir conta: " + err.message);
+            });
+        }
     }
 
     function loginAdmin() {
@@ -775,54 +820,44 @@
         }
     });
 
-    // --- GESTÃO DE CONTA (MEMBRO) (CORRIGIDO PARA USAR E-MAIL SANITIZADO) ---
+    // --- GESTÃO DE CONTA (MEMBRO) (CORRIGIDO PARA USAR E-MAIL SANITIZADO) (MANTIDO) ---
     
-    // CORREÇÃO: Função de cadastro melhorada para sanitizar e-mail e tratar erro
     function cadastrarMembro() {
         const nome = document.getElementById('cad-nome').value.trim();
-        const emailOriginal = document.getElementById('cad-user').value.trim().toLowerCase(); // Mantém original
+        const emailOriginal = document.getElementById('cad-user').value.trim().toLowerCase(); 
         const pass = document.getElementById('cad-pass').value.trim();
         const tel = document.getElementById('cad-tel').value.trim();
 
         if(!nome || !emailOriginal || !pass) return alert("Por favor mestre, preencha Nome, E-mail (Usuário) e Senha!");
         if(pass.length < 6) return alert("A senha mestre deve ter pelo menos 6 caracteres!");
 
-        // NOVA FUNÇÃO UTILITÁRIA PARA SANITIZAR E-MAIL mestre
-        // Firebase não aceita ponto '.', trocamos por underscore '_' mestre
         const emailSanitizado = sanitizarEmail(emailOriginal);
 
         const d = { nome, user: emailOriginal, pass, tel, bloqueado: false, dataCadastro: new Date().toLocaleDateString('pt-BR') };
 
-        // CORREÇÃO MESTRE: Usar o e-mail sanitizado como chave mestre do banco de dados
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             if(snap.exists()) {
                 alert("Mestre, este e-mail já está cadastrado no sistema.");
             } else {
-                // Salvar direto no Database, sem criar Auth seguro mestre
                 db.ref('membros/' + emailSanitizado).set(d).then(() => {
                     alert("Cadastro realizado mestre! Use seu e-mail e senha para entrar.");
                     mostrarLogin();
-                }).catch(err => alert("Erro mestre ao cadastrar: " + err.message)); // Alerta mestre se der erro mestre
+                }).catch(err => alert("Erro mestre ao cadastrar: " + err.message)); 
             }
         });
     }
     
-    // Login SIMPLIFICADO (MANTIDO E CORRIGIDO PARA USAR E-MAIL SANITIZADO)
     function loginMembro() {
         const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
         const passInput = document.getElementById('log-pass').value;
         
         if(!emailInput || !passInput) return alert("Preencha usuário e senha mestre!");
 
-        // CORREÇÃO MESTRE: Sanitizar e-mail para buscar chave mestre no banco
         const emailSanitizado = sanitizarEmail(emailInput);
 
-        // Chave do database trocou ponto '.' por underscore '_' mestre
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             const m = snap.val(); 
-            // Comparação de e-mail e senha direto mestre (sem auth)
             if(m && m.user === emailInput && m.pass === passInput) {
-                // Login sucesso, salva e-mail original para exibição mestre
                 localStorage.setItem('ipb_membro', JSON.stringify(m)); 
                 location.reload(); 
             } else {
