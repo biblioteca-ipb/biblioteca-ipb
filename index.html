@@ -516,12 +516,24 @@
     }
 
     // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
+    // CORREÇÃO: Adicionado window.scrollTo para ir ao topo mestre
     function mudarAba(aba) {
+        // Remove active de todos
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        
+        // Ativa o novo mestre
         document.getElementById(aba).classList.add('active');
         document.getElementById('nav-' + aba).classList.add('active');
-        if(aba === 'admin') cancelarEdicao(); // Cancela edição se mudar de aba
+        
+        // Cancela edição se mudar de aba
+        if(aba === 'admin') cancelarEdicao(); 
+
+        // NOVA CORREÇÃO: Vai para o topo da página suavemente ao mudar mestre
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
 
     // --- UTILITÁRIOS DE DADOS ---
@@ -675,7 +687,6 @@
             listaMembrosAdm.innerHTML = '';
             let membrosArr = [];
             for(let chaveMembro in membros) {
-                // A chaveMembro já está sanitizada (com underscore) vinda do DB
                 membrosArr.push({chaveDb: chaveMembro, ...membros[chaveMembro]});
             }
             membrosArr.sort((a,b) => a.nome.localeCompare(b.nome));
@@ -683,7 +694,6 @@
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
                 const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
                 
-                // O container do membro agora tem layout flex para os botões mestre
                 listaMembrosAdm.innerHTML += `
                     <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:10px;">
                         <div>
@@ -708,7 +718,6 @@
         if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
         
-        // CORREÇÃO MESTRE: Sanitizar o e-mail logado para buscar no banco mestre
         const emailSanitizado = sanitizarEmail(mLocal.user);
         
         db.ref('membros/' + emailSanitizado).once('value', snap => {
@@ -720,7 +729,6 @@
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
                     db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR') });
-                    // NOVO MESTRE: Mensagem de retirada mestre
                     alert("Mestre, reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
                 }
             });
@@ -758,7 +766,6 @@
         if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
     }
     
-    // NOVO MESTRE: Função ADM para excluir conta de usuário mestre
     function excluirMembroMestre(chaveDb, nomeMembro) {
         if(confirm("Mestre, tem certeza que deseja excluir permanentemente a conta e TODOS os dados de '" + nomeMembro + "'? Esta ação não pode ser desfeita mestre.")) {
             db.ref('membros/' + chaveDb).remove().then(() => {
