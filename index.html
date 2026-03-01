@@ -232,6 +232,24 @@
             font-size: 1rem; 
         }
         
+        /* Botão Secundário para gestão */
+        .btn-secundario {
+            background: var(--white);
+            color: var(--gray);
+            border: 2px solid #edf2ef;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        .btn-secundario:hover {
+            border-color: var(--gray);
+            color: var(--text);
+        }
+
         .btn-danger-small {
             border: none;
             padding: 4px 8px;
@@ -368,6 +386,15 @@
         </div>
         
         <div id="painel-adm" style="display:none;">
+            
+            <div class="card">
+                <h4>🔐 Gestão de Administradores ADM</h4>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel.</p>
+                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs...</div>
+                <input type="email" id="novo-admin-email" placeholder="E-mail do novo Administrador">
+                <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
+            </div>
+
             <div class="card">
                 <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
                 <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
@@ -545,7 +572,7 @@
         }
     });
 
-    // --- RESERVA (MANTIDO) ---
+    // --- RESERVA (MANTIDO COM MENSAGEM) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
@@ -559,13 +586,43 @@
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
                     db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
-                    alert("Reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
+                    alert("Reserva realizada! Procure o responsável na IPB Petrópolis para retirar seu livro.");
                 }
             });
         });
     }
 
-    // --- FUNÇÕES ADM (MANTIDO) ---
+    // --- FUNÇÕES ADM (MANTIDO E EXPANDIDO) ---
+    
+    // NOVO: Gestão de e-mails ADM no Database (READICIONADO)
+    db.ref('admins_emails').on('value', snap => {
+        const emailsObj = snap.val();
+        const listaGeral = document.getElementById('lista-admins-geral');
+        if(!listaGeral) return;
+        listaGeral.innerHTML = '';
+        if(!emailsObj){
+            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado. Apenas a conta master funciona.</small>';
+            return;
+        }
+        for(let id in emailsObj){
+            const email = emailsObj[id];
+            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X</button></div>`;
+        }
+    });
+
+    function promoverParaAdmin() {
+        const email = document.getElementById('novo-admin-email').value.trim().toLowerCase();
+        if(!email || !email.includes('@')) return alert("Digite um e-mail válido.");
+        db.ref('admins_emails').push(email).then(() => {
+            alert("E-mail adicionado à lista de administradores.");
+            document.getElementById('novo-admin-email').value = '';
+        });
+    }
+    
+    function removerAdmin(id) {
+        if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
+    }
+
     function excluirLivro(id) {
         if(confirm("Tem certeza que deseja excluir este livro?")) {
             db.ref('livros/' + id).remove();
@@ -581,12 +638,33 @@
     function loginAdmin() {
         const u = document.getElementById('adm-user').value.trim().toLowerCase();
         const p = document.getElementById('adm-pass').value;
+        
+        // Checagem Master original
         if(u === "ipb" && p === "ipbbrasil") { 
             sessionStorage.setItem('adm_ativo', "Master"); 
             location.reload(); 
-        } else {
-            alert("Dados ADM incorretos.");
+            return;
         }
+
+        // Checagem por e-mail no Database (READICIONADO)
+        db.ref('admins_emails').once('value', snap => {
+            const emailsObj = snap.val();
+            let emailPermitido = false;
+            if(emailsObj){
+                for(let id in emailsObj){
+                    if(emailsObj[id] === u){
+                        emailPermitido = true;
+                        break;
+                    }
+                }
+            }
+            
+            if(emailPermitido){
+                alert("Para e-mails ADM funcionarem, é necessário reativar o Firebase Auth no painel da internet.");
+            } else {
+                alert("Este e-mail não tem permissão ADM ou os dados estão incorretos.");
+            }
+        });
     }
     
     function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
