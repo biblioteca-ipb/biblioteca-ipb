@@ -343,7 +343,7 @@
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
         <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
-        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria mestre.</p>
+        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria.</p>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
@@ -389,57 +389,57 @@
             
             <div class="card">
                 <h4>🔐 Gestão de Administradores ADM</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel mestre.</p>
-                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs mestre...</div>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel.</p>
+                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs...</div>
                 <input type="email" id="novo-admin-email" placeholder="E-mail do novo Administrador">
-                <input type="password" id="novo-admin-pass" placeholder="Senha para este ADM mestre">
+                <input type="password" id="novo-admin-pass" placeholder="Senha para este ADM">
                 <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
             </div>
 
             <div class="card">
-                <h4>🏷️ Gestão de Categorias mestre</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Adicione ou remova categorias mestre mestre para os livros mestre mestre.</p>
-                <div id="lista-categorias-adm" style="margin-bottom: 10px; max-height: 150px; overflow-y:auto;">Carregando categorias mestre...</div>
-                <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria mestre">
-                <button class="btn-secundario" onclick="adicionarCategoria()">ADICIONAR CATEGORIA MESTRE</button>
+                <h4>🏷️ Gestão de Categorias</h4>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Adicione ou remova categorias para os livros.</p>
+                <div id="lista-categorias-adm" style="margin-bottom: 10px; max-height: 150px; overflow-y:auto;">Carregando categorias...</div>
+                <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria">
+                <button class="btn-secundario" onclick="adicionarCategoria()">ADICIONAR CATEGORIA</button>
             </div>
 
-            <div class="card">
-                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro mestre</h4>
+            <div class="card" id="card-form-livro">
+                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
                 <input type="hidden" id="edit-livro-id" value="">
-                <label>Título do Livro mestre</label>
+                <label>Título do Livro</label>
                 <input type="text" id="novo-titulo" placeholder="Ex: O Peregrino">
-                <label>Categoria mestre</label>
+                <label>Categoria</label>
                 <select id="novo-categoria">
-                    <option value="" disabled selected>Selecione uma categoria mestre</option>
+                    <option value="" disabled selected>Selecione uma categoria</option>
                     </select>
-                <label>Breve Resumo mestre</label>
-                <textarea id="novo-resumo" placeholder="Sobre o que fala este livro mestre..." rows="3"></textarea>
-                <label>Quantidade mestre</label>
+                <label>Breve Resumo</label>
+                <textarea id="novo-resumo" placeholder="Sobre o que fala este livro..." rows="3"></textarea>
+                <label>Quantidade</label>
                 <input type="number" id="novo-qtd" placeholder="Quantidade" value="1" min="1">
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-principal" id="btn-salvar-livro" style="margin-top:0;" onclick="salvarLivro()">SALVAR LIVRO MESTRE</button>
+                    <button class="btn-principal" id="btn-salvar-livro" style="margin-top:0;" onclick="salvarLivro()">SALVAR LIVRO</button>
                     <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray); margin-top:0;" onclick="cancelarEdicao()">CANCELAR</button>
                 </div>
             </div>
 
             <div class="card">
-                <h4>📚 Gestão do Acervo (Editar/Excluir) mestre</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo mestre...</div>
+                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
             </div>
 
             <div class="card">
-                <h4>📊 Empréstimos Ativos (Dar Baixa) mestre</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Clique mestre em dar baixa mestre quando o membro mestre devolver mestre o livro mestre físico mestre mestre.</p>
-                <div id="lista-adm">Nenhum empréstimo ativo mestre.</div>
+                <h4>📊 Empréstimos Ativos (Dar Baixa)</h4>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Clique em dar baixa quando o membro devolver o livro físico.</p>
+                <div id="lista-adm">Nenhum empréstimo ativo.</div>
             </div>
             
             <div class="card">
-                <h4>👥 Gestão de Membros mestre</h4>
-                <div id="lista-membros-adm">Carregando membros mestre...</div>
+                <h4>👥 Gestão de Membros</h4>
+                <div id="lista-membros-adm">Carregando membros...</div>
             </div>
 
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM mestre</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
         </div>
     </section>
 </div>
@@ -452,7 +452,7 @@
 </nav>
 
 <script>
-    // Configuração Firebase mestre (Sua configuração original)
+    // Configuração Firebase (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -471,40 +471,40 @@
         return email.replace(/\./g, '_');
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA MESTRE ---
-    // Ajusta tamanho do banner e rola para o topo mestre
+    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA ---
+    // Ajusta tamanho do banner e rola para o topo
     function mudarAba(abaId) {
-        // 1. Esconde todas as seções mestre
+        // 1. Esconde todas as seções
         const secoes = document.querySelectorAll('.section');
         secoes.forEach(s => s.classList.remove('active'));
         
-        // 2. Remove destaque de todos os botões mestre
+        // 2. Remove destaque de todos os botões
         const botoes = document.querySelectorAll('nav button');
         botoes.forEach(b => b.classList.remove('active'));
         
-        // 3. Mostra a seção clicada mestre
+        // 3. Mostra a seção clicada
         const secaoAtiva = document.getElementById(abaId);
         if (secaoAtiva) {
             secaoAtiva.classList.add('active');
         }
         
-        // 4. Destaque o botão clicado mestre
+        // 4. Destaque o botão clicado
         const botaoAtivo = document.getElementById('nav-' + abaId);
         if (botaoAtivo) {
             botaoAtivo.classList.add('active');
         }
         
-        // 5. LÓGICA DO BANNER DINÂMICO MESTRE
+        // 5. LÓGICA DO BANNER DINÂMICO
         const header = document.getElementById('main-header');
         if (abaId === 'inicio') {
-            // Se for Home mestre, banner grande mestre
+            // Se for Home, banner grande
             header.classList.remove('header-reduzido');
         } else {
-            // Se for qualquer outra aba mestre, reduz o banner automaticamente mestre
+            // Se for qualquer outra aba, reduz o banner automaticamente
             header.classList.add('header-reduzido');
         }
         
-        // 6. Rolagem INSTANTÂNEA mestre para o topo absoluto mestre
+        // 6. Rolagem INSTANTÂNEA para o topo absoluto
         window.scrollTo({
             top: 0,
             left: 0,
@@ -538,32 +538,32 @@
     db.ref().on('value', snap => {
         const dados = snap.val() || {};
         const livrosRaw = dados.livros || {};
-        const locacoesRaw = dados.locacoes || {}; // NOVO: MANTIDO
+        const locacoesRaw = dados.locacoes || {}; // MANTIDO
         const membros = dados.membros || {};
-        const categoriasRaw = dados.categorias || {}; // NOVO MESTRE
+        const categoriasRaw = dados.categorias || {}; 
         
         const livrosAgrupados = processarLivros(livrosRaw);
 
-        // Catálogo Usuário mestre
+        // Catálogo Usuário
         const listaCatalogo = document.getElementById('lista-catalogo');
         listaCatalogo.innerHTML = '';
         for (let categoria in livrosAgrupados) {
             listaCatalogo.innerHTML += `<div class="catalogo-categoria-titulo">${categoria}</div>`;
             livrosAgrupados[categoria].forEach(l => {
-                const resumoTxt = l.resumo || "Sem resumo disponível mestre.";
+                const resumoTxt = l.resumo || "Sem resumo disponível.";
                 const estaEsgotado = l.qtdAtual <= 0;
                 listaCatalogo.innerHTML += `
                     <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
                         <div class="livro-topo">
                             <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR mestre</button>
+                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
                         </div>
                         <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
             });
         }
         
-        // Gestão ACERVO ADM (MANTIDO EXPANDIDO COM EDIÇÃO MESTRE)
+        // Gestão ACERVO ADM (MANTIDO EXPANDIDO COM EDIÇÃO)
         const listaGestao = document.getElementById('gestao-livros-lista');
         if(listaGestao) {
             listaGestao.innerHTML = '';
@@ -575,35 +575,35 @@
                             <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
                             <div class="gestao-acoes" style="display:flex; gap:5px;">
                                 <button class="btn-acao" style="padding: 2px 6px; color:var(--primary-light); border-color:var(--primary-light)" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
-                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X mestre</button>
+                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
                             </div>
                         </div>`;
                 });
             }
         }
 
-        // NOVO MESTRE: Gestão CATEGORIAS ADM mestre
+        // Gestão CATEGORIAS ADM 
         const listaCategoriasAdm = document.getElementById('lista-categorias-adm');
         const selectCategorias = document.getElementById('novo-categoria');
         if(listaCategoriasAdm && selectCategorias) {
             listaCategoriasAdm.innerHTML = '';
-            // Reseta mestre mestre o select mestre mestre, mantendo a opção mestre mestre padrão mestre
-            selectCategorias.innerHTML = '<option value="" disabled selected>Selecione uma categoria mestre</option>';
+            // Reseta o select, mantendo a opção padrão
+            selectCategorias.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
             
             for(let idCat in categoriasRaw){
                 const catNome = categoriasRaw[idCat];
-                // Popula mestre mestre a lista mestre mestre mestre
+                // Popula a lista
                 listaCategoriasAdm.innerHTML += `
                     <div style="padding:5px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                         <small>${catNome}</small>
-                        <button class="btn-danger-small" style="padding: 2px 6px;" onclick="excluirCategoria('${idCat}', '${catNome}')">X mestre</button>
+                        <button class="btn-danger-small" style="padding: 2px 6px;" onclick="excluirCategoria('${idCat}', '${catNome}')">X</button>
                     </div>`;
-                // Popula mestre mestre o select mestre mestre mestre
+                // Popula o select
                 selectCategorias.innerHTML += `<option value="${catNome}">${catNome}</option>`;
             }
         }
 
-        // Gestão EMPRÉSTIMOS mestre ADM mestre (MANTIDO MESTRE)
+        // Gestão EMPRÉSTIMOS ADM (MANTIDO)
         const listaAdmEmprestimos = document.getElementById('lista-adm');
         if(listaAdmEmprestimos){
             listaAdmEmprestimos.innerHTML = '';
@@ -619,10 +619,10 @@
                             <small>${loc.membroNome} (@${loc.membroUser})</small><br>
                             <small style="color:${corStatus}">Devolver: ${loc.dataDevolucao}</small>
                         </div>
-                        <button class="btn-acao" onclick="darBaixaEmprestimo('${idLoc}', '${loc.livroId}', '${loc.livroNome.replace(/'/g, "\\'")}')">Dar Baixa mestre</button>
+                        <button class="btn-acao" onclick="darBaixaEmprestimo('${idLoc}', '${loc.livroId}', '${loc.livroNome.replace(/'/g, "\\'")}')">Dar Baixa</button>
                     </div>`;
             }
-            if(!temLocacao) listaAdmEmprestimos.innerHTML = 'Nenhum empréstimo ativo mestre.';
+            if(!temLocacao) listaAdmEmprestimos.innerHTML = 'Nenhum empréstimo ativo.';
         }
 
         // Gestão Membros ADM (MANTIDO)
@@ -643,13 +643,13 @@
                         <div>
                             <strong>${m.nome}</strong><br>
                             <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
-                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats mestre</a>` : ''}
+                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats</a>` : ''}
                         </div>
                         <div style="display:flex; gap: 5px; align-items:center;">
                             <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
-                                ${m.bloqueado ? 'Desbloquear mestre' : 'Bloquear mestre'}
+                                ${m.bloqueado ? 'Desbloquear' : 'Bloquear'}
                             </button>
-                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X mestre</button>
+                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X</button>
                         </div>
                     </div>`;
             });
@@ -659,18 +659,18 @@
     // --- RESERVA (MANTIDO COM MENSAGEM) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
-        if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
+        if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
         const emailSanitizado = sanitizarEmail(mLocal.user);
         
         db.ref('membros/' + emailSanitizado).once('value', snap => {
             const mDb = snap.val();
-            if(mDb.bloqueado) return alert("Sua conta está bloqueada mestre.");
+            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
             
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
                     db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
-                    alert("Reserva realizada mestre! Procure o responsável na IPB Ibirité para retirar seu livro mestre.");
+                    alert("Reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
                 }
             });
         });
@@ -678,55 +678,55 @@
 
     // --- FUNÇÕES ADM (MANTIDO E EXPANDIDO) ---
     
-    // Gestão de e-mails/senhas ADM no Database mestre (MANTIDOEXPANDIDO)
+    // Gestão de e-mails/senhas ADM no Database (MANTIDOEXPANDIDO)
     db.ref('admins_emails').on('value', snap => {
         const emailsObj = snap.val();
         const listaGeral = document.getElementById('lista-admins-geral');
         if(!listaGeral) return;
         listaGeral.innerHTML = '';
         if(!emailsObj){
-            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado mestre. Apenas a conta master funciona mestre.</small>';
+            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado. Apenas a conta master funciona.</small>';
             return;
         }
         for(let id in emailsObj){
             const mData = emailsObj[id];
-            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${mData.email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X mestre</button></div>`;
+            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${mData.email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X</button></div>`;
         }
     });
 
     function promoverParaAdmin() {
         const email = document.getElementById('novo-admin-email').value.trim().toLowerCase();
-        const pass = document.getElementById('novo-admin-pass').value.trim(); // NOVO MESTRE
-        if(!email || !email.includes('@')) return alert("Digite um e-mail válido mestre.");
-        if(pass.length < 5) return alert("Defina mestre mestre uma senha mestre mestre de mestre mestre pelo menos mestre mestre 5 mestre mestre caracteres mestre mestre."); // NOVO MESTRE
+        const pass = document.getElementById('novo-admin-pass').value.trim(); 
+        if(!email || !email.includes('@')) return alert("Digite um e-mail válido.");
+        if(pass.length < 5) return alert("Defina uma senha de pelo menos 5 caracteres."); 
 
         db.ref('admins_emails').push({email: email, pass: pass}).then(() => {
-            alert("Administrador adicionado com sucesso mestre.");
+            alert("Administrador adicionado com sucesso.");
             document.getElementById('novo-admin-email').value = '';
             document.getElementById('novo-admin-pass').value = '';
         });
     }
     
     function removerAdmin(id) {
-        if(confirm("Remover acesso ADM deste e-mail mestre?")) db.ref('admins_emails/' + id).remove();
+        if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
     }
 
-    // NOVO MESTRE: Gestão CATEGORIAS mestre mestre
+    // Gestão CATEGORIAS 
     function adicionarCategoria() {
         const nome = document.getElementById('nova-categoria-nome').value.trim();
-        if(!nome) return alert("Digite mestre mestre o mestre mestre nome mestre mestre mestre mestre da mestre mestre categoria mestre mestre mestre mestre.");
+        if(!nome) return alert("Digite o nome da categoria.");
         db.ref('categorias').push(nome).then(() => {
-            alert("Categoria adicionada mestre.");
+            alert("Categoria adicionada.");
             document.getElementById('nova-categoria-nome').value = '';
         });
     }
     function excluirCategoria(id, nome) {
-        if(confirm(`Mestre, deseja excluir permanentemente a categoria mestre '${nome}'? mestre mestre mestre`)) {
+        if(confirm(`Deseja excluir permanentemente a categoria '${nome}'?`)) {
             db.ref('categorias/' + id).remove();
         }
     }
 
-    // NOVO: Gestão CADASTRO/EDIÇÃO mestre mestre LIVROS mestre mestre
+    // Gestão CADASTRO/EDIÇÃO LIVROS 
     function salvarLivro() {
         const idInput = document.getElementById('edit-livro-id').value;
         const t = document.getElementById('novo-titulo').value.trim();
@@ -734,11 +734,11 @@
         const r = document.getElementById('novo-resumo').value.trim();
         const q = parseInt(document.getElementById('novo-qtd').value);
 
-        if(!t || !c || isNaN(q) || q < 1) { alert("Preencha mestre mestre Título mestre mestre, Categoria mestre mestre e mestre mestre Quantidade mestre mestre mestre mestre mestre."); return; }
+        if(!t || !c || isNaN(q) || q < 1) { alert("Preencha Título, Categoria e Quantidade."); return; }
 
         if (idInput) {
-            // Modo Edição mestre
-            // Busca mestre mestre a mestre mestre quantidade mestre mestre antiga mestre mestre mestre mestre mestre mestre mestre para mestre mestre recalcular mestre mestre a mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre atual mestre
+            // Modo Edição 
+            // Busca a quantidade antiga para recalcular a atual
             db.ref('livros/' + idInput).once('value').then(snap => {
                 const dadosAntigos = snap.val();
                 if(!dadosAntigos) return;
@@ -747,53 +747,53 @@
                 
                 const dadosAtualizados = {
                     titulo: t, categoria: c, resumo: r,
-                    qtdTotal: q, qtdAtual: Math.max(0, novaQtdAtual) // Não mestre mestre deixa mestre mestre ficar mestre mestre mestre mestre negativo mestre
+                    qtdTotal: q, qtdAtual: Math.max(0, novaQtdAtual) // Não deixa ficar negativo
                 };
                 db.ref('livros/' + idInput).update(dadosAtualizados).then(() => {
-                    alert("Livro atualizado com sucesso mestre.");
-                    cancelarEdicao(); // Reseta mestre mestre o mestre mestre formulário mestre mestre mestre mestre
+                    alert("Livro atualizado com sucesso.");
+                    cancelarEdicao(); // Reseta o formulário
                 });
             });
         } else {
-            // Modo Cadastro Novo mestre
+            // Modo Cadastro Novo 
             const novoLivro = { 
                 titulo: t, categoria: c, resumo: r, 
-                qtdTotal: q, qtdAtual: q // Qtd mestre mestre atual mestre mestre mestre mestre começa mestre mestre mestre mestre igual mestre mestre mestre mestre mestre mestre a mestre mestre mestre mestre total mestre
+                qtdTotal: q, qtdAtual: q // Qtd atual começa igual a total
             };
             db.ref('livros').push(novoLivro).then(() => {
-                alert("Livro cadastrado mestre.");
+                alert("Livro cadastrado.");
                 limparFormularioLivro();
             });
         }
     }
     
-    // NOVO MESTRE: Edição mestre mestre Livro mestre mestre mestre mestre
+    // Edição Livro 
     function carregarDadosParaEditar(id) {
         db.ref('livros/' + id).once('value').then(snap => {
             const l = snap.val();
             if(!l) return;
-            // Popula mestre mestre o mestre mestre mestre mestre mestre mestre formulário mestre mestre mestre mestre mestre mestre mestre
+            // Popula o formulário
             document.getElementById('edit-livro-id').value = id;
             document.getElementById('novo-titulo').value = l.titulo;
             document.getElementById('novo-categoria').value = l.categoria || "";
             document.getElementById('novo-resumo').value = l.resumo || "";
             document.getElementById('novo-qtd').value = l.qtdTotal;
             
-            // Altera mestre mestre a mestre mestre mestre mestre aparência mestre mestre mestre mestre mestre mestre mestre do mestre mestre mestre mestre formulário mestre mestre mestre mestre mestre mestre mestre
-            document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro mestre";
-            document.getElementById('btn-salvar-livro').innerText = "ATUALIZAR MESTRE";
+            // Altera a aparência do formulário
+            document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro";
+            document.getElementById('btn-salvar-livro').innerText = "ATUALIZAR";
             document.getElementById('btn-cancelar-edit').classList.remove('hidden');
             
-            // Rola mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre para mestre mestre o mestre mestre mestre mestre formulário mestre mestre mestre mestre mestre mestre mestre
+            // Rola para o formulário
             window.scrollTo({top: document.getElementById('card-form-livro').offsetTop - 20, behavior: 'smooth'});
         });
     }
     
-    // NOVO MESTRE: Reset mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre
+    // Reset do formulário de edição
     function cancelarEdicao() {
         limparFormularioLivro();
-        document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro mestre";
-        document.getElementById('btn-salvar-livro').innerText = "SALVAR LIVRO MESTRE";
+        document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro";
+        document.getElementById('btn-salvar-livro').innerText = "SALVAR LIVRO";
         document.getElementById('btn-cancelar-edit').classList.add('hidden');
     }
     function limparFormularioLivro() {
@@ -804,26 +804,26 @@
         document.getElementById('novo-qtd').value = '1';
     }
 
-    // NOVO: Dar BAIXA mestre mestre Empréstimo mestre mestre mestre mestre
+    // Dar BAIXA Empréstimo 
     function darBaixaEmprestimo(locId, livroId, livroNome) {
-        if(confirm(`Mestre, dar baixa mestre mestre mestre mestre no mestre mestre mestre mestre empréstimo mestre mestre mestre mestre do mestre mestre mestre mestre livro mestre mestre mestre mestre '${livroNome}'? mestre mestre mestre mestre`)) {
-            // 1. Aumenta mestre mestre a mestre mestre mestre mestre quantidade mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre atual mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre no mestre mestre mestre mestre estoque mestre mestre mestre mestre
+        if(confirm(`Dar baixa no empréstimo do livro '${livroNome}'?`)) {
+            // 1. Aumenta a quantidade atual no estoque
             db.ref('livros/' + livroId).transaction(l => {
                 if(l) { l.qtdAtual = Math.min(l.qtdTotal, (l.qtdAtual || 0) + 1); return l; }
             });
-            // 2. Remove mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre o mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre mestre registro mestre mestre mestre mestre de mestre mestre mestre mestre locação mestre mestre mestre mestre
-            db.ref('locacoes/' + locId).remove().then(() => alert("Empréstimo finalizado mestre. mestre mestre mestre mestre"));
+            // 2. Remove o registro de locação
+            db.ref('locacoes/' + locId).remove().then(() => alert("Empréstimo finalizado."));
         }
     }
 
     function excluirLivro(id) {
-        if(confirm("Tem certeza que deseja excluir este livro mestre mestre mestre?")) {
+        if(confirm("Tem certeza que deseja excluir este livro?")) {
             db.ref('livros/' + id).remove();
         }
     }
     
     function excluirMembroMestre(chaveDb, nomeMembro) {
-        if(confirm("Mestre, tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'? mestre mestre mestre mestre")) {
+        if(confirm("Tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'?")) {
             db.ref('membros/' + chaveDb).remove();
         }
     }
@@ -832,7 +832,7 @@
         const u = document.getElementById('adm-user').value.trim().toLowerCase();
         const p = document.getElementById('adm-pass').value;
         
-        // Checagem Master original mestre
+        // Checagem Master original 
         if(u === "ipb" && p === "ipbbrasil") { 
             sessionStorage.setItem('adm_ativo', "Master"); 
             location.reload(); 
@@ -854,10 +854,10 @@
             }
             
             if(acessoPermitido){
-                sessionStorage.setItem('adm_ativo', "ADM_Database mestre"); 
+                sessionStorage.setItem('adm_ativo', "ADM_Database"); 
                 location.reload(); 
             } else {
-                alert("Dados ADM incorretos mestre. mestre mestre mestre mestre");
+                alert("Dados ADM incorretos.");
             }
         });
     }
@@ -871,18 +871,18 @@
         const pass = document.getElementById('cad-pass').value.trim();
         const tel = document.getElementById('cad-tel').value.trim();
 
-        if(!nome || !emailOriginal || !pass) return alert("Por favor mestre preencha tudo!");
-        if(pass.length < 6) return alert("Senha muito curta mestre (mín. 6)!");
+        if(!nome || !emailOriginal || !pass) return alert("Por favor preencha tudo!");
+        if(pass.length < 6) return alert("Senha muito curta (mín. 6)!");
 
         const emailSanitizado = sanitizarEmail(emailOriginal);
         const d = { nome, user: emailOriginal, pass, tel, bloqueado: false };
 
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             if(snap.exists()) {
-                alert("E-mail já cadastrado mestre.");
+                alert("E-mail já cadastrado.");
             } else {
                 db.ref('membros/' + emailSanitizado).set(d).then(() => {
-                    alert("Cadastro realizado mestre!");
+                    alert("Cadastro realizado!");
                     mostrarLogin();
                 });
             }
@@ -892,7 +892,7 @@
     function loginMembro() {
         const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
         const passInput = document.getElementById('log-pass').value;
-        if(!emailInput || !passInput) return alert("Preencha tudo mestre!");
+        if(!emailInput || !passInput) return alert("Preencha tudo!");
         const emailSanitizado = sanitizarEmail(emailInput);
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             const m = snap.val(); 
@@ -900,7 +900,7 @@
                 localStorage.setItem('ipb_membro', JSON.stringify(m)); 
                 location.reload(); 
             } else {
-                alert("Dados incorretos mestre.");
+                alert("Dados incorretos.");
             }
         });
     }
