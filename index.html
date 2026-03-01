@@ -9,20 +9,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     
     <style>
-        /* --- VARIÁVEIS DE COR E ESTILO PROFISSIONAL (MANTIDAS) --- */
         :root { 
-            --primary: #006437; /* Verde IPB Profundo */
+            --primary: #006437; 
             --primary-light: #008f4f; 
-            --accent: #2ecc71; /* Verde Claro para Destaques */
-            --bg: #f4f7f5; /* Cinza Esverdeado Muito Claro para o Fundo */
+            --accent: #2ecc71; 
+            --bg: #f4f7f5; 
             --white: #ffffff; 
-            --text: #1a2a1f; /* Preto Esverdeado para Texto */
+            --text: #1a2a1f; 
             --danger: #d63031; 
             --gray: #636e72; 
-            --shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra Suave Profissional */
+            --shadow: 0 4px 15px rgba(0,0,0,0.05); 
             --radius-lg: 18px;
             --radius-md: 12px;
-            --transition: all 0.3s ease-in-out; /* Transição suave */
+            --transition: all 0.3s ease-in-out; 
         }
 
         body { 
@@ -30,12 +29,10 @@
             margin: 0; 
             background-color: var(--bg); 
             color: var(--text); 
-            padding-bottom: 100px; /* Espaço para o menu flutuante */
-            -webkit-font-smoothing: antialiased;
+            padding-bottom: 100px; 
             overflow-x: hidden;
         }
 
-        /* --- CABEÇALHO COMO BANNER PROPORCIONAL DINÂMICO --- */
         header { 
             width: 100vw; 
             position: relative; 
@@ -46,26 +43,18 @@
             overflow: hidden;
             display: flex; 
             justify-content: center;
-            transition: var(--transition); /* Transição suave de tamanho */
+            transition: var(--transition);
             z-index: 100;
         }
         
-        /* Container que mantém a proporção */
         .banner-proporcional {
             width: 100%;
             position: relative;
-            /* Tamanho padrão grande para a Home */
             padding-bottom: 50%; 
             transition: var(--transition);
         }
 
-        /* ESTILO: Quando o banner está reduzido */
-        header.header-reduzido {
-            border-bottom-width: 2px; /* Linha mais fina */
-        }
-        
         header.header-reduzido .banner-proporcional {
-            /* Tamanho reduzido para outras abas (aprox 15vh) */
             padding-bottom: 15%; 
         }
 
@@ -76,7 +65,7 @@
             width: 100%;
             height: 100%;
             background-image: url('imagem.png');
-            background-size: contain; /* Mostra inteira sem cortes */
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
@@ -92,41 +81,23 @@
             z-index: 2;
         }
         
-        /* Oculta textos antigos */
         .logo-container, header h1, header h2 { display: none; }
 
         .container { 
             padding: 20px; 
             max-width: 500px; 
             margin: 0 auto; 
-            margin-top: 0; 
         }
 
-        .section { 
-            display: none; 
-            animation: fadeIn 0.4s ease-out; /* Animação suave */
-        }
-
-        .section.active { 
-            display: block; 
-        }
+        .section { display: none; animation: fadeIn 0.4s ease-out; }
+        .section.active { display: block; }
 
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(15px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* --- ESTILIZAÇÃO DO ACERVO ORGANIZADO (MANTIDO) --- */
-        
-        .section h3 {
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .section h3 { color: var(--primary); font-weight: 800; margin-bottom: 15px; }
 
         .info-box.homenagem {
             font-size: 0.9rem; 
@@ -137,7 +108,6 @@
             padding: 15px; 
             border-radius: var(--radius-md);
             border-left: 5px solid var(--accent);
-            box-shadow: var(--shadow);
             text-align: center;
         }
 
@@ -146,10 +116,7 @@
             font-weight: 700;
             font-size: 0.9rem; 
             text-transform: uppercase; 
-            letter-spacing: 1.5px; 
             margin-top: 35px; 
-            margin-bottom: 15px; 
-            padding-bottom: 8px;
             border-bottom: 2px solid rgba(0,100,55,0.1); 
         }
 
@@ -158,38 +125,10 @@
             padding: 20px; 
             border-radius: var(--radius-md); 
             margin-bottom: 15px; 
-            display: flex; 
-            flex-direction: column; 
             border-left: 5px solid var(--primary); 
             box-shadow: var(--shadow); 
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
         }
 
-        .livro-topo { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            width: 100%; 
-            gap: 10px; 
-        }
-
-        .titulo-livro { 
-            font-weight: 700; 
-            color: var(--text);
-            font-size: 1.15rem; 
-            line-height: 1.2; 
-            text-decoration: none; 
-        }
-
-        .disp-info {
-            font-size: 0.8rem;
-            margin-top: 8px;
-            font-weight: 600;
-        }
-
-        /* --- BOTÕES MODERNOS E PROFISSIONAIS (MANTIDO) --- */
-        
         .btn-acao { 
             background: var(--white); 
             color: var(--primary); 
@@ -197,12 +136,7 @@
             padding: 8px 16px; 
             border-radius: 20px; 
             font-weight: 700; 
-            font-size: 0.75rem; 
             cursor: pointer; 
-            white-space: nowrap; 
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .btn-grande { 
@@ -214,9 +148,6 @@
             font-weight: 800; 
             width: 100%; 
             cursor: pointer; 
-            font-size: 1.1rem; 
-            box-shadow: 0 5px 15px rgba(0,100,55,0.2); 
-            transition: all 0.2s ease; 
         }
 
         .btn-principal { 
@@ -225,47 +156,13 @@
             border: none; 
             padding: 15px; 
             border-radius: var(--radius-md); 
-            font-weight: 700; 
             width: 100%; 
             cursor: pointer; 
-            margin-top: 15px; 
-            font-size: 1rem; 
-        }
-        
-        /* Botão Secundário para gestão */
-        .btn-secundario {
-            background: var(--white);
-            color: var(--gray);
-            border: 2px solid #edf2ef;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 10px;
-        }
-        .btn-secundario:hover {
-            border-color: var(--gray);
-            color: var(--text);
         }
 
-        .btn-danger-small {
-            border: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            font-weight: 700;
-            color: var(--white);
-            background-color: var(--danger);
-        }
-
-        /* --- NAVEGAÇÃO FLUTUANTE ESTILO APP (MANTIDO) --- */
         nav { 
             display: flex; 
             background: rgba(255,255,255,0.98); 
-            backdrop-filter: blur(5px); 
             position: fixed; 
             bottom: 15px; 
             left: 50%; 
@@ -273,10 +170,8 @@
             width: calc(100% - 30px); 
             max-width: 470px; 
             box-shadow: 0 5px 25px rgba(0,0,0,0.15); 
-            z-index: 2000; 
             border-radius: 50px; 
             padding: 5px;
-            border: 1px solid rgba(0,0,0,0.03);
         }
 
         nav button { 
@@ -287,38 +182,13 @@
             font-weight: 700; 
             color: #a4b0be; 
             font-size: 0.7rem; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
             border-radius: 50px;
-            -webkit-tap-highlight-color: transparent; 
         }
 
-        nav button.active { 
-            color: var(--primary); 
-            background: rgba(0,100,55,0.08); 
-        }
+        nav button.active { color: var(--primary); background: rgba(0,100,55,0.08); }
 
-        /* --- OUTROS ELEMENTOS PROFISSIONAIS (MANTIDO) --- */
-        .card { 
-            background: var(--white); 
-            padding: 25px; 
-            border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow); 
-            margin-bottom: 20px; 
-        }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 15px; 
-            margin: 10px 0; 
-            border: 2px solid #edf2ef; 
-            border-radius: var(--radius-md); 
-            box-sizing: border-box; 
-            font-size: 16px; 
-        }
-
-        .hidden { display: none !important; }
+        .card { background: var(--white); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #edf2ef; border-radius: var(--radius-md); box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -330,12 +200,11 @@
     </div>
 </header>
 
-<div class="container" id="main-container">
-    
+<div class="container">
     <section id="inicio" class="section active">
         <div style="text-align: center; padding: 30px 10px;">
-            <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
-            <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
+            <h2 style="color: var(--primary);">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
+            <p style="font-style: italic; color: var(--gray);">2 Pedro 3:18</p>
             <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
     </section>
@@ -343,7 +212,6 @@
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
         <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
-        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria.</p>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
@@ -351,95 +219,44 @@
         <div id="tela-login">
             <div class="card">
                 <h3>Acessar Conta</h3>
-                <input type="text" id="log-user" placeholder="Usuário (e-mail)">
+                <input type="text" id="log-user" placeholder="E-mail">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
+                <center><button onclick="mostrarCadastro()" style="margin-top:10px; background:none; border:none; color:var(--primary); cursor:pointer;">Criar nova conta</button></center>
             </div>
         </div>
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
                 <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
-                <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
-                <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
+                <input type="text" id="cad-user" placeholder="E-mail">
+                <input type="password" id="cad-pass" placeholder="Senha">
+                <input type="tel" id="cad-tel" placeholder="WhatsApp">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
-                <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
+                <center><button onclick="mostrarLogin()" style="margin-top:10px; background:none; border:none; color:var(--primary); cursor:pointer;">Já tenho conta</button></center>
             </div>
         </div>
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
-                <div id="meus-livros"></div>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
+                <h3>Olá, <span id="nome-exibicao"></span></h3>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger);">SAIR</button>
             </div>
         </div>
     </section>
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Cadeado do Pastor 🔐</h3>
-            <input type="text" id="adm-user" placeholder="Usuário ADM (e-mail)">
+            <h3>Área Administrativa</h3>
+            <input type="text" id="adm-user" placeholder="Usuário ADM">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
         </div>
-        
         <div id="painel-adm" style="display:none;">
-            
             <div class="card">
-                <h4>🔐 Gestão de Administradores ADM</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel.</p>
-                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs...</div>
-                <input type="email" id="novo-admin-email" placeholder="E-mail do novo Administrador">
-                <input type="password" id="novo-admin-pass" placeholder="Senha para este ADM">
-                <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
+                <h4>Gerenciar Livros</h4>
+                <div id="gestao-livros-lista"></div>
             </div>
-
-            <div class="card">
-                <h4>🏷️ Gestão de Categorias</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Adicione ou remova categorias para os livros.</p>
-                <div id="lista-categorias-adm" style="margin-bottom: 10px; max-height: 150px; overflow-y:auto;">Carregando categorias...</div>
-                <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria">
-                <button class="btn-secundario" onclick="adicionarCategoria()">ADICIONAR CATEGORIA</button>
-            </div>
-
-            <div class="card" id="card-form-livro">
-                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
-                <input type="hidden" id="edit-livro-id" value="">
-                <label>Título do Livro</label>
-                <input type="text" id="novo-titulo" placeholder="Ex: O Peregrino">
-                <label>Categoria</label>
-                <select id="novo-categoria">
-                    <option value="" disabled selected>Selecione uma categoria</option>
-                    </select>
-                <label>Breve Resumo</label>
-                <textarea id="novo-resumo" placeholder="Sobre o que fala este livro..." rows="3"></textarea>
-                <label>Quantidade</label>
-                <input type="number" id="novo-qtd" placeholder="Quantidade" value="1" min="1">
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-principal" id="btn-salvar-livro" style="margin-top:0;" onclick="salvarLivro()">SALVAR LIVRO</button>
-                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray); margin-top:0;" onclick="cancelarEdicao()">CANCELAR</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
-            </div>
-
-            <div class="card">
-                <h4>📊 Empréstimos Ativos (Dar Baixa)</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 10px;">Clique em dar baixa quando o membro devolver o livro físico.</p>
-                <div id="lista-adm">Nenhum empréstimo ativo.</div>
-            </div>
-            
-            <div class="card">
-                <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm">Carregando membros...</div>
-            </div>
-
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger);">SAIR ADM</button>
         </div>
     </section>
 </div>
@@ -452,7 +269,6 @@
 </nav>
 
 <script>
-    // Configuração Firebase (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -462,457 +278,107 @@
         messagingSenderId: "140869477812",
         appId: "1:140869477812:web:d4a57845136c2958403ee1"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function sanitizarEmail(email) {
-        if(!email) return "";
-        return email.replace(/\./g, '_');
-    }
+    function sanitizarEmail(email) { return email ? email.replace(/\./g, '_') : ""; }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA ---
-    // Ajusta tamanho do banner e rola para o topo
     function mudarAba(abaId) {
-        // 1. Esconde todas as seções
-        const secoes = document.querySelectorAll('.section');
-        secoes.forEach(s => s.classList.remove('active'));
-        
-        // 2. Remove destaque de todos os botões
-        const botoes = document.querySelectorAll('nav button');
-        botoes.forEach(b => b.classList.remove('active'));
-        
-        // 3. Mostra a seção clicada
-        const secaoAtiva = document.getElementById(abaId);
-        if (secaoAtiva) {
-            secaoAtiva.classList.add('active');
-        }
-        
-        // 4. Destaque o botão clicado
-        const botaoAtivo = document.getElementById('nav-' + abaId);
-        if (botaoAtivo) {
-            botaoAtivo.classList.add('active');
-        }
-        
-        // 5. LÓGICA DO BANNER DINÂMICO
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(abaId).classList.add('active');
+        document.getElementById('nav-' + abaId).classList.add('active');
         const header = document.getElementById('main-header');
-        if (abaId === 'inicio') {
-            // Se for Home, banner grande
-            header.classList.remove('header-reduzido');
-        } else {
-            // Se for qualquer outra aba, reduz o banner automaticamente
-            header.classList.add('header-reduzido');
-        }
-        
-        // 6. Rolagem INSTANTÂNEA para o topo absoluto
-        window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'auto' 
-        });
+        abaId === 'inicio' ? header.classList.remove('header-reduzido') : header.classList.add('header-reduzido');
+        window.scrollTo(0,0);
     }
 
-    // --- UTILITÁRIOS DE DADOS (MANTIDO) ---
-    function processarLivros(livrosObj) {
-        if (!livrosObj) return {};
-        let livrosArray = [];
-        for (let id in livrosObj) {
-            livrosArray.push({ id: id, ...livrosObj[id] });
-        }
-        livrosArray.sort((a, b) => a.titulo.localeCompare(b.titulo));
-        let agrupado = {};
-        livrosArray.forEach(livro => {
-            const cat = livro.categoria || "Sem Categoria";
-            if (!agrupado[cat]) agrupado[cat] = [];
-            agrupado[cat].push(livro);
-        });
-        const categoriasOrdenadas = Object.keys(agrupado).sort();
-        let resultadoFinal = {};
-        categoriasOrdenadas.forEach(cat => {
-            resultadoFinal[cat] = agrupado[cat];
-        });
-        return resultadoFinal;
-    }
-
-    // --- RENDERIZAÇÃO DE LISTAS (MANTIDO) ---
-    db.ref().on('value', snap => {
-        const dados = snap.val() || {};
-        const livrosRaw = dados.livros || {};
-        const locacoesRaw = dados.locacoes || {}; // MANTIDO
-        const membros = dados.membros || {};
-        const categoriasRaw = dados.categorias || {}; 
-        
-        const livrosAgrupados = processarLivros(livrosRaw);
-
-        // Catálogo Usuário
-        const listaCatalogo = document.getElementById('lista-catalogo');
-        listaCatalogo.innerHTML = '';
-        for (let categoria in livrosAgrupados) {
-            listaCatalogo.innerHTML += `<div class="catalogo-categoria-titulo">${categoria}</div>`;
-            livrosAgrupados[categoria].forEach(l => {
-                const resumoTxt = l.resumo || "Sem resumo disponível.";
-                const estaEsgotado = l.qtdAtual <= 0;
-                listaCatalogo.innerHTML += `
-                    <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
-                        <div class="livro-topo">
-                            <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
-                        </div>
-                        <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
-                    </div>`;
-            });
-        }
-        
-        // Gestão ACERVO ADM (MANTIDO EXPANDIDO COM EDIÇÃO)
-        const listaGestao = document.getElementById('gestao-livros-lista');
-        if(listaGestao) {
-            listaGestao.innerHTML = '';
-            for (let categoria in livrosAgrupados) {
-                listaGestao.innerHTML += `<div style="background:#f4f7f5; padding: 5px 10px; font-weight:bold; color:var(--primary); font-size:0.8rem; margin-top:10px; border-radius:5px;">${categoria}</div>`;
-                livrosAgrupados[categoria].forEach(l => {
-                    listaGestao.innerHTML += `
-                        <div style="padding:12px 10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                            <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
-                            <div class="gestao-acoes" style="display:flex; gap:5px;">
-                                <button class="btn-acao" style="padding: 2px 6px; color:var(--primary-light); border-color:var(--primary-light)" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
-                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
-                            </div>
-                        </div>`;
-                });
-            }
-        }
-
-        // Gestão CATEGORIAS ADM 
-        const listaCategoriasAdm = document.getElementById('lista-categorias-adm');
-        const selectCategorias = document.getElementById('novo-categoria');
-        if(listaCategoriasAdm && selectCategorias) {
-            listaCategoriasAdm.innerHTML = '';
-            // Reseta o select, mantendo a opção padrão
-            selectCategorias.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
-            
-            for(let idCat in categoriasRaw){
-                const catNome = categoriasRaw[idCat];
-                // Popula a lista
-                listaCategoriasAdm.innerHTML += `
-                    <div style="padding:5px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                        <small>${catNome}</small>
-                        <button class="btn-danger-small" style="padding: 2px 6px;" onclick="excluirCategoria('${idCat}', '${catNome}')">X</button>
-                    </div>`;
-                // Popula o select
-                selectCategorias.innerHTML += `<option value="${catNome}">${catNome}</option>`;
-            }
-        }
-
-        // Gestão EMPRÉSTIMOS ADM (MANTIDO)
-        const listaAdmEmprestimos = document.getElementById('lista-adm');
-        if(listaAdmEmprestimos){
-            listaAdmEmprestimos.innerHTML = '';
-            let temLocacao = false;
-            for(let idLoc in locacoesRaw){
-                temLocacao = true;
-                const loc = locacoesRaw[idLoc];
-                const corStatus = new Date() > new Date(loc.dataDevolucao.split('/').reverse().join('-')) ? 'var(--danger)' : 'var(--text)';
-                listaAdmEmprestimos.innerHTML += `
-                    <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${loc.livroNome}</strong><br>
-                            <small>${loc.membroNome} (@${loc.membroUser})</small><br>
-                            <small style="color:${corStatus}">Devolver: ${loc.dataDevolucao}</small>
-                        </div>
-                        <button class="btn-acao" onclick="darBaixaEmprestimo('${idLoc}', '${loc.livroId}', '${loc.livroNome.replace(/'/g, "\\'")}')">Dar Baixa</button>
-                    </div>`;
-            }
-            if(!temLocacao) listaAdmEmprestimos.innerHTML = 'Nenhum empréstimo ativo.';
-        }
-
-        // Gestão Membros ADM (MANTIDO)
-        const listaMembrosAdm = document.getElementById('lista-membros-adm');
-        if(listaMembrosAdm) {
-            listaMembrosAdm.innerHTML = '';
-            let membrosArr = [];
-            for(let chaveMembro in membros) {
-                membrosArr.push({chaveDb: chaveMembro, ...membros[chaveMembro]});
-            }
-            membrosArr.sort((a,b) => a.nome.localeCompare(b.nome));
-            membrosArr.forEach(m => {
-                const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
-                const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
-                
-                listaMembrosAdm.innerHTML += `
-                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:10px;">
-                        <div>
-                            <strong>${m.nome}</strong><br>
-                            <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
-                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats</a>` : ''}
-                        </div>
-                        <div style="display:flex; gap: 5px; align-items:center;">
-                            <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
-                                ${m.bloqueado ? 'Desbloquear' : 'Bloquear'}
-                            </button>
-                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X</button>
-                        </div>
-                    </div>`;
-            });
+    db.ref('livros').on('value', snap => {
+        const livros = snap.val() || {};
+        const lista = document.getElementById('lista-catalogo');
+        lista.innerHTML = '';
+        for(let id in livros) {
+            const l = livros[id];
+            lista.innerHTML += `
+                <div class="livro-item">
+                    <strong>${l.titulo}</strong><br>
+                    <small>Disponível: ${l.qtdAtual}</small><br>
+                    <button class="btn-acao" onclick="reservar('${id}', '${l.titulo}')" style="margin-top:10px">RESERVAR</button>
+                </div>`;
         }
     });
 
-    // --- RESERVA (MANTIDO COM MENSAGEM) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
-        if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
+        if(!s) { alert("Faça login primeiro!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
-        const emailSanitizado = sanitizarEmail(mLocal.user);
-        
-        db.ref('membros/' + emailSanitizado).once('value', snap => {
-            const mDb = snap.val();
-            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
-            
-            db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
-                if(result.committed) {
-                    db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
-                    alert("Reserva realizada! Procure o responsável na IPB Petrópolis para retirar seu livro.");
-                }
-            });
-        });
-    }
 
-    // --- FUNÇÕES ADM (MANTIDO E EXPANDIDO) ---
-    
-    // Gestão de e-mails/senhas ADM no Database (MANTIDOEXPANDIDO)
-    db.ref('admins_emails').on('value', snap => {
-        const emailsObj = snap.val();
-        const listaGeral = document.getElementById('lista-admins-geral');
-        if(!listaGeral) return;
-        listaGeral.innerHTML = '';
-        if(!emailsObj){
-            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado. Apenas a conta master funciona.</small>';
-            return;
-        }
-        for(let id in emailsObj){
-            const mData = emailsObj[id];
-            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${mData.email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X</button></div>`;
-        }
-    });
+        const prazo = prompt("Escolha o prazo de empréstimo: 15, 20 ou 30 dias", "15");
+        if(!["15", "20", "30"].includes(prazo)) return alert("Prazo inválido! Escolha 15, 20 ou 30.");
 
-    function promoverParaAdmin() {
-        const email = document.getElementById('novo-admin-email').value.trim().toLowerCase();
-        const pass = document.getElementById('novo-admin-pass').value.trim(); 
-        if(!email || !email.includes('@')) return alert("Digite um e-mail válido.");
-        if(pass.length < 5) return alert("Defina uma senha de pelo menos 5 caracteres."); 
+        const dataDev = new Date();
+        dataDev.setDate(dataDev.getDate() + parseInt(prazo));
 
-        db.ref('admins_emails').push({email: email, pass: pass}).then(() => {
-            alert("Administrador adicionado com sucesso.");
-            document.getElementById('novo-admin-email').value = '';
-            document.getElementById('novo-admin-pass').value = '';
-        });
-    }
-    
-    function removerAdmin(id) {
-        if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
-    }
-
-    // Gestão CATEGORIAS 
-    function adicionarCategoria() {
-        const nome = document.getElementById('nova-categoria-nome').value.trim();
-        if(!nome) return alert("Digite o nome da categoria.");
-        db.ref('categorias').push(nome).then(() => {
-            alert("Categoria adicionada.");
-            document.getElementById('nova-categoria-nome').value = '';
-        });
-    }
-    function excluirCategoria(id, nome) {
-        if(confirm(`Deseja excluir permanentemente a categoria '${nome}'?`)) {
-            db.ref('categorias/' + id).remove();
-        }
-    }
-
-    // Gestão CADASTRO/EDIÇÃO LIVROS 
-    function salvarLivro() {
-        const idInput = document.getElementById('edit-livro-id').value;
-        const t = document.getElementById('novo-titulo').value.trim();
-        const c = document.getElementById('novo-categoria').value;
-        const r = document.getElementById('novo-resumo').value.trim();
-        const q = parseInt(document.getElementById('novo-qtd').value);
-
-        if(!t || !c || isNaN(q) || q < 1) { alert("Preencha Título, Categoria e Quantidade."); return; }
-
-        if (idInput) {
-            // Modo Edição 
-            // Busca a quantidade antiga para recalcular a atual
-            db.ref('livros/' + idInput).once('value').then(snap => {
-                const dadosAntigos = snap.val();
-                if(!dadosAntigos) return;
-                const difTotal = q - dadosAntigos.qtdTotal;
-                const novaQtdAtual = dadosAntigos.qtdAtual + difTotal;
-                
-                const dadosAtualizados = {
-                    titulo: t, categoria: c, resumo: r,
-                    qtdTotal: q, qtdAtual: Math.max(0, novaQtdAtual) // Não deixa ficar negativo
-                };
-                db.ref('livros/' + idInput).update(dadosAtualizados).then(() => {
-                    alert("Livro atualizado com sucesso.");
-                    cancelarEdicao(); // Reseta o formulário
+        db.ref('livros/' + id).transaction(l => {
+            if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; }
+        }).then(result => {
+            if(result.committed) {
+                db.ref('locacoes').push({
+                    livroId: id,
+                    livroNome: titulo,
+                    membroUser: mLocal.user,
+                    dataDevolucao: dataDev.toLocaleDateString('pt-BR')
                 });
-            });
-        } else {
-            // Modo Cadastro Novo 
-            const novoLivro = { 
-                titulo: t, categoria: c, resumo: r, 
-                qtdTotal: q, qtdAtual: q // Qtd atual começa igual a total
-            };
-            db.ref('livros').push(novoLivro).then(() => {
-                alert("Livro cadastrado.");
-                limparFormularioLivro();
-            });
-        }
-    }
-    
-    // Edição Livro 
-    function carregarDadosParaEditar(id) {
-        db.ref('livros/' + id).once('value').then(snap => {
-            const l = snap.val();
-            if(!l) return;
-            // Popula o formulário
-            document.getElementById('edit-livro-id').value = id;
-            document.getElementById('novo-titulo').value = l.titulo;
-            document.getElementById('novo-categoria').value = l.categoria || "";
-            document.getElementById('novo-resumo').value = l.resumo || "";
-            document.getElementById('novo-qtd').value = l.qtdTotal;
-            
-            // Altera a aparência do formulário
-            document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro";
-            document.getElementById('btn-salvar-livro').innerText = "ATUALIZAR";
-            document.getElementById('btn-cancelar-edit').classList.remove('hidden');
-            
-            // Rola para o formulário
-            window.scrollTo({top: document.getElementById('card-form-livro').offsetTop - 20, behavior: 'smooth'});
+                alert("Reserva feita! Devolução em: " + dataDev.toLocaleDateString('pt-BR'));
+            }
         });
-    }
-    
-    // Reset do formulário de edição
-    function cancelarEdicao() {
-        limparFormularioLivro();
-        document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro";
-        document.getElementById('btn-salvar-livro').innerText = "SALVAR LIVRO";
-        document.getElementById('btn-cancelar-edit').classList.add('hidden');
-    }
-    function limparFormularioLivro() {
-        document.getElementById('edit-livro-id').value = '';
-        document.getElementById('novo-titulo').value = '';
-        document.getElementById('novo-categoria').value = '';
-        document.getElementById('novo-resumo').value = '';
-        document.getElementById('novo-qtd').value = '1';
-    }
-
-    // Dar BAIXA Empréstimo 
-    function darBaixaEmprestimo(locId, livroId, livroNome) {
-        if(confirm(`Dar baixa no empréstimo do livro '${livroNome}'?`)) {
-            // 1. Aumenta a quantidade atual no estoque
-            db.ref('livros/' + livroId).transaction(l => {
-                if(l) { l.qtdAtual = Math.min(l.qtdTotal, (l.qtdAtual || 0) + 1); return l; }
-            });
-            // 2. Remove o registro de locação
-            db.ref('locacoes/' + locId).remove().then(() => alert("Empréstimo finalizado."));
-        }
-    }
-
-    function excluirLivro(id) {
-        if(confirm("Tem certeza que deseja excluir este livro?")) {
-            db.ref('livros/' + id).remove();
-        }
-    }
-    
-    function excluirMembroMestre(chaveDb, nomeMembro) {
-        if(confirm("Tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'?")) {
-            db.ref('membros/' + chaveDb).remove();
-        }
     }
 
     function loginAdmin() {
-        const u = document.getElementById('adm-user').value.trim().toLowerCase();
+        const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
-        
-        // Checagem Master original 
-        if(u === "ipb" && p === "ipbbrasil") { 
-            sessionStorage.setItem('adm_ativo', "Master"); 
-            location.reload(); 
-            return;
-        }
-
-        // Checagem por e-mail/senha no Database (MANTIDO EXPANDIDO)
-        db.ref('admins_emails').once('value', snap => {
-            const emailsObj = snap.val();
-            let acessoPermitido = false;
-            if(emailsObj){
-                for(let id in emailsObj){
-                    const mData = emailsObj[id];
-                    if(mData.email === u && mData.pass === p){
-                        acessoPermitido = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(acessoPermitido){
-                sessionStorage.setItem('adm_ativo', "ADM_Database"); 
-                location.reload(); 
-            } else {
-                alert("Dados ADM incorretos.");
-            }
-        });
+        if(u === "ipb" && p === "ipbbrasil") {
+            sessionStorage.setItem('adm_ativo', "Master");
+            location.reload();
+        } else { alert("Acesso negado."); }
     }
-    
-    function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
 
-    // --- GESTÃO DE CONTA (MEMBRO) (MANTIDO) ---
-    function cadastrarMembro() {
-        const nome = document.getElementById('cad-nome').value.trim();
-        const emailOriginal = document.getElementById('cad-user').value.trim().toLowerCase(); 
-        const pass = document.getElementById('cad-pass').value.trim();
-        const tel = document.getElementById('cad-tel').value.trim();
-
-        if(!nome || !emailOriginal || !pass) return alert("Por favor preencha tudo!");
-        if(pass.length < 6) return alert("Senha muito curta (mín. 6)!");
-
-        const emailSanitizado = sanitizarEmail(emailOriginal);
-        const d = { nome, user: emailOriginal, pass, tel, bloqueado: false };
-
-        db.ref('membros/' + emailSanitizado).once('value', snap => { 
-            if(snap.exists()) {
-                alert("E-mail já cadastrado.");
-            } else {
-                db.ref('membros/' + emailSanitizado).set(d).then(() => {
-                    alert("Cadastro realizado!");
-                    mostrarLogin();
-                });
-            }
-        });
-    }
-    
     function loginMembro() {
-        const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
-        const passInput = document.getElementById('log-pass').value;
-        if(!emailInput || !passInput) return alert("Preencha tudo!");
-        const emailSanitizado = sanitizarEmail(emailInput);
-        db.ref('membros/' + emailSanitizado).once('value', snap => { 
-            const m = snap.val(); 
-            if(m && m.user === emailInput && m.pass === passInput) {
-                localStorage.setItem('ipb_membro', JSON.stringify(m)); 
-                location.reload(); 
-            } else {
-                alert("Dados incorretos.");
-            }
+        const u = document.getElementById('log-user').value.toLowerCase();
+        const p = document.getElementById('log-pass').value;
+        db.ref('membros/' + sanitizarEmail(u)).once('value', snap => {
+            const m = snap.val();
+            if(m && m.pass === p) {
+                localStorage.setItem('ipb_membro', JSON.stringify(m));
+                location.reload();
+            } else { alert("Dados incorretos."); }
         });
     }
-    
+
+    function cadastrarMembro() {
+        const n = document.getElementById('cad-nome').value;
+        const e = document.getElementById('cad-user').value.toLowerCase();
+        const p = document.getElementById('cad-pass').value;
+        if(!n || !e || !p) return alert("Preencha tudo.");
+        db.ref('membros/' + sanitizarEmail(e)).set({nome: n, user: e, pass: p}).then(() => {
+            alert("Cadastrado!"); mostrarLogin();
+        });
+    }
+
     function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
+    function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
     function mostrarCadastro() { document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block'; }
     function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
 
-    // --- CHECAGEM INICIAL AO CARREGAR PÁGINA ---
-    if(localStorage.getItem('ipb_membro')) { document.getElementById('tela-login').style.display='none'; document.getElementById('perfil-membro').style.display='block'; document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome; }
-    if(sessionStorage.getItem('adm_ativo')) { document.getElementById('area-adm-login').style.display='none'; document.getElementById('painel-adm').style.display='block'; }
+    if(localStorage.getItem('ipb_membro')) {
+        document.getElementById('tela-login').style.display='none';
+        document.getElementById('perfil-membro').style.display='block';
+        document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome;
+    }
+    if(sessionStorage.getItem('adm_ativo')) {
+        document.getElementById('area-adm-login').style.display='none';
+        document.getElementById('painel-adm').style.display='block';
+    }
 </script>
 </body>
 </html>
-
