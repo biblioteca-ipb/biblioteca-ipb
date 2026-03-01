@@ -220,14 +220,6 @@
         
         <div id="painel-adm" style="display:none;">
             <div class="card">
-                <h4>🔐 Gestão de Administradores</h4>
-                <div id="lista-admins-geral" style="margin-bottom: 15px;"></div>
-                <input type="email" id="novo-admin-email" placeholder="E-mail do novo ADM">
-                <input type="password" id="novo-admin-pass" placeholder="Senha para este ADM">
-                <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
-            </div>
-
-            <div class="card">
                 <h4>🏷️ Gestão de Categorias</h4>
                 <div id="lista-categorias-adm" style="margin-bottom: 10px; max-height: 150px; overflow-y:auto;"></div>
                 <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria">
@@ -259,7 +251,7 @@
             
             <div class="card">
                 <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm"></div>
+                <div id="lista-membros-adm" style="max-height: 400px; overflow-y: auto;">Carregando membros...</div>
             </div>
 
             <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
@@ -360,7 +352,7 @@
             }
         }
 
-        // Render Categorias no Select e Lista
+        // Render Categorias
         const listaCatAdm = document.getElementById('lista-categorias-adm');
         const selectCat = document.getElementById('novo-categoria');
         if(listaCatAdm && selectCat) {
@@ -386,9 +378,43 @@
                     </div>`;
             }
         }
+
+        // --- LÓGICA DE LISTAGEM DE MEMBROS ADICIONADA ---
+        const listaMembrosAdm = document.getElementById('lista-membros-adm');
+        if(listaMembrosAdm) {
+            listaMembrosAdm.innerHTML = '';
+            for(let chaveMembro in membros) {
+                const m = membros[chaveMembro];
+                const corStatus = m.bloqueado ? 'var(--danger)' : 'var(--accent)';
+                listaMembrosAdm.innerHTML += `
+                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong>${m.nome}</strong><br>
+                            <small>${m.user} | ${m.tel || 'Sem Tel'}</small>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-acao" style="color:${corStatus}; border-color:${corStatus}; font-size:0.6rem; padding:4px;" 
+                                onclick="toggleBloqueioMembro('${chaveMembro}', ${m.bloqueado})">
+                                ${m.bloqueado ? 'DESBLOQUEAR' : 'BLOQUEAR'}
+                            </button>
+                            <button class="btn-danger-small" onclick="excluirMembro('${chaveMembro}')">X</button>
+                        </div>
+                    </div>`;
+            }
+        }
     });
 
-    // --- NOVA FUNÇÃO DE RESERVA COM PRAZO ---
+    // --- FUNÇÕES DE MEMBROS ---
+    function toggleBloqueioMembro(chave, statusAtual) {
+        db.ref('membros/' + chave).update({ bloqueado: !statusAtual });
+    }
+
+    function excluirMembro(chave) {
+        if(confirm("Deseja excluir permanentemente este membro?")) {
+            db.ref('membros/' + chave).remove();
+        }
+    }
+
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
@@ -411,27 +437,21 @@
                     membroUser: mLocal.user,
                     dataDevolucao: dataDev.toLocaleDateString('pt-BR')
                 });
-                alert("Reservado com sucesso! Devolução prevista para: " + dataDev.toLocaleDateString('pt-BR'));
+                alert("Reservado! Devolução: " + dataDev.toLocaleDateString('pt-BR'));
             }
         });
     }
 
-    // --- FUNÇÕES DE ADMINISTRAÇÃO COMPLETAS ---
     function salvarLivro() {
         const id = document.getElementById('edit-livro-id').value;
         const t = document.getElementById('novo-titulo').value;
         const c = document.getElementById('novo-categoria').value;
         const r = document.getElementById('novo-resumo').value;
         const q = parseInt(document.getElementById('novo-qtd').value);
-        if(!t || !c) return alert("Título e Categoria obrigatórios");
-
-        if(id) {
-            db.ref('livros/'+id).update({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
-            cancelarEdicao();
-        } else {
-            db.ref('livros').push({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
-        }
-        alert("Salvo com sucesso!");
+        if(!t || !c) return alert("Preencha Título e Categoria");
+        if(id) db.ref('livros/'+id).update({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
+        else db.ref('livros').push({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
+        cancelarEdicao();
     }
 
     function carregarDadosParaEditar(id) {
@@ -461,14 +481,13 @@
     function darBaixaEmprestimo(locId, livId) {
         db.ref('livros/'+livId).transaction(l => { if(l) l.qtdAtual++; return l; });
         db.ref('locacoes/'+locId).remove();
-        alert("Baixa confirmada!");
     }
 
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
         if(u === "ipb" && p === "ipbbrasil") { sessionStorage.setItem('adm_ativo', "Master"); location.reload(); }
-        else { alert("Acesso negado"); }
+        else alert("Erro ADM");
     }
 
     function loginMembro() {
@@ -476,8 +495,11 @@
         const p = document.getElementById('log-pass').value;
         db.ref('membros/'+sanitizarEmail(u)).once('value', snap => {
             const m = snap.val();
-            if(m && m.pass === p) { localStorage.setItem('ipb_membro', JSON.stringify(m)); location.reload(); }
-            else { alert("Login incorreto"); }
+            if(m && m.pass === p) {
+                if(m.bloqueado) return alert("Conta bloqueada pelo administrador.");
+                localStorage.setItem('ipb_membro', JSON.stringify(m)); 
+                location.reload(); 
+            } else alert("Dados incorretos");
         });
     }
 
@@ -485,7 +507,8 @@
         const n = document.getElementById('cad-nome').value;
         const e = document.getElementById('cad-user').value.toLowerCase();
         const p = document.getElementById('cad-pass').value;
-        if(n && e && p) { db.ref('membros/'+sanitizarEmail(e)).set({nome:n, user:e, pass:p}).then(() => { alert("Cadastrado!"); mostrarLogin(); }); }
+        const t = document.getElementById('cad-tel').value;
+        if(n && e && p) db.ref('membros/'+sanitizarEmail(e)).set({nome:n, user:e, pass:p, tel:t, bloqueado: false}).then(() => { alert("OK!"); mostrarLogin(); });
     }
 
     function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
