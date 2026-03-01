@@ -22,7 +22,7 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra Suave Profissional */
             --radius-lg: 18px;
             --radius-md: 12px;
-            --transition: all 0.3s ease-in-out; /* Transição suave mestre */
+            --transition: all 0.3s ease-in-out; /* Transição suave */
         }
 
         body { 
@@ -35,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CABEÇALHO COMO BANNER PROPORCIONAL DINÂMICO MESTRE --- */
+        /* --- CABEÇALHO COMO BANNER PROPORCIONAL DINÂMICO --- */
         header { 
             width: 100vw; 
             position: relative; 
@@ -46,26 +46,26 @@
             overflow: hidden;
             display: flex; 
             justify-content: center;
-            transition: var(--transition); /* Transição suave de tamanho mestre */
+            transition: var(--transition); /* Transição suave de tamanho */
             z-index: 100;
         }
         
-        /* Container que mantém a proporção mestre */
+        /* Container que mantém a proporção */
         .banner-proporcional {
             width: 100%;
             position: relative;
-            /* Tamanho padrão grande para a Home mestre */
+            /* Tamanho padrão grande para a Home */
             padding-bottom: 50%; 
             transition: var(--transition);
         }
 
-        /* ESTILO NOVO MESTRE: Quando o banner está reduzido mestre */
+        /* ESTILO: Quando o banner está reduzido */
         header.header-reduzido {
-            border-bottom-width: 2px; /* Linha mais fina mestre */
+            border-bottom-width: 2px; /* Linha mais fina */
         }
         
         header.header-reduzido .banner-proporcional {
-            /* Tamanho reduzido para outras abas mestre (aprox 15vh) */
+            /* Tamanho reduzido para outras abas (aprox 15vh) */
             padding-bottom: 15%; 
         }
 
@@ -76,7 +76,7 @@
             width: 100%;
             height: 100%;
             background-image: url('imagem.png');
-            background-size: contain; /* Mostra inteira sem cortes mestre */
+            background-size: contain; /* Mostra inteira sem cortes */
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
@@ -92,7 +92,7 @@
             z-index: 2;
         }
         
-        /* Oculta textos antigos mestre */
+        /* Oculta textos antigos */
         .logo-container, header h1, header h2 { display: none; }
 
         .container { 
@@ -104,7 +104,7 @@
 
         .section { 
             display: none; 
-            animation: fadeIn 0.4s ease-out; /* Animação suave mestre */
+            animation: fadeIn 0.4s ease-out; /* Animação suave */
         }
 
         .section.active { 
@@ -318,65 +318,65 @@
         <div style="text-align: center; padding: 30px 10px;">
             <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
             <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
-            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo mestre</button>
+            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
     </section>
 
     <section id="catalogo" class="section">
-        <h3>📖 Livros Disponíveis mestre</h3>
-        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres mestre</div>
-        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria mestre.</p>
-        <div id="lista-catalogo">Carregando acervo mestre...</div>
+        <h3>📖 Livros Disponíveis</h3>
+        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
+        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria.</p>
+        <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
     <section id="conta" class="section">
         <div id="tela-login">
             <div class="card">
-                <h3>Acessar Conta Mestre mestre</h3>
+                <h3>Acessar Conta</h3>
                 <input type="text" id="log-user" placeholder="Usuário (e-mail)">
                 <input type="password" id="log-pass" placeholder="Senha">
-                <button class="btn-principal" onclick="loginMembro()">ENTRAR mestre</button>
-                <center><button onclick="mostrarCadastro()">Criar nova conta mestre</button></center>
+                <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
+                <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
             </div>
         </div>
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
-                <h3>Cadastro mestre</h3>
+                <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
                 <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
                 <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
-                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR mestre</button>
-                <center><button onclick="mostrarLogin()">Já tenho conta mestre</button></center>
+                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
+                <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
             </div>
         </div>
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span> mestre</h3>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
                 <div id="meus-livros"></div>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA mestre</button>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
             </div>
         </div>
     </section>
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Cadeado do Pastor 🔐 mestre</h3>
+            <h3>Cadeado do Pastor 🔐</h3>
             <input type="text" id="adm-user" placeholder="Usuário ADM (e-mail)">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
-            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL mestre</button>
+            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
             <div class="card">
-                <h4>📚 Gestão do Acervo (Editar/Excluir) mestre</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo mestre...</div>
+                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
             </div>
             <div class="card">
-                <h4>👥 Gestão de Membros mestre</h4>
-                <div id="lista-membros-adm">Carregando membros mestre...</div>
+                <h4>👥 Gestão de Membros</h4>
+                <div id="lista-membros-adm">Carregando membros...</div>
             </div>
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM mestre</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
         </div>
     </section>
 </div>
@@ -389,7 +389,7 @@
 </nav>
 
 <script>
-    // Configuração Firebase mestre (Sua configuração original)
+    // Configuração Firebase (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -408,40 +408,40 @@
         return email.replace(/\./g, '_');
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA MESTRE ---
-    // CORREÇÃO DEFINITIVA: Ajusta tamanho do banner e rola para o topo mestre
+    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA ---
+    // Ajusta tamanho do banner e rola para o topo
     function mudarAba(abaId) {
-        // 1. Esconde todas as seções mestre
+        // 1. Esconde todas as seções
         const secoes = document.querySelectorAll('.section');
         secoes.forEach(s => s.classList.remove('active'));
         
-        // 2. Remove destaque de todos os botões mestre
+        // 2. Remove destaque de todos os botões
         const botoes = document.querySelectorAll('nav button');
         botoes.forEach(b => b.classList.remove('active'));
         
-        // 3. Mostra a seção clicada mestre
+        // 3. Mostra a seção clicada
         const secaoAtiva = document.getElementById(abaId);
         if (secaoAtiva) {
             secaoAtiva.classList.add('active');
         }
         
-        // 4. Destaque o botão clicado mestre
+        // 4. Destaque o botão clicado
         const botaoAtivo = document.getElementById('nav-' + abaId);
         if (botaoAtivo) {
             botaoAtivo.classList.add('active');
         }
         
-        // 5. LÓGICA DO BANNER DINÂMICO MESTRE (A CORREÇÃO ESTÁ AQUI!)
+        // 5. LÓGICA DO BANNER DINÂMICO
         const header = document.getElementById('main-header');
         if (abaId === 'inicio') {
-            // Se for Home mestre, banner grande mestre
+            // Se for Home, banner grande
             header.classList.remove('header-reduzido');
         } else {
-            // Se for qualquer outra aba mestre, reduz o banner automaticamente mestre
+            // Se for qualquer outra aba, reduz o banner automaticamente
             header.classList.add('header-reduzido');
         }
         
-        // 6. Rolagem INSTANTÂNEA mestre para o topo absoluto mestre
+        // 6. Rolagem INSTANTÂNEA para o topo absoluto
         window.scrollTo({
             top: 0,
             left: 0,
@@ -491,7 +491,7 @@
                     <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
                         <div class="livro-topo">
                             <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR mestre</button>
+                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
                         </div>
                         <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
@@ -508,7 +508,7 @@
                     listaGestao.innerHTML += `
                         <div style="padding:12px 10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
-                            <div class="gestao-acoes"><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X mestre</button></div>
+                            <div class="gestao-acoes"><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button></div>
                         </div>`;
                 });
             }
@@ -532,13 +532,13 @@
                         <div>
                             <strong>${m.nome}</strong><br>
                             <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
-                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats mestre</a>` : ''}
+                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats</a>` : ''}
                         </div>
                         <div style="display:flex; gap: 5px; align-items:center;">
                             <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
-                                ${m.bloqueado ? 'Desbloquear mestre' : 'Bloquear mestre'}
+                                ${m.bloqueado ? 'Desbloquear' : 'Bloquear'}
                             </button>
-                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X mestre</button>
+                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X</button>
                         </div>
                     </div>`;
             });
@@ -548,18 +548,18 @@
     // --- RESERVA (MANTIDO) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
-        if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
+        if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
         const emailSanitizado = sanitizarEmail(mLocal.user);
         
         db.ref('membros/' + emailSanitizado).once('value', snap => {
             const mDb = snap.val();
-            if(mDb.bloqueado) return alert("Sua conta está bloqueada mestre.");
+            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
             
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
                     db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
-                    alert("Mestre, reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
+                    alert("Reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
                 }
             });
         });
@@ -567,13 +567,13 @@
 
     // --- FUNÇÕES ADM (MANTIDO) ---
     function excluirLivro(id) {
-        if(confirm("Tem certeza que deseja excluir este livro mestre?")) {
+        if(confirm("Tem certeza que deseja excluir este livro?")) {
             db.ref('livros/' + id).remove();
         }
     }
     
     function excluirMembroMestre(chaveDb, nomeMembro) {
-        if(confirm("Mestre, tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'?")) {
+        if(confirm("Tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'?")) {
             db.ref('membros/' + chaveDb).remove();
         }
     }
@@ -585,7 +585,7 @@
             sessionStorage.setItem('adm_ativo', "Master"); 
             location.reload(); 
         } else {
-            alert("Dados ADM incorretos mestre.");
+            alert("Dados ADM incorretos.");
         }
     }
     
@@ -598,18 +598,18 @@
         const pass = document.getElementById('cad-pass').value.trim();
         const tel = document.getElementById('cad-tel').value.trim();
 
-        if(!nome || !emailOriginal || !pass) return alert("Por favor mestre, preencha tudo!");
-        if(pass.length < 6) return alert("Senha mestre muito curta (mín. 6)!");
+        if(!nome || !emailOriginal || !pass) return alert("Por favor, preencha tudo!");
+        if(pass.length < 6) return alert("Senha muito curta (mín. 6)!");
 
         const emailSanitizado = sanitizarEmail(emailOriginal);
         const d = { nome, user: emailOriginal, pass, tel, bloqueado: false };
 
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             if(snap.exists()) {
-                alert("Mestre, e-mail já cadastrado.");
+                alert("E-mail já cadastrado.");
             } else {
                 db.ref('membros/' + emailSanitizado).set(d).then(() => {
-                    alert("Cadastro realizado mestre!");
+                    alert("Cadastro realizado!");
                     mostrarLogin();
                 });
             }
@@ -619,7 +619,7 @@
     function loginMembro() {
         const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
         const passInput = document.getElementById('log-pass').value;
-        if(!emailInput || !passInput) return alert("Preencha tudo mestre!");
+        if(!emailInput || !passInput) return alert("Preencha tudo!");
         const emailSanitizado = sanitizarEmail(emailInput);
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             const m = snap.val(); 
@@ -627,7 +627,7 @@
                 localStorage.setItem('ipb_membro', JSON.stringify(m)); 
                 location.reload(); 
             } else {
-                alert("Dados incorretos mestre.");
+                alert("Dados incorretos.");
             }
         });
     }
