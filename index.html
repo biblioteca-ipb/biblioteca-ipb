@@ -670,7 +670,7 @@
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
                     db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
-                    alert("Reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
+                    alert("Reserva realizada! Procure o responsável na IPB Petrópolis para retirar seu livro.");
                 }
             });
         });
@@ -915,3 +915,4 @@
 </script>
 </body>
 </html>
+
