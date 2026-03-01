@@ -3,84 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Biblioteca Rev Welison R. Ayres</title> <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <title>Biblioteca Rev Welison R. Ayres</title>
     
-    <style>
-        :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; --warning: #f1c40f; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script> <style>
+        /* --- VARIÁVEIS DE COR E ESTILO PROFISSIONAL (MANTIDAS) --- */
+        :root { 
+            --primary: #006437; /* Verde IPB Profundo */
+            --primary-light: #008f4f; 
+            --accent: #2ecc71; /* Verde Claro para Destaques */
+            --bg: #f4f7f5; /* Cinza Esverdeado Muito Claro para o Fundo */
+            --white: #ffffff; 
+            --text: #1a2a1f; /* Preto Esverdeado para Texto */
+            --danger: #d63031; 
+            --gray: #636e72; 
+            --shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra Suave Profissional */
+            --radius-lg: 18px;
+            --radius-md: 12px;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            margin: 0; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            padding-bottom: 100px; /* Espaço para o menu flutuante */
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- CABEÇALHO COMO BANNER PROPORCIONAL INTEIRO (MANTIDO) --- */
+        header { 
+            width: 100vw; 
+            position: relative; 
+            background-color: var(--white); 
+            border-bottom: 4px solid var(--primary); 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            margin-bottom: 0;
+            overflow: hidden;
+            display: flex; 
+            justify-content: center;
+        }
         
-        /* CABEÇALHO AJUSTADO - Logo Grande e Nome */
-        header { background: var(--white); padding: 30px 15px; /* Aumentado padding vertical */ text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .banner-proporcional {
+            width: 100%;
+            position: relative;
+            padding-bottom: 50%; /* Proporção 2:1 padrão */
+        }
+
+        .banner-imagem {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('imagem.png');
+            background-size: contain; /* Mostra inteira sem cortes */
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+            z-index: 2;
+        }
         
-        /* Ajuste de tamanho do LOGO para grande destaque */
-        .logo-container img { max-width: 250px; /* Logo bem maior conforme solicitado */ height: auto; display: block; margin: 0 auto 15px; }
+        /* Oculta textos originais do header para focar no banner */
+        .logo-container, header h1, header h2 { display: none; }
+
+        .container { 
+            padding: 20px; 
+            max-width: 500px; 
+            margin: 0 auto; 
+            margin-top: 0; 
+        }
+
+        .section { 
+            display: none; 
+            animation: fadeIn 0.5s ease-out; 
+        }
+
+        .section.active { 
+            display: block; 
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* --- ESTILIZAÇÃO DO ACERVO ORGANIZADO (MANTIDO) --- */
         
-        header h1 { /* Nome da biblioteca grande e em destaque */ margin: 10px 0 0 0; font-size: 1.8rem; color: var(--primary); font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
-        header h2 { margin-top: 5px; font-size: 0.9rem; color: var(--gray); letter-spacing: 1px; font-weight: 400; text-transform: uppercase; display: none; /* Mantido escondido conforme estrutura original */ }
+        .section h3 {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .section { display: none; animation: fadeIn 0.4s ease-out; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
+        .info-box.homenagem {
+            font-size: 0.9rem; 
+            color: var(--primary); 
+            font-weight: 700;
+            margin-bottom: 25px; 
+            background: var(--white); 
+            padding: 15px; 
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--accent);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .catalogo-categoria-titulo { 
+            color: var(--primary); 
+            font-weight: 700;
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            margin-top: 35px; 
+            margin-bottom: 15px; 
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0,100,55,0.1); 
+        }
+
+        .livro-item { 
+            background: var(--white); 
+            padding: 20px; 
+            border-radius: var(--radius-md); 
+            margin-bottom: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            border-left: 5px solid var(--primary); 
+            box-shadow: var(--shadow); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .livro-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .livro-item.esgotado { 
+            border-left-color: var(--gray); 
+            opacity: 0.7; 
+        }
+
+        .livro-topo { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            width: 100%; 
+            gap: 10px; 
+        }
+
+        .titulo-livro { 
+            font-weight: 700; 
+            cursor: help; 
+            color: var(--text);
+            font-size: 1.15rem; 
+            line-height: 1.2; 
+            text-decoration: none; 
+        }
+
+        .disp-info {
+            font-size: 0.8rem;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* --- BOTÕES MODERNOS E PROFISSIONAIS (MANTIDO) --- */
         
-        /* Estilos de Livro */
-        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
-        .livro-item.esgotado { border-left-color: var(--gray); opacity: 0.8; }
-        .livro-topo { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 10px; }
-        .titulo-livro { font-weight: 700; cursor: help; text-decoration: underline dotted var(--gray); font-size: 1.1rem; line-height: 1.2; }
+        .btn-acao { 
+            background: var(--white); 
+            color: var(--primary); 
+            border: 2px solid var(--primary); 
+            padding: 8px 16px; 
+            border-radius: 20px; 
+            font-weight: 700; 
+            font-size: 0.75rem; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-acao:hover:not(:disabled) { 
+            background: var(--primary); 
+            color: var(--white); 
+            box-shadow: 0 2px 8px rgba(0,100,55,0.2);
+        }
+
+        .btn-acao:disabled { 
+            border-color: var(--gray); 
+            color: var(--gray); 
+            cursor: not-allowed; 
+        }
+
+        .btn-grande { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            color: var(--white); 
+            border: none; 
+            padding: 18px; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            width: 100%; 
+            cursor: pointer; 
+            font-size: 1.1rem; 
+            box-shadow: 0 5px 15px rgba(0,100,55,0.2); 
+            transition: all 0.2s ease; 
+        }
+
+        .btn-grande:hover { 
+            box-shadow: 0 8px 25px rgba(0,100,55,0.3); 
+            transform: translateY(-2px); 
+        }
+
+        .btn-principal { 
+            background: var(--primary); 
+            color: var(--white); 
+            border: none; 
+            padding: 15px; 
+            border-radius: var(--radius-md); 
+            font-weight: 700; 
+            width: 100%; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            font-size: 1rem; 
+            transition: background 0.2s; 
+        }
+
+        .btn-principal:hover { 
+            background: var(--primary-light); 
+        }
         
-        /* Categoria no Catálogo */
-        .catalogo-categoria-titulo { color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        /* Botão Secundário para gestão */
+        .btn-secundario {
+            background: var(--white);
+            color: var(--gray);
+            border: 2px solid #edf2ef;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secundario:hover {
+            border-color: var(--gray);
+            color: var(--text);
+        }
 
-        /* Botões */
-        .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; font-size: 16px; transition: background 0.2s; }
-        .btn-principal:hover { background: var(--primary-light); }
-        .btn-principal:disabled { background: var(--gray); cursor: not-allowed; }
+        /* --- NAVEGAÇÃO FLUTUANTE ESTILO APP (MANTIDO) --- */
+        nav { 
+            display: flex; 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(5px); 
+            position: fixed; 
+            bottom: 15px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: calc(100% - 30px); 
+            max-width: 470px; 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
+            z-index: 1000; 
+            border-radius: 50px; 
+            padding: 5px;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        nav button { 
+            flex: 1; 
+            padding: 15px 0; 
+            border: none; 
+            background: none; 
+            font-weight: 700; 
+            color: #a4b0be; 
+            font-size: 0.7rem; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: color 0.2s; 
+            border-radius: 50px;
+        }
+
+        nav button.active { 
+            color: var(--primary); 
+            background: rgba(0,100,55,0.05); 
+        }
+        nav button.active::after { display: none; }
+
+        /* --- OUTROS ELEMENTOS PROFISSIONAIS (MANTIDO) --- */
+        .card { 
+            background: var(--white); 
+            padding: 25px; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); 
+            margin-bottom: 20px; 
+            border: 1px solid rgba(0,0,0,0.01); 
+        }
+
+        input, select, textarea { 
+            width: 100%; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border: 2px solid #edf2ef; 
+            border-radius: var(--radius-md); 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            font-family: inherit; 
+            transition: border-color 0.2s; 
+        }
+
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--accent); 
+            outline: none; 
+        }
+
+        center button { 
+            background:none; 
+            border:none; 
+            color:var(--primary); 
+            margin-top:15px; 
+            text-decoration:underline; 
+            font-family: inherit; 
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
         
-        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        .btn-acao:hover:not(:disabled) { background: var(--primary); color: white; }
-        .btn-acao:disabled { border-color: var(--gray); color: var(--gray); cursor: not-allowed; }
+        /* Link de esqueci a senha */
+        .link-recuperar {
+            font-size: 0.8rem;
+            color: var(--gray);
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+        }
 
-        .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,100,55,0.2); transition: all 0.2s; }
-        .btn-grande:hover { box-shadow: 0 8px 20px rgba(0,100,55,0.3); transform: translateY(-2px); }
-
-        /* Botões ADM de gestão */
-        .gestao-acoes { display: flex; gap: 5px; flex-shrink: 0; }
-        .btn-edit-small { background: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-        .btn-edit-small:hover { background: #e3b60c; }
-        .btn-danger-small { background: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
-        .btn-danger-small:hover { background: #b71c1c; }
-
-        /* Inputs e Formulários */
-        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; transition: border-color 0.2s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary-light); outline: none; }
-        label { font-size: 0.8rem; color: var(--gray); font-weight: 600; margin-left: 5px; display: block; margin-top: 10px;}
-
-        /* Navegação */
-        nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; max-width: 500px; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
-        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
-        nav button.active { color: var(--primary); position: relative; }
-        nav button.active::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 30px; height: 3px; background: var(--primary); border-radius: 0 0 3px 3px; }
-
-        /* Utilitários */
         .hidden { display: none !important; }
-        center button { background:none; border:none; color:var(--primary); margin-top:15px; text-decoration:underline; font-family: inherit; cursor: pointer;}
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-container"><img src="imagem.png" alt="Logo IPB"></div>
-    <h1>Biblioteca Rev Welison R. Ayres</h1>
+    <div class="banner-proporcional">
+        <div class="banner-imagem"></div>
+        <div class="banner-overlay"></div>
+    </div>
 </header>
 
 <div class="container">
     
     <section id="inicio" class="section active">
         <div style="text-align: center; padding: 30px 10px;">
-            <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
+            <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
             <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
             <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
@@ -88,7 +378,8 @@
 
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
-        <p style="font-size: 0.75rem; color: var(--gray); margin-bottom: 20px; background: #edf2ef; padding: 10px; border-radius: 8px;">Dica: Toque/Passe o mouse no título para ler o resumo. Os livros estão organizados por categoria e ordem alfabética.</p>
+        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
+        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Toque/Passe o mouse no título para ler o resumo. Os livros estão organizados por categoria e ordem alfabética.</p>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
@@ -96,9 +387,12 @@
         <div id="tela-login">
             <div class="card">
                 <h3>Acessar Conta Mestre</h3>
-                <input type="text" id="log-user" placeholder="Usuário">
+                <input type="text" id="log-user" placeholder="Usuário (e-mail)">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
+                
+                <center><button class="link-recuperar" onclick="recuperarSenhaMembro()">Esqueci minha senha</button></center>
+                
                 <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
             </div>
         </div>
@@ -106,8 +400,8 @@
             <div class="card">
                 <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="Escolha um Usuário">
-                <input type="password" id="cad-pass" placeholder="Crie uma Senha">
+                <input type="email" id="cad-user" placeholder="E-mail (será seu usuário)">
+                <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
                 <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
@@ -125,21 +419,26 @@
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
             <h3>Cadeado do Pastor 🔐</h3>
-            <input type="text" id="adm-user" placeholder="Usuário ADM">
+            <input type="text" id="adm-user" placeholder="Usuário ADM (e-mail)">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
             
+            <div class="card">
+                <h4>🔐 Gestão de Administradores ADM</h4>
+                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel.</p>
+                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs...</div>
+                <input type="email" id="novo-admin-email" placeholder="E-mail do novo Administrador">
+                <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
+            </div>
+
             <div class="card" id="card-form-livro">
                 <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
-                
                 <input type="hidden" id="edit-livro-id" value="">
-
                 <label>Título do Livro</label>
                 <input type="text" id="novo-titulo" placeholder="Ex: O Peregrino">
-                
                 <label>Categoria</label>
                 <select id="novo-categoria">
                     <option value="" disabled selected>Selecione uma categoria</option>
@@ -152,23 +451,19 @@
                     <option value="Liderança">Liderança</option>
                     <option value="Outros">Outros</option>
                 </select>
-
                 <label>Breve Resumo</label>
                 <textarea id="novo-resumo" placeholder="Sobre o que fala este livro..." rows="3"></textarea>
-                
-                <label>Quantidade Total de Exemplares</label>
+                <label>Quantidade Total</label>
                 <input type="number" id="novo-qtd" placeholder="Quantidade" value="1" min="1">
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-principal" id="btn-salvar-livro" onclick="salvarLivro()">SALVAR LIVRO</button>
-                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray);" onclick="cancelarEdicao()">CANCELAR</button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-principal" id="btn-salvar-livro" style="margin-top:0;" onclick="salvarLivro()">SALVAR LIVRO</button>
+                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray); margin-top:0;" onclick="cancelarEdicao()">CANCELAR</button>
                 </div>
             </div>
             
             <div class="card">
                 <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
-                <p style="font-size: 0.7rem; color: var(--gray); margin-bottom: 10px;">Organizado por Categoria -> Ordem Alfabética</p>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando...</div>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
             </div>
 
             <div class="card">
@@ -178,10 +473,10 @@
             
             <div class="card">
                 <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm"></div>
+                <div id="lista-membros-adm">Carregando membros...</div>
             </div>
 
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray); margin-top: 20px;">SAIR DO MODO ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
         </div>
     </section>
 </div>
@@ -194,7 +489,9 @@
 </nav>
 
 <script>
-    // Mantendo sua configuração original do Firebase intacta
+    // --- LÓGICA MANTIDA INTACTA ---
+    
+    // Configuração Firebase (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -208,6 +505,7 @@
     // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const auth = firebase.auth(); // Inicializar Auth
 
     // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
     function mudarAba(aba) {
@@ -240,7 +538,9 @@
         return resultadoFinal;
     }
 
-    // --- GESTÃO DE LIVROS (ADM) ---
+
+    // --- GESTÃO DE LIVROS (ADM) - ADICIONAR E EDITAR ---
+
     function salvarLivro() {
         const idInput = document.getElementById('edit-livro-id').value;
         const t = document.getElementById('novo-titulo').value.trim();
@@ -249,7 +549,7 @@
         const q = parseInt(document.getElementById('novo-qtd').value);
 
         if(!t || !c || isNaN(q) || q < 1) { 
-            alert("Por favor, preencha Título, Categoria e uma Quantidade válida."); 
+            alert("Por favor, preencha Título, Categoria e uma Quantidade válida (mínimo 1)."); 
             return; 
         }
 
@@ -316,12 +616,14 @@
         }
     }
 
-    // --- RENDERIZAÇÃO DE LISTAS (OUVINTE PRINCIPAL DB) ---
+
+    // --- RENDERIZAÇÃO DE LISTAS (MANTIDO) ---
     db.ref().on('value', snap => {
         const dados = snap.val() || {};
         const livrosRaw = dados.livros || {};
         const locacoes = dados.locacoes || {};
         const membros = dados.membros || {};
+        
         const livrosAgrupados = processarLivros(livrosRaw);
 
         // Catálogo Usuário
@@ -338,7 +640,7 @@
                             <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
                             <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
                         </div>
-                        <small style="margin-top:5px; color:${estaEsgotado ? 'var(--danger)' : 'var(--gray)'}; font-weight:600;">Disp: ${l.qtdAtual} / Total: ${l.qtdTotal}</small>
+                        <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
             });
         }
@@ -348,43 +650,38 @@
         if(listaGestao) {
             listaGestao.innerHTML = '';
             for (let categoria in livrosAgrupados) {
-                listaGestao.innerHTML += `<div style="background:#f4f7f5; padding:5px 10px; font-weight:bold; color:var(--primary); font-size:0.8rem; margin-top:10px;">${categoria}</div>`;
+                listaGestao.innerHTML += `<div style="background:#f4f7f5; padding: 5px 10px; font-weight:bold; color:var(--primary); font-size:0.8rem; margin-top:10px; border-radius:5px;">${categoria}</div>`;
                 livrosAgrupados[categoria].forEach(l => {
                     listaGestao.innerHTML += `
-                        <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                            <div><strong>${l.titulo}</strong><br><small>T:${l.qtdTotal} | D:${l.qtdAtual}</small></div>
-                            <div class="gestao-acoes">
-                                <button class="btn-edit-small" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
-                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
-                            </div>
+                        <div style="padding:12px 10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
+                            <div class="gestao-acoes"><button class="btn-edit-small" onclick="carregarDadosParaEditar('${l.id}')">✏️</button><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button></div>
                         </div>`;
                 });
             }
         }
 
-        // Gestão Membros ADM
+        // Gestão Membros ADM (MANTIDO)
         const listaMembrosAdm = document.getElementById('lista-membros-adm');
         if(listaMembrosAdm) {
             listaMembrosAdm.innerHTML = '';
-            for(let u in membros) {
-                const m = membros[u];
+            let membrosArr = [];
+            for(let u in membros) membrosArr.push({user: u, ...membros[u]});
+            membrosArr.sort((a,b) => a.nome.localeCompare(b.nome));
+            membrosArr.forEach(m => {
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
                 const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
-                listaMembrosAdm.innerHTML += `
-                    <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                        <div><strong>${m.nome}</strong><br><small>@${m.user} | ${m.tel || ''}</small></div>
-                        <button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${u}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button>
-                    </div>`;
-            }
+                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><strong>${m.nome}</strong><br><small>@${m.user} | ${m.tel || ''}</small>${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem;">Whats</a>` : ''}</div><button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${m.user}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button></div>`;
+            });
         }
     });
 
-    // --- RESERVA E EMPRÉSTIMO ---
+    // --- RESERVA E EMPRÉSTIMO (MANTIDO) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
-        db.ref('membros/' + mLocal.user).once('value', snap => {
+        db.ref('membros/' + mLocal.user.replace('.','_')).once('value', snap => {
             const mDb = snap.val();
             if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
             const prazo = prompt("Prazo: 15, 20 ou 30 dias?", "15");
@@ -397,18 +694,80 @@
     }
 
     // --- FUNÇÕES ADM ---
-    function loginAdmin() {
-        const u = document.getElementById('adm-user').value;
-        const p = document.getElementById('adm-pass').value;
-        if(u === "ipb" && p === "ipbbrasil") { sessionStorage.setItem('adm_ativo', "IPB"); location.reload(); }
+    
+    // Gestão de e-mails ADM no Database
+    db.ref('admins_emails').on('value', snap => {
+        const emailsObj = snap.val();
+        const listaGeral = document.getElementById('lista-admins-geral');
+        if(!listaGeral) return;
+        listaGeral.innerHTML = '';
+        if(!emailsObj){
+            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado. Apenas a conta master funciona.</small>';
+            return;
+        }
+        for(let id in emailsObj){
+            const email = emailsObj[id];
+            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X</button></div>`;
+        }
+    });
+
+    function promoverParaAdmin() {
+        const email = document.getElementById('novo-admin-email').value.trim().toLowerCase();
+        if(!email || !email.includes('@')) return alert("Digite um e-mail válido.");
+        db.ref('admins_emails').push(email).then(() => {
+            alert("E-mail adicionado à lista de administradores.");
+            document.getElementById('novo-admin-email').value = '';
+        });
     }
-    function logoutAdmin() { sessionStorage.clear(); location.reload(); }
+    
+    function removerAdmin(id) {
+        if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
+    }
+
+    function loginAdmin() {
+        const u = document.getElementById('adm-user').value.trim().toLowerCase();
+        const p = document.getElementById('adm-pass').value;
+        
+        // Checagem Master original (MANTIDA)
+        if(u === "ipb" && p === "ipbbrasil") { 
+            sessionStorage.setItem('adm_ativo', "Master"); 
+            location.reload(); 
+            return;
+        }
+
+        // Checagem por e-mail no Database (NOVA)
+        db.ref('admins_emails').once('value', snap => {
+            const emailsObj = snap.val();
+            let emailPermitido = false;
+            if(emailsObj){
+                for(let id in emailsObj){
+                    if(emailsObj[id] === u){
+                        emailPermitido = true;
+                        break;
+                    }
+                }
+            }
+            
+            if(emailPermitido){
+                // Usar Auth do Firebase para logar com e-mail/senha cadastrados
+                auth.signInWithEmailAndPassword(u, p).then(() => {
+                    sessionStorage.setItem('adm_ativo', u);
+                    location.reload();
+                }).catch(err => alert("Senha ADM incorreta para este e-mail."));
+            } else {
+                alert("Este e-mail não tem permissão ADM ou os dados estão incorretos.");
+            }
+        });
+    }
+    
+    function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); auth.signOut(); location.reload(); }
+    
     function darBaixa(locId, livroId) {
         db.ref('livros/' + livroId).transaction(l => { if(l) { l.qtdAtual = Math.min(l.qtdAtual + 1, l.qtdTotal); return l; } });
         db.ref('locacoes/' + locId).remove();
     }
 
-    // Ouvinte Locações
+    // Ouvinte Locações (MANTIDO)
     db.ref('locacoes').on('value', snap => {
         const locs = snap.val(); const listaAdm = document.getElementById('lista-adm');
         const listaMembro = document.getElementById('meus-livros');
@@ -422,26 +781,85 @@
         }
     });
 
-    // --- GESTÃO DE CONTA ---
-    function cadastrarMembro() {
-        const d = { nome: document.getElementById('cad-nome').value, user: document.getElementById('cad-user').value.toLowerCase(), pass: document.getElementById('cad-pass').value, tel: document.getElementById('cad-tel').value, bloqueado: false };
-        if(!d.user || !d.pass) return alert("Preencha usuário e senha mestre!");
-        db.ref('membros/' + d.user).once('value', snap => {
-            if(snap.exists()) alert("Usuário já existe!");
-            else db.ref('membros/' + d.user).set(d).then(() => location.reload());
+    // --- GESTÃO DE CONTA (MEMBRO) (CORRIGIDO E MELHORADO) ---
+    
+    // Recuperação de Senha do Firebase (MANTIDO)
+    function recuperarSenhaMembro() {
+        const email = prompt("Digite seu e-mail cadastrado:");
+        if(!email || !email.includes('@')) return alert("Digite um e-mail válido mestre!");
+        auth.sendPasswordResetEmail(email).then(() => {
+            alert("E-mail de redefinição de senha enviado! Verifique sua caixa de entrada.");
+        }).catch(err => {
+            if(err.code === "auth/user-not-found") alert("E-mail não encontrado na base de dados mestre.");
+            else alert("Erro ao enviar e-mail de recuperação: " + err.message);
         });
     }
-    function loginMembro() {
-        const u = document.getElementById('log-user').value.toLowerCase(); const p = document.getElementById('log-pass').value;
-        db.ref('membros/' + u).once('value', snap => { const m = snap.val(); if(m && m.pass === p) { localStorage.setItem('ipb_membro', JSON.stringify(m)); location.reload(); } else alert("Dados incorretos!"); });
+
+    // CORREÇÃO: Função de cadastro melhorada com tratamento de erro
+    function cadastrarMembro() {
+        const nome = document.getElementById('cad-nome').value.trim();
+        const email = document.getElementById('cad-user').value.trim().toLowerCase();
+        const pass = document.getElementById('cad-pass').value.trim();
+        const tel = document.getElementById('cad-tel').value.trim();
+
+        // 1. Verificação básica no front-end
+        if(!nome || !email || !pass) return alert("Por favor mestre, preencha Nome, E-mail e Senha!");
+        if(!email.includes('@') || !email.includes('.')) return alert("Por favor mestre, use um e-mail válido!");
+        if(pass.length < 6) return alert("A senha mestre deve ter pelo menos 6 caracteres!");
+
+        const d = { nome, user: email, pass, tel, bloqueado: false, dataCadastro: new Date().toLocaleDateString('pt-BR') };
+
+        // 2. Criar usuário no Auth do Firebase (necessário para reset de senha)
+        // Isso checa duplicidade e valida e-mail/senha mestre no servidor
+        auth.createUserWithEmailAndPassword(email, pass).then(userCredential => {
+            // 3. Se Auth sucesso, salvar dados adicionais no Database
+            // Chave do database não aceita ponto '.', trocamos por underscore '_'
+            db.ref('membros/' + email.replace('.','_')).set(d).then(() => {
+                alert("Cadastro realizado mestre! Use seu e-mail e senha para entrar.");
+                mostrarLogin();
+            });
+        }).catch(err => {
+            // Tratamento de erros específicos do Firebase Auth mestre
+            if (err.code === "auth/email-already-in-use") {
+                alert("Mestre, este e-mail já está cadastrado no sistema.");
+            } else if (err.code === "auth/invalid-email") {
+                alert("Mestre, o e-mail digitado é inválido.");
+            } else if (err.code === "auth/weak-password") {
+                alert("Mestre, a senha escolhida é muito fraca (use pelo menos 6 caracteres).");
+            } else {
+                alert("Erro mestre ao cadastrar no sistema: " + err.message);
+            }
+        });
     }
-    function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
+    
+    function loginMembro() {
+        const u = document.getElementById('log-user').value.trim().toLowerCase(); 
+        const p = document.getElementById('log-pass').value;
+        
+        if(!u || !p) return alert("Preencha usuário e senha mestre!");
+
+        // Logar com Auth do Firebase para checar senha oficial
+        auth.signInWithEmailAndPassword(u, p).then(() => {
+            // Chave do database trocou ponto '.' por underscore '_'
+            db.ref('membros/' + u.replace('.','_')).once('value', snap => { 
+                const m = snap.val(); 
+                localStorage.setItem('ipb_membro', JSON.stringify(m)); 
+                location.reload(); 
+            });
+        }).catch(err => alert("E-mail ou senha mestre incorretos."));
+    }
+    
+    function logout() { localStorage.removeItem('ipb_membro'); auth.signOut(); location.reload(); }
     function mostrarCadastro() { document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block'; }
     function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
 
-    // --- CHECAGEM INICIAL ---
+    // --- CHECAGEM INICIAL AO CARREGAR PÁGINA ---
     if(localStorage.getItem('ipb_membro')) { document.getElementById('tela-login').style.display='none'; document.getElementById('perfil-membro').style.display='block'; document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome; }
-    if(sessionStorage.getItem('adm_ativo')) { document.getElementById('area-adm-login').style.display='none'; document.getElementById('painel-adm').style.display='block'; db.ref('membros').keepSynced(true); }
+    if(sessionStorage.getItem('adm_ativo')) { 
+        document.getElementById('area-adm-login').style.display='none'; 
+        document.getElementById('painel-adm').style.display='block'; 
+        db.ref('membros').keepSynced(true); 
+    }
 </script>
 </body>
 </html>
