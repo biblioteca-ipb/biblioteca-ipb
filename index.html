@@ -7,7 +7,8 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script> <style>
+    
+    <style>
         /* --- VARIÁVEIS DE COR E ESTILO PROFISSIONAL (MANTIDAS) --- */
         :root { 
             --primary: #006437; /* Verde IPB Profundo */
@@ -341,18 +342,6 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-        
-        /* Link de esqueci a senha */
-        .link-recuperar {
-            font-size: 0.8rem;
-            color: var(--gray);
-            background: none;
-            border: none;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 10px;
-            display: block;
-        }
 
         .hidden { display: none !important; }
     </style>
@@ -390,9 +379,6 @@
                 <input type="text" id="log-user" placeholder="Usuário (e-mail)">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                
-                <center><button class="link-recuperar" onclick="recuperarSenhaMembro()">Esqueci minha senha</button></center>
-                
                 <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
             </div>
         </div>
@@ -400,7 +386,7 @@
             <div class="card">
                 <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="email" id="cad-user" placeholder="E-mail (será seu usuário)">
+                <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
                 <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
@@ -505,7 +491,13 @@
     // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const auth = firebase.auth(); // Inicializar Auth
+
+    // NOVA FUNÇÃO UTILITÁRIA PARA SANITIZAR E-MAIL (CORREÇÃO DO ERRO MESTRE)
+    // Firebase Realtime Database não aceita ponto '.' na chave, trocamos por underscore '_'
+    function sanitizarEmail(email) {
+        if(!email) return "";
+        return email.replace(/\./g, '_');
+    }
 
     // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
     function mudarAba(aba) {
@@ -661,27 +653,35 @@
             }
         }
 
-        // Gestão Membros ADM (MANTIDO)
+        // Gestão Membros ADM (CORRIGIDO PARA USAR CHAVE SANITIZADA NO BLOQUEIO)
         const listaMembrosAdm = document.getElementById('lista-membros-adm');
         if(listaMembrosAdm) {
             listaMembrosAdm.innerHTML = '';
             let membrosArr = [];
-            for(let u in membros) membrosArr.push({user: u, ...membros[u]});
+            for(let chaveMembro in membros) {
+                // A chaveMembro já está sanitizada (com underscore) vinda do DB
+                membrosArr.push({chaveDb: chaveMembro, ...membros[chaveMembro]});
+            }
             membrosArr.sort((a,b) => a.nome.localeCompare(b.nome));
             membrosArr.forEach(m => {
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
                 const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
-                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><strong>${m.nome}</strong><br><small>@${m.user} | ${m.tel || ''}</small>${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem;">Whats</a>` : ''}</div><button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${m.user}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button></div>`;
+                // O botão de bloqueio usa a chave sanitizada direta do DB (chaveDb)
+                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><strong>${m.nome}</strong><br><small>${m.user} | ${m.tel || ''}</small>${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem;">Whats</a>` : ''}</div><button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button></div>`;
             });
         }
     });
 
-    // --- RESERVA E EMPRÉSTIMO (MANTIDO) ---
+    // --- RESERVA E EMPRÉSTIMO (MANTIDO E CORRIGIDO PARA USAR E-MAIL SANITIZADO) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
-        db.ref('membros/' + mLocal.user.replace('.','_')).once('value', snap => {
+        
+        // CORREÇÃO MESTRE: Sanitizar o e-mail logado para buscar no banco mestre
+        const emailSanitizado = sanitizarEmail(mLocal.user);
+        
+        db.ref('membros/' + emailSanitizado).once('value', snap => {
             const mDb = snap.val();
             if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
             const prazo = prompt("Prazo: 15, 20 ou 30 dias?", "15");
@@ -728,14 +728,12 @@
         const u = document.getElementById('adm-user').value.trim().toLowerCase();
         const p = document.getElementById('adm-pass').value;
         
-        // Checagem Master original (MANTIDA)
         if(u === "ipb" && p === "ipbbrasil") { 
             sessionStorage.setItem('adm_ativo', "Master"); 
             location.reload(); 
             return;
         }
 
-        // Checagem por e-mail no Database (NOVA)
         db.ref('admins_emails').once('value', snap => {
             const emailsObj = snap.val();
             let emailPermitido = false;
@@ -749,18 +747,14 @@
             }
             
             if(emailPermitido){
-                // Usar Auth do Firebase para logar com e-mail/senha cadastrados
-                auth.signInWithEmailAndPassword(u, p).then(() => {
-                    sessionStorage.setItem('adm_ativo', u);
-                    location.reload();
-                }).catch(err => alert("Senha ADM incorreta para este e-mail."));
+                alert("Para e-mails ADM funcionarem mestre, é necessário reativar o Firebase Auth no painel da internet.");
             } else {
                 alert("Este e-mail não tem permissão ADM ou os dados estão incorretos.");
             }
         });
     }
     
-    function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); auth.signOut(); location.reload(); }
+    function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
     
     function darBaixa(locId, livroId) {
         db.ref('livros/' + livroId).transaction(l => { if(l) { l.qtdAtual = Math.min(l.qtdAtual + 1, l.qtdTotal); return l; } });
@@ -781,75 +775,63 @@
         }
     });
 
-    // --- GESTÃO DE CONTA (MEMBRO) (CORRIGIDO E MELHORADO) ---
+    // --- GESTÃO DE CONTA (MEMBRO) (CORRIGIDO PARA USAR E-MAIL SANITIZADO) ---
     
-    // Recuperação de Senha do Firebase (MANTIDO)
-    function recuperarSenhaMembro() {
-        const email = prompt("Digite seu e-mail cadastrado:");
-        if(!email || !email.includes('@')) return alert("Digite um e-mail válido mestre!");
-        auth.sendPasswordResetEmail(email).then(() => {
-            alert("E-mail de redefinição de senha enviado! Verifique sua caixa de entrada.");
-        }).catch(err => {
-            if(err.code === "auth/user-not-found") alert("E-mail não encontrado na base de dados mestre.");
-            else alert("Erro ao enviar e-mail de recuperação: " + err.message);
-        });
-    }
-
-    // CORREÇÃO: Função de cadastro melhorada com tratamento de erro
+    // CORREÇÃO: Função de cadastro melhorada para sanitizar e-mail e tratar erro
     function cadastrarMembro() {
         const nome = document.getElementById('cad-nome').value.trim();
-        const email = document.getElementById('cad-user').value.trim().toLowerCase();
+        const emailOriginal = document.getElementById('cad-user').value.trim().toLowerCase(); // Mantém original
         const pass = document.getElementById('cad-pass').value.trim();
         const tel = document.getElementById('cad-tel').value.trim();
 
-        // 1. Verificação básica no front-end
-        if(!nome || !email || !pass) return alert("Por favor mestre, preencha Nome, E-mail e Senha!");
-        if(!email.includes('@') || !email.includes('.')) return alert("Por favor mestre, use um e-mail válido!");
+        if(!nome || !emailOriginal || !pass) return alert("Por favor mestre, preencha Nome, E-mail (Usuário) e Senha!");
         if(pass.length < 6) return alert("A senha mestre deve ter pelo menos 6 caracteres!");
 
-        const d = { nome, user: email, pass, tel, bloqueado: false, dataCadastro: new Date().toLocaleDateString('pt-BR') };
+        // NOVA FUNÇÃO UTILITÁRIA PARA SANITIZAR E-MAIL mestre
+        // Firebase não aceita ponto '.', trocamos por underscore '_' mestre
+        const emailSanitizado = sanitizarEmail(emailOriginal);
 
-        // 2. Criar usuário no Auth do Firebase (necessário para reset de senha)
-        // Isso checa duplicidade e valida e-mail/senha mestre no servidor
-        auth.createUserWithEmailAndPassword(email, pass).then(userCredential => {
-            // 3. Se Auth sucesso, salvar dados adicionais no Database
-            // Chave do database não aceita ponto '.', trocamos por underscore '_'
-            db.ref('membros/' + email.replace('.','_')).set(d).then(() => {
-                alert("Cadastro realizado mestre! Use seu e-mail e senha para entrar.");
-                mostrarLogin();
-            });
-        }).catch(err => {
-            // Tratamento de erros específicos do Firebase Auth mestre
-            if (err.code === "auth/email-already-in-use") {
+        const d = { nome, user: emailOriginal, pass, tel, bloqueado: false, dataCadastro: new Date().toLocaleDateString('pt-BR') };
+
+        // CORREÇÃO MESTRE: Usar o e-mail sanitizado como chave mestre do banco de dados
+        db.ref('membros/' + emailSanitizado).once('value', snap => { 
+            if(snap.exists()) {
                 alert("Mestre, este e-mail já está cadastrado no sistema.");
-            } else if (err.code === "auth/invalid-email") {
-                alert("Mestre, o e-mail digitado é inválido.");
-            } else if (err.code === "auth/weak-password") {
-                alert("Mestre, a senha escolhida é muito fraca (use pelo menos 6 caracteres).");
             } else {
-                alert("Erro mestre ao cadastrar no sistema: " + err.message);
+                // Salvar direto no Database, sem criar Auth seguro mestre
+                db.ref('membros/' + emailSanitizado).set(d).then(() => {
+                    alert("Cadastro realizado mestre! Use seu e-mail e senha para entrar.");
+                    mostrarLogin();
+                }).catch(err => alert("Erro mestre ao cadastrar: " + err.message)); // Alerta mestre se der erro mestre
             }
         });
     }
     
+    // Login SIMPLIFICADO (MANTIDO E CORRIGIDO PARA USAR E-MAIL SANITIZADO)
     function loginMembro() {
-        const u = document.getElementById('log-user').value.trim().toLowerCase(); 
-        const p = document.getElementById('log-pass').value;
+        const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
+        const passInput = document.getElementById('log-pass').value;
         
-        if(!u || !p) return alert("Preencha usuário e senha mestre!");
+        if(!emailInput || !passInput) return alert("Preencha usuário e senha mestre!");
 
-        // Logar com Auth do Firebase para checar senha oficial
-        auth.signInWithEmailAndPassword(u, p).then(() => {
-            // Chave do database trocou ponto '.' por underscore '_'
-            db.ref('membros/' + u.replace('.','_')).once('value', snap => { 
-                const m = snap.val(); 
+        // CORREÇÃO MESTRE: Sanitizar e-mail para buscar chave mestre no banco
+        const emailSanitizado = sanitizarEmail(emailInput);
+
+        // Chave do database trocou ponto '.' por underscore '_' mestre
+        db.ref('membros/' + emailSanitizado).once('value', snap => { 
+            const m = snap.val(); 
+            // Comparação de e-mail e senha direto mestre (sem auth)
+            if(m && m.user === emailInput && m.pass === passInput) {
+                // Login sucesso, salva e-mail original para exibição mestre
                 localStorage.setItem('ipb_membro', JSON.stringify(m)); 
                 location.reload(); 
-            });
-        }).catch(err => alert("E-mail ou senha mestre incorretos."));
+            } else {
+                alert("E-mail ou senha mestre incorretos.");
+            }
+        });
     }
     
-    function logout() { localStorage.removeItem('ipb_membro'); auth.signOut(); location.reload(); }
+    function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
     function mostrarCadastro() { document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block'; }
     function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
 
