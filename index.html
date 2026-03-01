@@ -3,100 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Biblioteca IPB Petrópolis</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <title>Biblioteca Rev Welison R. Ayres</title> <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     
     <style>
-        :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; }
+        :root { --primary: #006437; --primary-light: #008f4f; --accent: #2ecc71; --bg: #f8faf8; --white: #ffffff; --text: #1a2a1f; --danger: #d63031; --gray: #636e72; --warning: #f1c40f; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
-        header { background: var(--white); padding: 15px; text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo-container img { max-width: 90px; height: auto; display: block; margin: 0 auto 5px; }
-        header h2 { margin: 0; font-size: 0.85rem; color: var(--primary); letter-spacing: 1px; }
+        
+        /* CABEÇALHO AJUSTADO - Logo Grande e Nome */
+        header { background: var(--white); padding: 30px 15px; /* Aumentado padding vertical */ text-align: center; border-bottom: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* Ajuste de tamanho do LOGO para grande destaque */
+        .logo-container img { max-width: 250px; /* Logo bem maior conforme solicitado */ height: auto; display: block; margin: 0 auto 15px; }
+        
+        header h1 { /* Nome da biblioteca grande e em destaque */ margin: 10px 0 0 0; font-size: 1.8rem; color: var(--primary); font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+        header h2 { margin-top: 5px; font-size: 0.9rem; color: var(--gray); letter-spacing: 1px; font-weight: 400; text-transform: uppercase; display: none; /* Mantido escondido conforme estrutura original */ }
+
         .container { padding: 20px; max-width: 500px; margin: 0 auto; }
         .section { display: none; animation: fadeIn 0.4s ease-out; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: var(--white); padding: 20px; border-radius: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.02); }
-        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .livro-topo { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .titulo-livro { font-weight: 700; cursor: help; text-decoration: underline dotted var(--gray); position: relative; }
-        .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; }
-        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
-        .btn-danger-small { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
-        .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; }
-        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; }
-        nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; }
-        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; }
-        nav button.active { color: var(--primary); border-top: 3px solid var(--primary); }
+        
+        /* Estilos de Livro */
+        .livro-item { background: var(--white); padding: 16px; border-radius: 14px; margin-bottom: 12px; display: flex; flex-direction: column; border-left: 6px solid var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
+        .livro-item.esgotado { border-left-color: var(--gray); opacity: 0.8; }
+        .livro-topo { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 10px; }
+        .titulo-livro { font-weight: 700; cursor: help; text-decoration: underline dotted var(--gray); font-size: 1.1rem; line-height: 1.2; }
+        
+        /* Categoria no Catálogo */
+        .catalogo-categoria-titulo { color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Botões */
+        .btn-principal { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; margin-top: 10px; font-size: 16px; transition: background 0.2s; }
+        .btn-principal:hover { background: var(--primary-light); }
+        .btn-principal:disabled { background: var(--gray); cursor: not-allowed; }
+        
+        .btn-acao { background: var(--white); color: var(--primary); border: 2px solid var(--primary); padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .btn-acao:hover:not(:disabled) { background: var(--primary); color: white; }
+        .btn-acao:disabled { border-color: var(--gray); color: var(--gray); cursor: not-allowed; }
+
+        .btn-grande { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: 800; width: 100%; cursor: pointer; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,100,55,0.2); transition: all 0.2s; }
+        .btn-grande:hover { box-shadow: 0 8px 20px rgba(0,100,55,0.3); transform: translateY(-2px); }
+
+        /* Botões ADM de gestão */
+        .gestao-acoes { display: flex; gap: 5px; flex-shrink: 0; }
+        .btn-edit-small { background: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn-edit-small:hover { background: #e3b60c; }
+        .btn-danger-small { background: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn-danger-small:hover { background: #b71c1c; }
+
+        /* Inputs e Formulários */
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #edf2ef; border-radius: 12px; box-sizing: border-box; font-size: 16px; font-family: inherit; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary-light); outline: none; }
+        label { font-size: 0.8rem; color: var(--gray); font-weight: 600; margin-left: 5px; display: block; margin-top: 10px;}
+
+        /* Navegação */
+        nav { display: flex; background: rgba(255,255,255,0.95); position: fixed; bottom: 0; width: 100%; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000; max-width: 500px; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
+        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
+        nav button.active { color: var(--primary); position: relative; }
+        nav button.active::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 30px; height: 3px; background: var(--primary); border-radius: 0 0 3px 3px; }
+
+        /* Utilitários */
+        .hidden { display: none !important; }
+        center button { background:none; border:none; color:var(--primary); margin-top:15px; text-decoration:underline; font-family: inherit; cursor: pointer;}
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo-container"><img src="imagem.png" alt="Logo IPB"></div>
-    <h2>BIBLIOTECA IPB PETRÓPOLIS</h2>
+    <h1>Biblioteca Rev Welison R. Ayres</h1>
 </header>
 
 <div class="container">
     
     <section id="inicio" class="section active">
         <div style="text-align: center; padding: 30px 10px;">
-            <h2 style="color: var(--primary);">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
-            <p style="font-style: italic; color: var(--gray); margin-bottom: 30px;">2 Pedro 3:18</p>
+            <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
+            <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
             <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
         </div>
     </section>
 
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
-        <p style="font-size: 0.7rem; color: var(--gray);">Dica: Passe o mouse no título para ler o resumo.</p>
+        <p style="font-size: 0.75rem; color: var(--gray); margin-bottom: 20px; background: #edf2ef; padding: 10px; border-radius: 8px;">Dica: Toque/Passe o mouse no título para ler o resumo. Os livros estão organizados por categoria e ordem alfabética.</p>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
     <section id="conta" class="section">
         <div id="tela-login">
             <div class="card">
-                <h3>Acessar Conta</h3>
+                <h3>Acessar Conta Mestre</h3>
                 <input type="text" id="log-user" placeholder="Usuário">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button onclick="document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block';" style="background:none; border:none; color:var(--primary); margin-top:15px; text-decoration:underline;">Criar nova conta</button></center>
+                <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
             </div>
         </div>
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
                 <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="Usuário">
-                <input type="password" id="cad-pass" placeholder="Senha">
-                <input type="tel" id="cad-tel" placeholder="WhatsApp">
+                <input type="text" id="cad-user" placeholder="Escolha um Usuário">
+                <input type="password" id="cad-pass" placeholder="Crie uma Senha">
+                <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
+                <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
             </div>
         </div>
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao"></span></h3>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
                 <div id="meus-livros"></div>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger)">SAIR</button>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
             </div>
         </div>
     </section>
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
+            <h3>Cadeado do Pastor 🔐</h3>
             <input type="text" id="adm-user" placeholder="Usuário ADM">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
-            <button class="btn-principal" onclick="loginAdmin()">ACESSAR</button>
+            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
         </div>
+        
         <div id="painel-adm" style="display:none;">
+            
+            <div class="card" id="card-form-livro">
+                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
+                
+                <input type="hidden" id="edit-livro-id" value="">
+
+                <label>Título do Livro</label>
+                <input type="text" id="novo-titulo" placeholder="Ex: O Peregrino">
+                
+                <label>Categoria</label>
+                <select id="novo-categoria">
+                    <option value="" disabled selected>Selecione uma categoria</option>
+                    <option value="Teologia">Teologia</option>
+                    <option value="Vida Cristã">Vida Cristã</option>
+                    <option value="Comentário Bíblico">Comentário Bíblico</option>
+                    <option value="História da Igreja">História da Igreja</option>
+                    <option value="Família">Família</option>
+                    <option value="Devocional">Devocional</option>
+                    <option value="Liderança">Liderança</option>
+                    <option value="Outros">Outros</option>
+                </select>
+
+                <label>Breve Resumo</label>
+                <textarea id="novo-resumo" placeholder="Sobre o que fala este livro..." rows="3"></textarea>
+                
+                <label>Quantidade Total de Exemplares</label>
+                <input type="number" id="novo-qtd" placeholder="Quantidade" value="1" min="1">
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-principal" id="btn-salvar-livro" onclick="salvarLivro()">SALVAR LIVRO</button>
+                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray);" onclick="cancelarEdicao()">CANCELAR</button>
+                </div>
+            </div>
+            
             <div class="card">
-                <h4>➕ Cadastrar Livro</h4>
-                <input type="text" id="novo-titulo" placeholder="Título">
-                <textarea id="novo-resumo" placeholder="Breve resumo sobre o livro..." rows="2"></textarea>
-                <input type="number" id="novo-qtd" placeholder="Quantidade" value="1">
-                <button class="btn-principal" onclick="addLivro()">SALVAR</button>
+                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
+                <p style="font-size: 0.7rem; color: var(--gray); margin-bottom: 10px;">Organizado por Categoria -> Ordem Alfabética</p>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando...</div>
+            </div>
+
+            <div class="card">
+                <h4>📊 Empréstimos Ativos (Dar Baixa)</h4>
+                <div id="lista-adm">Nenhum empréstimo ativo.</div>
             </div>
             
             <div class="card">
@@ -104,14 +181,7 @@
                 <div id="lista-membros-adm"></div>
             </div>
 
-            <div class="card">
-                <h4>📚 Acervo e Exclusão</h4>
-                <div id="gestao-livros-lista"></div>
-            </div>
-
-            <div class="card"><h4>📊 Empréstimos Ativos</h4><div id="lista-adm"></div></div>
-            
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray)">SAIR ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--gray); margin-top: 20px;">SAIR DO MODO ADM</button>
         </div>
     </section>
 </div>
@@ -124,6 +194,7 @@
 </nav>
 
 <script>
+    // Mantendo sua configuração original do Firebase intacta
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -134,62 +205,160 @@
         appId: "1:140869477812:web:d4a57845136c2958403ee1"
     };
 
+    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
     function mudarAba(aba) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         document.getElementById(aba).classList.add('active');
         document.getElementById('nav-' + aba).classList.add('active');
+        if(aba === 'admin') cancelarEdicao(); // Cancela edição se mudar de aba
     }
 
-    function addLivro() {
-        const t = document.getElementById('novo-titulo').value;
-        const r = document.getElementById('novo-resumo').value;
-        const q = parseInt(document.getElementById('novo-qtd').value) || 1;
-        if(t) {
-            db.ref('livros').push({ titulo: t, resumo: r, qtdTotal: q, qtdAtual: q });
-            document.getElementById('novo-titulo').value = '';
-            document.getElementById('novo-resumo').value = '';
+    // --- UTILITÁRIOS DE DADOS ---
+    function processarLivros(livrosObj) {
+        if (!livrosObj) return {};
+        let livrosArray = [];
+        for (let id in livrosObj) {
+            livrosArray.push({ id: id, ...livrosObj[id] });
+        }
+        livrosArray.sort((a, b) => a.titulo.localeCompare(b.titulo));
+        let agrupado = {};
+        livrosArray.forEach(livro => {
+            const cat = livro.categoria || "Sem Categoria";
+            if (!agrupado[cat]) agrupado[cat] = [];
+            agrupado[cat].push(livro);
+        });
+        const categoriasOrdenadas = Object.keys(agrupado).sort();
+        let resultadoFinal = {};
+        categoriasOrdenadas.forEach(cat => {
+            resultadoFinal[cat] = agrupado[cat];
+        });
+        return resultadoFinal;
+    }
+
+    // --- GESTÃO DE LIVROS (ADM) ---
+    function salvarLivro() {
+        const idInput = document.getElementById('edit-livro-id').value;
+        const t = document.getElementById('novo-titulo').value.trim();
+        const c = document.getElementById('novo-categoria').value;
+        const r = document.getElementById('novo-resumo').value.trim();
+        const q = parseInt(document.getElementById('novo-qtd').value);
+
+        if(!t || !c || isNaN(q) || q < 1) { 
+            alert("Por favor, preencha Título, Categoria e uma Quantidade válida."); 
+            return; 
+        }
+
+        if (idInput) {
+            db.ref('livros/' + idInput).once('value').then(snap => {
+                const dadosAntigos = snap.val();
+                if(!dadosAntigos) return;
+                const difTotal = q - dadosAntigos.qtdTotal;
+                let novaQtdAtual = dadosAntigos.qtdAtual + difTotal;
+                if(novaQtdAtual < 0) novaQtdAtual = 0;
+                const dadosAtualizados = {
+                    titulo: t, categoria: c, resumo: r, qtdTotal: q, qtdAtual: novaQtdAtual
+                };
+                db.ref('livros/' + idInput).update(dadosAtualizados).then(() => {
+                    alert("Livro atualizado com sucesso!");
+                    cancelarEdicao();
+                });
+            });
+        } else {
+            const novoLivro = { 
+                titulo: t, categoria: c, resumo: r, qtdTotal: q, qtdAtual: q
+            };
+            db.ref('livros').push(novoLivro).then(() => {
+                alert("Livro cadastrado!");
+                limparFormulario();
+            });
         }
     }
 
-    function excluirLivro(id) {
-        if(confirm("Excluir permanentemente?")) db.ref('livros/' + id).remove();
+    function carregarDadosParaEditar(id) {
+        db.ref('livros/' + id).once('value').then(snap => {
+            const l = snap.val();
+            if(!l) return;
+            document.getElementById('edit-livro-id').value = id;
+            document.getElementById('novo-titulo').value = l.titulo;
+            document.getElementById('novo-categoria').value = l.categoria || "Outros";
+            document.getElementById('novo-resumo').value = l.resumo || "";
+            document.getElementById('novo-qtd').value = l.qtdTotal;
+            document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro";
+            document.getElementById('btn-salvar-livro').innerText = "ATUALIZAR";
+            document.getElementById('btn-cancelar-edit').classList.remove('hidden');
+            document.getElementById('card-form-livro').scrollIntoView({behavior: 'smooth'});
+        });
     }
 
+    function cancelarEdicao() {
+        limparFormulario();
+        document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro";
+        document.getElementById('btn-salvar-livro').innerText = "SALVAR LIVRO";
+        document.getElementById('btn-cancelar-edit').classList.add('hidden');
+    }
+
+    function limparFormulario() {
+        document.getElementById('edit-livro-id').value = '';
+        document.getElementById('novo-titulo').value = '';
+        document.getElementById('novo-categoria').value = '';
+        document.getElementById('novo-resumo').value = '';
+        document.getElementById('novo-qtd').value = '1';
+    }
+
+    function excluirLivro(id) {
+        if(confirm("Tem certeza que deseja excluir permanentemente este livro do acervo?")) {
+            db.ref('livros/' + id).remove().then(() => alert("Livro excluído."));
+        }
+    }
+
+    // --- RENDERIZAÇÃO DE LISTAS (OUVINTE PRINCIPAL DB) ---
     db.ref().on('value', snap => {
         const dados = snap.val() || {};
-        const livros = dados.livros || {};
+        const livrosRaw = dados.livros || {};
         const locacoes = dados.locacoes || {};
         const membros = dados.membros || {};
-        
+        const livrosAgrupados = processarLivros(livrosRaw);
+
+        // Catálogo Usuário
         const listaCatalogo = document.getElementById('lista-catalogo');
         listaCatalogo.innerHTML = '';
+        for (let categoria in livrosAgrupados) {
+            listaCatalogo.innerHTML += `<div class="catalogo-categoria-titulo">${categoria}</div>`;
+            livrosAgrupados[categoria].forEach(l => {
+                const resumoTxt = l.resumo || "Sem resumo disponível.";
+                const estaEsgotado = l.qtdAtual <= 0;
+                listaCatalogo.innerHTML += `
+                    <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
+                        <div class="livro-topo">
+                            <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
+                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
+                        </div>
+                        <small style="margin-top:5px; color:${estaEsgotado ? 'var(--danger)' : 'var(--gray)'}; font-weight:600;">Disp: ${l.qtdAtual} / Total: ${l.qtdTotal}</small>
+                    </div>`;
+            });
+        }
+        
+        // Gestão ADM
         const listaGestao = document.getElementById('gestao-livros-lista');
-        if(listaGestao) listaGestao.innerHTML = '';
-
-        for(let id in livros) {
-            const l = livros[id];
-            const resumoTxt = l.resumo || "Sem resumo disponível.";
-            
-            // Acervo Usuário
-            listaCatalogo.innerHTML += `
-                <div class="livro-item">
-                    <div class="livro-topo">
-                        <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                        <button class="btn-acao" onclick="reservar('${id}', '${l.titulo}')" ${l.qtdAtual <= 0 ? 'disabled' : ''}>RESERVAR</button>
-                    </div>
-                    <small>${l.qtdAtual <= 0 ? 'Esgotado' : 'Disponível: ' + l.qtdAtual}</small>
-                </div>`;
-            
-            // Gestão ADM
-            if(listaGestao) {
-                listaGestao.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                    <div title="${resumoTxt}"><strong>${l.titulo}</strong></div>
-                    <button class="btn-danger-small" onclick="excluirLivro('${id}')">X</button>
-                </div>`;
+        if(listaGestao) {
+            listaGestao.innerHTML = '';
+            for (let categoria in livrosAgrupados) {
+                listaGestao.innerHTML += `<div style="background:#f4f7f5; padding:5px 10px; font-weight:bold; color:var(--primary); font-size:0.8rem; margin-top:10px;">${categoria}</div>`;
+                livrosAgrupados[categoria].forEach(l => {
+                    listaGestao.innerHTML += `
+                        <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>${l.titulo}</strong><br><small>T:${l.qtdTotal} | D:${l.qtdAtual}</small></div>
+                            <div class="gestao-acoes">
+                                <button class="btn-edit-small" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
+                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
+                            </div>
+                        </div>`;
+                });
             }
         }
 
@@ -200,17 +369,20 @@
             for(let u in membros) {
                 const m = membros[u];
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
-                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                    <div>${m.nome}</div>
-                    <button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${u}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button>
-                </div>`;
+                const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
+                listaMembrosAdm.innerHTML += `
+                    <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                        <div><strong>${m.nome}</strong><br><small>@${m.user} | ${m.tel || ''}</small></div>
+                        <button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${u}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button>
+                    </div>`;
             }
         }
     });
 
+    // --- RESERVA E EMPRÉSTIMO ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
-        if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
+        if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
         db.ref('membros/' + mLocal.user).once('value', snap => {
             const mDb = snap.val();
@@ -224,6 +396,7 @@
         });
     }
 
+    // --- FUNÇÕES ADM ---
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
@@ -235,6 +408,7 @@
         db.ref('locacoes/' + locId).remove();
     }
 
+    // Ouvinte Locações
     db.ref('locacoes').on('value', snap => {
         const locs = snap.val(); const listaAdm = document.getElementById('lista-adm');
         const listaMembro = document.getElementById('meus-livros');
@@ -243,22 +417,31 @@
         const userAtual = localStorage.getItem('ipb_membro') ? JSON.parse(localStorage.getItem('ipb_membro')).user : null;
         for(let id in locs) {
             const l = locs[id];
-            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;"><strong>${l.membroNome}</strong> - ${l.livroNome}<br><button class="btn-acao" onclick="darBaixa('${id}', '${l.livroId}')">Baixa</button></div>`;
+            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;"><strong>${l.membroNome}</strong> - ${l.livroNome}<br><small>Dev: ${l.dataDevolucao}</small><br><button class="btn-acao" onclick="darBaixa('${id}', '${l.livroId}')">Baixa</button></div>`;
             if(userAtual === l.membroUser) listaMembro.innerHTML += `<div class="livro-item">${l.livroNome}<br><small>Devolver: ${l.dataDevolucao}</small></div>`;
         }
     });
 
+    // --- GESTÃO DE CONTA ---
     function cadastrarMembro() {
         const d = { nome: document.getElementById('cad-nome').value, user: document.getElementById('cad-user').value.toLowerCase(), pass: document.getElementById('cad-pass').value, tel: document.getElementById('cad-tel').value, bloqueado: false };
-        db.ref('membros/' + d.user).set(d).then(() => location.reload());
+        if(!d.user || !d.pass) return alert("Preencha usuário e senha mestre!");
+        db.ref('membros/' + d.user).once('value', snap => {
+            if(snap.exists()) alert("Usuário já existe!");
+            else db.ref('membros/' + d.user).set(d).then(() => location.reload());
+        });
     }
     function loginMembro() {
         const u = document.getElementById('log-user').value.toLowerCase(); const p = document.getElementById('log-pass').value;
-        db.ref('membros/' + u).once('value', snap => { const m = snap.val(); if(m && m.pass === p) { localStorage.setItem('ipb_membro', JSON.stringify(m)); location.reload(); } });
+        db.ref('membros/' + u).once('value', snap => { const m = snap.val(); if(m && m.pass === p) { localStorage.setItem('ipb_membro', JSON.stringify(m)); location.reload(); } else alert("Dados incorretos!"); });
     }
     function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
+    function mostrarCadastro() { document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block'; }
+    function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
+
+    // --- CHECAGEM INICIAL ---
     if(localStorage.getItem('ipb_membro')) { document.getElementById('tela-login').style.display='none'; document.getElementById('perfil-membro').style.display='block'; document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome; }
-    if(sessionStorage.getItem('adm_ativo')) { document.getElementById('area-adm-login').style.display='none'; document.getElementById('painel-adm').style.display='block'; }
+    if(sessionStorage.getItem('adm_ativo')) { document.getElementById('area-adm-login').style.display='none'; document.getElementById('painel-adm').style.display='block'; db.ref('membros').keepSynced(true); }
 </script>
 </body>
 </html>
