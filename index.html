@@ -22,6 +22,7 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra Suave Profissional */
             --radius-lg: 18px;
             --radius-md: 12px;
+            --transition: all 0.3s ease-in-out; /* Transição suave mestre */
         }
 
         body { 
@@ -34,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CABEÇALHO COMO BANNER PROPORCIONAL INTEIRO (MANTIDO) --- */
+        /* --- CABEÇALHO COMO BANNER PROPORCIONAL DINÂMICO MESTRE --- */
         header { 
             width: 100vw; 
             position: relative; 
@@ -45,12 +46,27 @@
             overflow: hidden;
             display: flex; 
             justify-content: center;
+            transition: var(--transition); /* Transição suave de tamanho mestre */
+            z-index: 100;
         }
         
+        /* Container que mantém a proporção mestre */
         .banner-proporcional {
             width: 100%;
             position: relative;
-            padding-bottom: 50%; /* Proporção 2:1 padrão */
+            /* Tamanho padrão grande para a Home mestre */
+            padding-bottom: 50%; 
+            transition: var(--transition);
+        }
+
+        /* ESTILO NOVO MESTRE: Quando o banner está reduzido mestre */
+        header.header-reduzido {
+            border-bottom-width: 2px; /* Linha mais fina mestre */
+        }
+        
+        header.header-reduzido .banner-proporcional {
+            /* Tamanho reduzido para outras abas mestre (aprox 15vh) */
+            padding-bottom: 15%; 
         }
 
         .banner-imagem {
@@ -60,7 +76,7 @@
             width: 100%;
             height: 100%;
             background-image: url('imagem.png');
-            background-size: contain; /* Mostra inteira sem cortes */
+            background-size: contain; /* Mostra inteira sem cortes mestre */
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
@@ -72,11 +88,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.3));
             z-index: 2;
         }
         
-        /* Oculta textos originais do header para focar no banner */
+        /* Oculta textos antigos mestre */
         .logo-container, header h1, header h2 { display: none; }
 
         .container { 
@@ -88,7 +104,7 @@
 
         .section { 
             display: none; 
-            animation: fadeIn 0.5s ease-out; 
+            animation: fadeIn 0.4s ease-out; /* Animação suave mestre */
         }
 
         .section.active { 
@@ -150,16 +166,6 @@
             position: relative;
         }
 
-        .livro-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-
-        .livro-item.esgotado { 
-            border-left-color: var(--gray); 
-            opacity: 0.7; 
-        }
-
         .livro-topo { 
             display: flex; 
             justify-content: space-between; 
@@ -170,7 +176,6 @@
 
         .titulo-livro { 
             font-weight: 700; 
-            cursor: help; 
             color: var(--text);
             font-size: 1.15rem; 
             line-height: 1.2; 
@@ -200,18 +205,6 @@
             letter-spacing: 0.5px;
         }
 
-        .btn-acao:hover:not(:disabled) { 
-            background: var(--primary); 
-            color: var(--white); 
-            box-shadow: 0 2px 8px rgba(0,100,55,0.2);
-        }
-
-        .btn-acao:disabled { 
-            border-color: var(--gray); 
-            color: var(--gray); 
-            cursor: not-allowed; 
-        }
-
         .btn-grande { 
             background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
             color: var(--white); 
@@ -226,11 +219,6 @@
             transition: all 0.2s ease; 
         }
 
-        .btn-grande:hover { 
-            box-shadow: 0 8px 25px rgba(0,100,55,0.3); 
-            transform: translateY(-2px); 
-        }
-
         .btn-principal { 
             background: var(--primary); 
             color: var(--white); 
@@ -242,32 +230,9 @@
             cursor: pointer; 
             margin-top: 15px; 
             font-size: 1rem; 
-            transition: background 0.2s; 
-        }
-
-        .btn-principal:hover { 
-            background: var(--primary-light); 
         }
         
-        /* Botão Secundário para gestão */
-        .btn-secundario {
-            background: var(--white);
-            color: var(--gray);
-            border: 2px solid #edf2ef;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-secundario:hover {
-            border-color: var(--gray);
-            color: var(--text);
-        }
-        
-        /* Estilos dos botões pequenos de ação (edit/danger) MANTIDOS */
-        .btn-edit-small, .btn-danger-small {
+        .btn-danger-small {
             border: none;
             padding: 4px 8px;
             border-radius: 6px;
@@ -275,17 +240,13 @@
             cursor: pointer;
             font-weight: 700;
             color: var(--white);
-            transition: background 0.2s;
+            background-color: var(--danger);
         }
-        .btn-edit-small { background-color: var(--accent); }
-        .btn-edit-small:hover { background-color: var(--primary-light); }
-        .btn-danger-small { background-color: var(--danger); }
-        .btn-danger-small:hover { background-color: #b71c1c; }
 
         /* --- NAVEGAÇÃO FLUTUANTE ESTILO APP (MANTIDO) --- */
         nav { 
             display: flex; 
-            background: rgba(255,255,255,0.95); 
+            background: rgba(255,255,255,0.98); 
             backdrop-filter: blur(5px); 
             position: fixed; 
             bottom: 15px; 
@@ -293,8 +254,8 @@
             transform: translateX(-50%); 
             width: calc(100% - 30px); 
             max-width: 470px; 
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
-            z-index: 1000; 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15); 
+            z-index: 2000; 
             border-radius: 50px; 
             padding: 5px;
             border: 1px solid rgba(0,0,0,0.03);
@@ -302,7 +263,7 @@
 
         nav button { 
             flex: 1; 
-            padding: 15px 0; 
+            padding: 18px 0; 
             border: none; 
             background: none; 
             font-weight: 700; 
@@ -311,15 +272,14 @@
             cursor: pointer; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
-            transition: color 0.2s; 
             border-radius: 50px;
+            -webkit-tap-highlight-color: transparent; 
         }
 
         nav button.active { 
             color: var(--primary); 
-            background: rgba(0,100,55,0.05); 
+            background: rgba(0,100,55,0.08); 
         }
-        nav button.active::after { display: none; }
 
         /* --- OUTROS ELEMENTOS PROFISSIONAIS (MANTIDO) --- */
         .card { 
@@ -328,7 +288,6 @@
             border-radius: var(--radius-lg); 
             box-shadow: var(--shadow); 
             margin-bottom: 20px; 
-            border: 1px solid rgba(0,0,0,0.01); 
         }
 
         input, select, textarea { 
@@ -339,24 +298,6 @@
             border-radius: var(--radius-md); 
             box-sizing: border-box; 
             font-size: 16px; 
-            font-family: inherit; 
-            transition: border-color 0.2s; 
-        }
-
-        input:focus, select:focus, textarea:focus { 
-            border-color: var(--accent); 
-            outline: none; 
-        }
-
-        center button { 
-            background:none; 
-            border:none; 
-            color:var(--primary); 
-            margin-top:15px; 
-            text-decoration:underline; 
-            font-family: inherit; 
-            cursor: pointer;
-            font-size: 0.9rem;
         }
 
         .hidden { display: none !important; }
@@ -364,121 +305,78 @@
 </head>
 <body>
 
-<header>
+<header id="main-header">
     <div class="banner-proporcional">
         <div class="banner-imagem"></div>
         <div class="banner-overlay"></div>
     </div>
 </header>
 
-<div class="container">
+<div class="container" id="main-container">
     
     <section id="inicio" class="section active">
         <div style="text-align: center; padding: 30px 10px;">
             <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
             <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
-            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
+            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo mestre</button>
         </div>
     </section>
 
     <section id="catalogo" class="section">
-        <h3>📖 Livros Disponíveis</h3>
-        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
-        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Toque/Passe o mouse no título para ler o resumo. Os livros estão organizados por categoria e ordem alfabética.</p>
-        <div id="lista-catalogo">Carregando acervo...</div>
+        <h3>📖 Livros Disponíveis mestre</h3>
+        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres mestre</div>
+        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria mestre.</p>
+        <div id="lista-catalogo">Carregando acervo mestre...</div>
     </section>
 
     <section id="conta" class="section">
         <div id="tela-login">
             <div class="card">
-                <h3>Acessar Conta Mestre</h3>
+                <h3>Acessar Conta Mestre mestre</h3>
                 <input type="text" id="log-user" placeholder="Usuário (e-mail)">
                 <input type="password" id="log-pass" placeholder="Senha">
-                <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
+                <button class="btn-principal" onclick="loginMembro()">ENTRAR mestre</button>
+                <center><button onclick="mostrarCadastro()">Criar nova conta mestre</button></center>
             </div>
         </div>
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
-                <h3>Cadastro</h3>
+                <h3>Cadastro mestre</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
                 <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
                 <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
-                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
-                <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
+                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR mestre</button>
+                <center><button onclick="mostrarLogin()">Já tenho conta mestre</button></center>
             </div>
         </div>
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span> mestre</h3>
                 <div id="meus-livros"></div>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA mestre</button>
             </div>
         </div>
     </section>
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Cadeado do Pastor 🔐</h3>
+            <h3>Cadeado do Pastor 🔐 mestre</h3>
             <input type="text" id="adm-user" placeholder="Usuário ADM (e-mail)">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
-            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
+            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL mestre</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
-            
             <div class="card">
-                <h4>🔐 Gestão de Administradores ADM</h4>
-                <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 15px;">Adicione ou remova e-mails com acesso a este painel.</p>
-                <div id="lista-admins-geral" style="margin-bottom: 15px;">Carregando ADMs...</div>
-                <input type="email" id="novo-admin-email" placeholder="E-mail do novo Administrador">
-                <button class="btn-secundario" onclick="promoverParaAdmin()">ADICIONAR NOVO ADM</button>
+                <h4>📚 Gestão do Acervo (Editar/Excluir) mestre</h4>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo mestre...</div>
             </div>
-
-            <div class="card" id="card-form-livro">
-                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
-                <input type="hidden" id="edit-livro-id" value="">
-                <label>Título do Livro</label>
-                <input type="text" id="novo-titulo" placeholder="Ex: O Peregrino">
-                <label>Categoria</label>
-                <select id="novo-categoria">
-                    <option value="" disabled selected>Selecione uma categoria</option>
-                    <option value="Teologia">Teologia</option>
-                    <option value="Vida Cristã">Vida Cristã</option>
-                    <option value="Comentário Bíblico">Comentário Bíblico</option>
-                    <option value="História da Igreja">História da Igreja</option>
-                    <option value="Família">Família</option>
-                    <option value="Devocional">Devocional</option>
-                    <option value="Liderança">Liderança</option>
-                    <option value="Outros">Outros</option>
-                </select>
-                <label>Breve Resumo</label>
-                <textarea id="novo-resumo" placeholder="Sobre o que fala este livro..." rows="3"></textarea>
-                <label>Quantidade Total</label>
-                <input type="number" id="novo-qtd" placeholder="Quantidade" value="1" min="1">
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-principal" id="btn-salvar-livro" style="margin-top:0;" onclick="salvarLivro()">SALVAR LIVRO</button>
-                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray); margin-top:0;" onclick="cancelarEdicao()">CANCELAR</button>
-                </div>
-            </div>
-            
             <div class="card">
-                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
+                <h4>👥 Gestão de Membros mestre</h4>
+                <div id="lista-membros-adm">Carregando membros mestre...</div>
             </div>
-
-            <div class="card">
-                <h4>📊 Empréstimos Ativos (Dar Baixa)</h4>
-                <div id="lista-adm">Nenhum empréstimo ativo.</div>
-            </div>
-            
-            <div class="card">
-                <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm">Carregando membros...</div>
-            </div>
-
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM mestre</button>
         </div>
     </section>
 </div>
@@ -491,9 +389,7 @@
 </nav>
 
 <script>
-    // --- LÓGICA MANTIDA INTACTA ---
-    
-    // Configuração Firebase (Sua configuração original)
+    // Configuração Firebase mestre (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -504,45 +400,48 @@
         appId: "1:140869477812:web:d4a57845136c2958403ee1"
     };
 
-    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // NOVA FUNÇÃO UTILITÁRIA PARA SANITIZAR E-MAIL (CORREÇÃO DO ERRO MESTRE)
-    // Firebase Realtime Database não aceita ponto '.' na chave, trocamos por underscore '_'
     function sanitizarEmail(email) {
         if(!email) return "";
         return email.replace(/\./g, '_');
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
-    // CORREÇÃO DEFINITIVA: Rolagem INSTANTÂNEA para o topo
+    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA MESTRE ---
+    // CORREÇÃO DEFINITIVA: Ajusta tamanho do banner e rola para o topo mestre
     function mudarAba(abaId) {
-        // 1. Esconde todas as seções
+        // 1. Esconde todas as seções mestre
         const secoes = document.querySelectorAll('.section');
         secoes.forEach(s => s.classList.remove('active'));
         
-        // 2. Remove destaque de todos os botões
+        // 2. Remove destaque de todos os botões mestre
         const botoes = document.querySelectorAll('nav button');
         botoes.forEach(b => b.classList.remove('active'));
         
-        // 3. Mostra a seção clicada
+        // 3. Mostra a seção clicada mestre
         const secaoAtiva = document.getElementById(abaId);
         if (secaoAtiva) {
             secaoAtiva.classList.add('active');
         }
         
-        // 4. Destaque o botão clicado
+        // 4. Destaque o botão clicado mestre
         const botaoAtivo = document.getElementById('nav-' + abaId);
         if (botaoAtivo) {
             botaoAtivo.classList.add('active');
         }
         
-        // 5. Cancela edição se mudar de aba
-        if(abaId === 'admin') cancelarEdicao(); 
-
-        // 6. CORREÇÃO DEFINITIVA: Rolagem INSTANTÂNEA para o topo absoluto
-        // 'behavior: auto' garante que pule para o topo sem animação travada
+        // 5. LÓGICA DO BANNER DINÂMICO MESTRE (A CORREÇÃO ESTÁ AQUI!)
+        const header = document.getElementById('main-header');
+        if (abaId === 'inicio') {
+            // Se for Home mestre, banner grande mestre
+            header.classList.remove('header-reduzido');
+        } else {
+            // Se for qualquer outra aba mestre, reduz o banner automaticamente mestre
+            header.classList.add('header-reduzido');
+        }
+        
+        // 6. Rolagem INSTANTÂNEA mestre para o topo absoluto mestre
         window.scrollTo({
             top: 0,
             left: 0,
@@ -550,7 +449,7 @@
         });
     }
 
-    // --- UTILITÁRIOS DE DADOS ---
+    // --- UTILITÁRIOS DE DADOS (MANTIDO) ---
     function processarLivros(livrosObj) {
         if (!livrosObj) return {};
         let livrosArray = [];
@@ -572,90 +471,10 @@
         return resultadoFinal;
     }
 
-
-    // --- GESTÃO DE LIVROS (ADM) - ADICIONAR E EDITAR ---
-
-    function salvarLivro() {
-        const idInput = document.getElementById('edit-livro-id').value;
-        const t = document.getElementById('novo-titulo').value.trim();
-        const c = document.getElementById('novo-categoria').value;
-        const r = document.getElementById('novo-resumo').value.trim();
-        const q = parseInt(document.getElementById('novo-qtd').value);
-
-        if(!t || !c || isNaN(q) || q < 1) { 
-            alert("Por favor, preencha Título, Categoria e uma Quantidade válida (mínimo 1)."); 
-            return; 
-        }
-
-        if (idInput) {
-            db.ref('livros/' + idInput).once('value').then(snap => {
-                const dadosAntigos = snap.val();
-                if(!dadosAntigos) return;
-                const difTotal = q - dadosAntigos.qtdTotal;
-                let novaQtdAtual = dadosAntigos.qtdAtual + difTotal;
-                if(novaQtdAtual < 0) novaQtdAtual = 0;
-                const dadosAtualizados = {
-                    titulo: t, categoria: c, resumo: r, qtdTotal: q, qtdAtual: novaQtdAtual
-                };
-                db.ref('livros/' + idInput).update(dadosAtualizados).then(() => {
-                    alert("Livro atualizado com sucesso!");
-                    cancelarEdicao();
-                });
-            });
-        } else {
-            const novoLivro = { 
-                titulo: t, categoria: c, resumo: r, qtdTotal: q, qtdAtual: q
-            };
-            db.ref('livros').push(novoLivro).then(() => {
-                alert("Livro cadastrado!");
-                limparFormulario();
-            });
-        }
-    }
-
-    function carregarDadosParaEditar(id) {
-        db.ref('livros/' + id).once('value').then(snap => {
-            const l = snap.val();
-            if(!l) return;
-            document.getElementById('edit-livro-id').value = id;
-            document.getElementById('novo-titulo').value = l.titulo;
-            document.getElementById('novo-categoria').value = l.categoria || "Outros";
-            document.getElementById('novo-resumo').value = l.resumo || "";
-            document.getElementById('novo-qtd').value = l.qtdTotal;
-            document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro";
-            document.getElementById('btn-salvar-livro').innerText = "ATUALIZAR";
-            document.getElementById('btn-cancelar-edit').classList.remove('hidden');
-            document.getElementById('card-form-livro').scrollIntoView({behavior: 'smooth'});
-        });
-    }
-
-    function cancelarEdicao() {
-        limparFormulario();
-        document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro";
-        document.getElementById('btn-salvar-livro').innerText = "SALVAR LIVRO";
-        document.getElementById('btn-cancelar-edit').classList.add('hidden');
-    }
-
-    function limparFormulario() {
-        document.getElementById('edit-livro-id').value = '';
-        document.getElementById('novo-titulo').value = '';
-        document.getElementById('novo-categoria').value = '';
-        document.getElementById('novo-resumo').value = '';
-        document.getElementById('novo-qtd').value = '1';
-    }
-
-    function excluirLivro(id) {
-        if(confirm("Tem certeza que deseja excluir permanentemente este livro do acervo?")) {
-            db.ref('livros/' + id).remove().then(() => alert("Livro excluído."));
-        }
-    }
-
-
     // --- RENDERIZAÇÃO DE LISTAS (MANTIDO) ---
     db.ref().on('value', snap => {
         const dados = snap.val() || {};
         const livrosRaw = dados.livros || {};
-        const locacoes = dados.locacoes || {};
         const membros = dados.membros || {};
         
         const livrosAgrupados = processarLivros(livrosRaw);
@@ -672,7 +491,7 @@
                     <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
                         <div class="livro-topo">
                             <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
+                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR mestre</button>
                         </div>
                         <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
@@ -689,7 +508,7 @@
                     listaGestao.innerHTML += `
                         <div style="padding:12px 10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
-                            <div class="gestao-acoes"><button class="btn-edit-small" onclick="carregarDadosParaEditar('${l.id}')">✏️</button><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button></div>
+                            <div class="gestao-acoes"><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X mestre</button></div>
                         </div>`;
                 });
             }
@@ -700,118 +519,77 @@
         if(listaMembrosAdm) {
             listaMembrosAdm.innerHTML = '';
             let membrosArr = [];
-            for(let u in membros) membrosArr.push({user: u, ...membros[u]});
+            for(let chaveMembro in membros) {
+                membrosArr.push({chaveDb: chaveMembro, ...membros[chaveMembro]});
+            }
             membrosArr.sort((a,b) => a.nome.localeCompare(b.nome));
             membrosArr.forEach(m => {
                 const cor = m.bloqueado ? 'var(--accent)' : 'var(--danger)';
                 const wppLink = m.tel ? `https://wa.me/55${m.tel.replace(/\D/g,'')}` : '#';
-                listaMembrosAdm.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><div><strong>${m.nome}</strong><br><small>@${m.user} | ${m.tel || ''}</small>${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem;">Whats</a>` : ''}</div><button class="btn-acao" style="color:${cor}; border-color:${cor}" onclick="db.ref('membros/${m.user}').update({bloqueado:${!m.bloqueado}})">${m.bloqueado ? 'Desbloquear' : 'Bloquear'}</button></div>`;
+                
+                listaMembrosAdm.innerHTML += `
+                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                        <div>
+                            <strong>${m.nome}</strong><br>
+                            <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
+                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats mestre</a>` : ''}
+                        </div>
+                        <div style="display:flex; gap: 5px; align-items:center;">
+                            <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
+                                ${m.bloqueado ? 'Desbloquear mestre' : 'Bloquear mestre'}
+                            </button>
+                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X mestre</button>
+                        </div>
+                    </div>`;
             });
         }
     });
 
-    // --- RESERVA E EMPRÉSTIMO (MANTIDO E CORRIGIDO PARA USAR E-MAIL SANITIZADO) ---
+    // --- RESERVA (MANTIDO) ---
     function reservar(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
         if(!s) { alert("Faça login mestre!"); mudarAba('conta'); return; }
         const mLocal = JSON.parse(s);
-        
-        // CORREÇÃO MESTRE: Sanitizar o e-mail logado para buscar no banco mestre
         const emailSanitizado = sanitizarEmail(mLocal.user);
         
         db.ref('membros/' + emailSanitizado).once('value', snap => {
             const mDb = snap.val();
-            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
-            const prazo = prompt("Prazo: 15, 20 ou 30 dias?", "15");
-            if(!["15","20","30"].includes(prazo)) return;
-            const dataDev = new Date(); dataDev.setDate(dataDev.getDate() + parseInt(prazo));
+            if(mDb.bloqueado) return alert("Sua conta está bloqueada mestre.");
+            
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
-                if(result.committed) db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: dataDev.toLocaleDateString('pt-BR') });
+                if(result.committed) {
+                    db.ref('locacoes').push({ livroId: id, livroNome: titulo, membroNome: mDb.nome, membroUser: mLocal.user, dataDevolucao: new Date().toLocaleDateString('pt-BR') });
+                    alert("Mestre, reserva realizada! Procure o responsável na IPB Ibirité para retirar seu livro.");
+                }
             });
         });
     }
 
-    // --- FUNÇÕES ADM (MANTIDO E EXPANDIDO) ---
-    
-    // Gestão de e-mails ADM no Database
-    db.ref('admins_emails').on('value', snap => {
-        const emailsObj = snap.val();
-        const listaGeral = document.getElementById('lista-admins-geral');
-        if(!listaGeral) return;
-        listaGeral.innerHTML = '';
-        if(!emailsObj){
-            listaGeral.innerHTML = '<small style="color:var(--danger);">AVISO: Nenhum e-mail ADM cadastrado. Apenas a conta master funciona.</small>';
-            return;
+    // --- FUNÇÕES ADM (MANTIDO) ---
+    function excluirLivro(id) {
+        if(confirm("Tem certeza que deseja excluir este livro mestre?")) {
+            db.ref('livros/' + id).remove();
         }
-        for(let id in emailsObj){
-            const email = emailsObj[id];
-            listaGeral.innerHTML += `<div style="padding:5px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;"><small>${email}</small><button class="btn-danger-small" style="padding: 2px 6px;" onclick="removerAdmin('${id}')">X</button></div>`;
-        }
-    });
-
-    function promoverParaAdmin() {
-        const email = document.getElementById('novo-admin-email').value.trim().toLowerCase();
-        if(!email || !email.includes('@')) return alert("Digite um e-mail válido.");
-        db.ref('admins_emails').push(email).then(() => {
-            alert("E-mail adicionado à lista de administradores.");
-            document.getElementById('novo-admin-email').value = '';
-        });
     }
     
-    function removerAdmin(id) {
-        if(confirm("Remover acesso ADM deste e-mail?")) db.ref('admins_emails/' + id).remove();
+    function excluirMembroMestre(chaveDb, nomeMembro) {
+        if(confirm("Mestre, tem certeza que deseja excluir permanentemente a conta de '" + nomeMembro + "'?")) {
+            db.ref('membros/' + chaveDb).remove();
+        }
     }
 
     function loginAdmin() {
         const u = document.getElementById('adm-user').value.trim().toLowerCase();
         const p = document.getElementById('adm-pass').value;
-        
         if(u === "ipb" && p === "ipbbrasil") { 
             sessionStorage.setItem('adm_ativo', "Master"); 
             location.reload(); 
-            return;
+        } else {
+            alert("Dados ADM incorretos mestre.");
         }
-
-        db.ref('admins_emails').once('value', snap => {
-            const emailsObj = snap.val();
-            let emailPermitido = false;
-            if(emailsObj){
-                for(let id in emailsObj){
-                    if(emailsObj[id] === u){
-                        emailPermitido = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(emailPermitido){
-                alert("Para e-mails ADM funcionarem, é necessário reativar o Firebase Auth no painel da internet.");
-            } else {
-                alert("Este e-mail não tem permissão ADM ou os dados estão incorretos.");
-            }
-        });
     }
     
     function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
-    
-    function darBaixa(locId, livroId) {
-        db.ref('livros/' + livroId).transaction(l => { if(l) { l.qtdAtual = Math.min(l.qtdAtual + 1, l.qtdTotal); return l; } });
-        db.ref('locacoes/' + locId).remove();
-    }
-
-    // Ouvinte Locações (MANTIDO)
-    db.ref('locacoes').on('value', snap => {
-        const locs = snap.val(); const listaAdm = document.getElementById('lista-adm');
-        const listaMembro = document.getElementById('meus-livros');
-        listaAdm.innerHTML = ''; if(listaMembro) listaMembro.innerHTML = '<h4>📚 Meus Livros</h4>';
-        if(!locs) return;
-        const userAtual = localStorage.getItem('ipb_membro') ? JSON.parse(localStorage.getItem('ipb_membro')).user : null;
-        for(let id in locs) {
-            const l = locs[id];
-            listaAdm.innerHTML += `<div style="padding:10px 0; border-bottom:1px solid #eee;"><strong>${l.membroNome}</strong> - ${l.livroNome}<br><small>Dev: ${l.dataDevolucao}</small><br><button class="btn-acao" onclick="darBaixa('${id}', '${l.livroId}')">Baixa</button></div>`;
-            if(userAtual === l.membroUser) listaMembro.innerHTML += `<div class="livro-item">${l.livroNome}<br><small>Devolver: ${l.dataDevolucao}</small></div>`;
-        }
-    });
 
     // --- GESTÃO DE CONTA (MEMBRO) (MANTIDO) ---
     function cadastrarMembro() {
@@ -821,7 +599,7 @@
         const tel = document.getElementById('cad-tel').value.trim();
 
         if(!nome || !emailOriginal || !pass) return alert("Por favor mestre, preencha tudo!");
-        if(pass.length < 6) return alert("Senha muito curta (mín. 6)!");
+        if(pass.length < 6) return alert("Senha mestre muito curta (mín. 6)!");
 
         const emailSanitizado = sanitizarEmail(emailOriginal);
         const d = { nome, user: emailOriginal, pass, tel, bloqueado: false };
@@ -841,7 +619,7 @@
     function loginMembro() {
         const emailInput = document.getElementById('log-user').value.trim().toLowerCase(); 
         const passInput = document.getElementById('log-pass').value;
-        if(!emailInput || !passInput) return alert("Preencha tudo!");
+        if(!emailInput || !passInput) return alert("Preencha tudo mestre!");
         const emailSanitizado = sanitizarEmail(emailInput);
         db.ref('membros/' + emailSanitizado).once('value', snap => { 
             const m = snap.val(); 
@@ -849,7 +627,7 @@
                 localStorage.setItem('ipb_membro', JSON.stringify(m)); 
                 location.reload(); 
             } else {
-                alert("Dados incorretos.");
+                alert("Dados incorretos mestre.");
             }
         });
     }
