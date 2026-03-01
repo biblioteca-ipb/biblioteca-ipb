@@ -22,6 +22,7 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra Suave Profissional */
             --radius-lg: 18px;
             --radius-md: 12px;
+            --transition: all 0.3s ease-in-out; /* Transição suave mestre */
         }
 
         body { 
@@ -34,7 +35,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CABEÇALHO COMO BANNER PROPORCIONAL INTEIRO (MANTIDO) --- */
+        /* --- CABEÇALHO COMO BANNER PROPORCIONAL DINÂMICO MESTRE --- */
         header { 
             width: 100vw; 
             position: relative; 
@@ -45,12 +46,27 @@
             overflow: hidden;
             display: flex; 
             justify-content: center;
+            transition: var(--transition); /* Transição suave de tamanho mestre */
+            z-index: 100;
         }
         
+        /* Container que mantém a proporção mestre */
         .banner-proporcional {
             width: 100%;
             position: relative;
-            padding-bottom: 50%; /* Proporção 2:1 padrão */
+            /* Tamanho padrão grande para a Home mestre */
+            padding-bottom: 50%; 
+            transition: var(--transition);
+        }
+
+        /* ESTILO NOVO MESTRE: Quando o banner está reduzido mestre */
+        header.header-reduzido {
+            border-bottom-width: 2px; /* Linha mais fina mestre */
+        }
+        
+        header.header-reduzido .banner-proporcional {
+            /* Tamanho reduzido para outras abas mestre (aprox 15vh) */
+            padding-bottom: 15%; 
         }
 
         .banner-imagem {
@@ -60,7 +76,7 @@
             width: 100%;
             height: 100%;
             background-image: url('imagem.png');
-            background-size: contain; /* Mostra inteira sem cortes */
+            background-size: contain; /* Mostra inteira sem cortes mestre */
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
@@ -72,11 +88,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.3));
             z-index: 2;
         }
         
-        /* Oculta textos originais do header para focar no banner */
+        /* Oculta textos antigos mestre */
         .logo-container, header h1, header h2 { display: none; }
 
         .container { 
@@ -88,7 +104,7 @@
 
         .section { 
             display: none; 
-            animation: fadeIn 0.3s ease-out; /* Animação mais rápida para feedback instantâneo */
+            animation: fadeIn 0.4s ease-out; /* Animação suave mestre */
         }
 
         .section.active { 
@@ -96,7 +112,7 @@
         }
 
         @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
+            from { opacity: 0; transform: translateY(15px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
 
@@ -189,11 +205,6 @@
             letter-spacing: 0.5px;
         }
 
-        .btn-acao:hover:not(:disabled) { 
-            background: var(--primary); 
-            color: var(--white); 
-        }
-
         .btn-grande { 
             background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
             color: var(--white); 
@@ -235,7 +246,7 @@
         /* --- NAVEGAÇÃO FLUTUANTE ESTILO APP (MANTIDO) --- */
         nav { 
             display: flex; 
-            background: rgba(255,255,255,0.98); /* Mais opaco para garantir clique */
+            background: rgba(255,255,255,0.98); 
             backdrop-filter: blur(5px); 
             position: fixed; 
             bottom: 15px; 
@@ -244,7 +255,7 @@
             width: calc(100% - 30px); 
             max-width: 470px; 
             box-shadow: 0 5px 25px rgba(0,0,0,0.15); 
-            z-index: 2000; /* Garantir que fique acima de tudo */
+            z-index: 2000; 
             border-radius: 50px; 
             padding: 5px;
             border: 1px solid rgba(0,0,0,0.03);
@@ -252,7 +263,7 @@
 
         nav button { 
             flex: 1; 
-            padding: 18px 0; /* Aumentado para facilitar o toque */
+            padding: 18px 0; 
             border: none; 
             background: none; 
             font-weight: 700; 
@@ -262,7 +273,7 @@
             text-transform: uppercase; 
             letter-spacing: 1px; 
             border-radius: 50px;
-            -webkit-tap-highlight-color: transparent; /* Remove flash de clique no mobile */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         nav button.active { 
@@ -294,7 +305,7 @@
 </head>
 <body>
 
-<header>
+<header id="main-header">
     <div class="banner-proporcional">
         <div class="banner-imagem"></div>
         <div class="banner-overlay"></div>
@@ -307,81 +318,78 @@
         <div style="text-align: center; padding: 30px 10px;">
             <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
             <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
-            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
+            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo mestre</button>
         </div>
     </section>
 
     <section id="catalogo" class="section">
-        <h3>📖 Livros Disponíveis</h3>
-        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
-        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria e ordem alfabética.</p>
-        <div id="lista-catalogo">Carregando acervo...</div>
+        <h3>📖 Livros Disponíveis mestre</h3>
+        <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres mestre</div>
+        <p style="font-size: 0.8rem; color: var(--gray); margin-bottom: 25px; background: var(--white); padding: 12px 15px; border-radius: var(--radius-md); border-left: 4px solid var(--accent); box-shadow: var(--shadow);">Dica: Os livros estão organizados por categoria mestre.</p>
+        <div id="lista-catalogo">Carregando acervo mestre...</div>
     </section>
 
     <section id="conta" class="section">
         <div id="tela-login">
             <div class="card">
-                <h3>Acessar Conta Mestre</h3>
+                <h3>Acessar Conta Mestre mestre</h3>
                 <input type="text" id="log-user" placeholder="Usuário (e-mail)">
                 <input type="password" id="log-pass" placeholder="Senha">
-                <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button onclick="mostrarCadastro()">Criar nova conta</button></center>
+                <button class="btn-principal" onclick="loginMembro()">ENTRAR mestre</button>
+                <center><button onclick="mostrarCadastro()">Criar nova conta mestre</button></center>
             </div>
         </div>
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
-                <h3>Cadastro</h3>
+                <h3>Cadastro mestre</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
                 <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
                 <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp (ex: 24999999999)">
-                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
-                <center><button onclick="mostrarLogin()">Já tenho conta</button></center>
+                <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR mestre</button>
+                <center><button onclick="mostrarLogin()">Já tenho conta mestre</button></center>
             </div>
         </div>
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span> mestre</h3>
                 <div id="meus-livros"></div>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA mestre</button>
             </div>
         </div>
     </section>
 
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Cadeado do Pastor 🔐</h3>
+            <h3>Cadeado do Pastor 🔐 mestre</h3>
             <input type="text" id="adm-user" placeholder="Usuário ADM (e-mail)">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
-            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
+            <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL mestre</button>
         </div>
         
         <div id="painel-adm" style="display:none;">
-            
             <div class="card">
-                <h4>📚 Gestão do Acervo (Editar/Excluir)</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo...</div>
+                <h4>📚 Gestão do Acervo (Editar/Excluir) mestre</h4>
+                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;">Carregando acervo mestre...</div>
             </div>
-
             <div class="card">
-                <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm">Carregando membros...</div>
+                <h4>👥 Gestão de Membros mestre</h4>
+                <div id="lista-membros-adm">Carregando membros mestre...</div>
             </div>
-
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM mestre</button>
         </div>
     </section>
 </div>
 
 <nav>
-    <button onclick="mudarAba('inicio')" id="nav-inicio" class="active">INÍCIO</button>
-    <button onclick="mudarAba('catalogo')" id="nav-catalogo">ACERVO</button>
-    <button onclick="mudarAba('conta')" id="nav-conta">CONTA</button>
-    <button onclick="mudarAba('admin')" id="nav-admin">ADM</button>
+    <button onclick="mudarAba('inicio')" id="nav-inicio" class="active">INÍCIO mestre</button>
+    <button onclick="mudarAba('catalogo')" id="nav-catalogo">ACERVO mestre</button>
+    <button onclick="mudarAba('conta')" id="nav-conta">CONTA mestre</button>
+    <button onclick="mudarAba('admin')" id="nav-admin">ADM mestre</button>
 </nav>
 
 <script>
-    // Configuração Firebase (Sua configuração original)
+    // Configuração Firebase mestre (Sua configuração original)
     const firebaseConfig = {
         apiKey: "AIzaSyCea0_d_WrJKIyvyCvBsjH68hH9-BlY7M0",
         authDomain: "biblioteca-ipb.firebaseapp.com",
@@ -392,18 +400,16 @@
         appId: "1:140869477812:web:d4a57845136c2958403ee1"
     };
 
-    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // FUNÇÃO UTILITÁRIA PARA SANITIZAR E-MAIL (MANTIDO)
     function sanitizarEmail(email) {
         if(!email) return "";
         return email.replace(/\./g, '_');
     }
 
-    // --- FUNÇÕES DE NAVEGAÇÃO E TELA ---
-    // CORREÇÃO DEFINITIVA: Rolagem INSTANTÂNEA para o topo mestre
+    // --- FUNÇÕES DE NAVEGAÇÃO E TELA DINÂMICA MESTRE ---
+    // CORREÇÃO DEFINITIVA: Ajusta tamanho do banner e rola para o topo mestre
     function mudarAba(abaId) {
         // 1. Esconde todas as seções mestre
         const secoes = document.querySelectorAll('.section');
@@ -425,8 +431,17 @@
             botaoAtivo.classList.add('active');
         }
         
-        // 5. CORREÇÃO MESTRE: Rolagem INSTANTÂNEA para o topo absoluto mestre
-        // 'behavior: auto' garante que pule para o topo sem animação travada mestre
+        // 5. LÓGICA DO BANNER DINÂMICO MESTRE
+        const header = document.getElementById('main-header');
+        if (abaId === 'inicio') {
+            // Se for Home mestre, banner grande mestre
+            header.classList.remove('header-reduzido');
+        } else {
+            // Se for qualquer outra aba mestre, reduz o banner automaticamente mestre
+            header.classList.add('header-reduzido');
+        }
+        
+        // 6. Rolagem INSTANTÂNEA mestre para o topo absoluto mestre
         window.scrollTo({
             top: 0,
             left: 0,
@@ -476,7 +491,7 @@
                     <div class="livro-item ${estaEsgotado ? 'esgotado' : ''}">
                         <div class="livro-topo">
                             <div class="titulo-livro" title="${resumoTxt}">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
+                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR mestre</button>
                         </div>
                         <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
@@ -493,7 +508,7 @@
                     listaGestao.innerHTML += `
                         <div style="padding:12px 10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                             <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
-                            <div class="gestao-acoes"><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button></div>
+                            <div class="gestao-acoes"><button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X mestre</button></div>
                         </div>`;
                 });
             }
@@ -517,13 +532,13 @@
                         <div>
                             <strong>${m.nome}</strong><br>
                             <small style="color:var(--gray);">${m.user} | ${m.tel || ''}</small>
-                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats</a>` : ''}
+                            ${m.tel ? `<br><a href="${wppLink}" target="_blank" style="color:var(--accent); font-size:0.75rem; font-weight:600;">Whats mestre</a>` : ''}
                         </div>
                         <div style="display:flex; gap: 5px; align-items:center;">
                             <button class="btn-acao" style="color:${cor}; border-color:${cor}; padding: 5px 10px;" onclick="db.ref('membros/${m.chaveDb}').update({bloqueado:${!m.bloqueado}})">
-                                ${m.bloqueado ? 'Desbloquear' : 'Bloquear'}
+                                ${m.bloqueado ? 'Desbloquear mestre' : 'Bloquear mestre'}
                             </button>
-                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X</button>
+                            <button class="btn-danger-small" onclick="excluirMembroMestre('${m.chaveDb}', '${m.nome.replace(/'/g, "\\'")}')">X mestre</button>
                         </div>
                     </div>`;
             });
@@ -539,7 +554,7 @@
         
         db.ref('membros/' + emailSanitizado).once('value', snap => {
             const mDb = snap.val();
-            if(mDb.bloqueado) return alert("Sua conta está bloqueada.");
+            if(mDb.bloqueado) return alert("Sua conta está bloqueada mestre.");
             
             db.ref('livros/' + id).transaction(l => { if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; } }).then(result => {
                 if(result.committed) {
@@ -622,6 +637,8 @@
     function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
 
     // --- CHECAGEM INICIAL AO CARREGAR PÁGINA ---
+    // CORREÇÃO: Força o banner a começar reduzido se não estiver na Home mestre
+    const urlAba = new URLSearchParams(window.location.search).get('aba') || 'inicio';
     if(localStorage.getItem('ipb_membro')) { document.getElementById('tela-login').style.display='none'; document.getElementById('perfil-membro').style.display='block'; document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome; }
     if(sessionStorage.getItem('adm_ativo')) { document.getElementById('area-adm-login').style.display='none'; document.getElementById('painel-adm').style.display='block'; }
 </script>
