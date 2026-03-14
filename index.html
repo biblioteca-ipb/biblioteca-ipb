@@ -4,67 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Biblioteca Rev Welison R. Ayres</title>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-    
+
     <style>
-        :root { 
-            --primary: #006437; 
-            --primary-light: #008f4f; 
-            --accent: #2ecc71; 
-            --bg: #f4f7f5; 
-            --white: #ffffff; 
-            --text: #1a2a1f; 
-            --danger: #d63031; 
-            --gray: #636e72; 
-            --shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        :root {
+            --primary: #006437;
+            --primary-light: #008f4f;
+            --accent: #2ecc71;
+            --bg: #f4f7f5;
+            --white: #ffffff;
+            --text: #1a2a1f;
+            --danger: #d63031;
+            --gray: #636e72;
+            --shadow: 0 4px 15px rgba(0,0,0,0.06);
             --radius-lg: 18px;
             --radius-md: 12px;
-            --transition: all 0.3s ease-in-out; 
+            --transition: all 0.3s ease-in-out;
         }
 
-        body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            margin: 0; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            padding-bottom: 100px; 
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 100px;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
-        header { 
-            width: 100vw; 
-            position: relative; 
-            background-color: var(--white); 
-            border-bottom: 4px solid var(--primary); 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-            margin-bottom: 0;
-            overflow: hidden;
-            display: flex; 
+        header {
+            width: 100vw;
+            position: relative;
+            background-color: var(--white);
+            border-bottom: 4px solid var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
             justify-content: center;
             transition: var(--transition);
             z-index: 100;
+            overflow: hidden;
         }
-        
+
         .banner-proporcional {
             width: 100%;
             position: relative;
-            padding-bottom: 50%; 
+            padding-bottom: 50%;
             transition: var(--transition);
         }
 
-        header.header-reduzido .banner-proporcional {
-            padding-bottom: 15%; 
-        }
+        header.header-reduzido .banner-proporcional { padding-bottom: 15%; }
 
         .banner-imagem {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('imagem.png');
             background-size: contain;
             background-position: center;
@@ -73,90 +69,510 @@
         }
 
         .banner-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0.3));
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.03), rgba(0,0,0,0.2));
             z-index: 2;
         }
-        
-        .logo-container, header h1, header h2 { display: none; }
 
-        .container { 
-            padding: 20px; 
-            max-width: 500px; 
-            margin: 0 auto; 
+        .container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        .section { display: none; animation: fadeIn 0.4s ease-out; }
+        .section { display: none; animation: fadeIn 0.35s ease-out; }
         .section.active { display: block; }
 
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(15px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .section h3 { color: var(--primary); font-weight: 800; font-size: 1.4rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .section h3 {
+            font-family: 'Lora', serif;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .info-box.homenagem {
-            font-size: 0.9rem; color: var(--primary); font-weight: 700; margin-bottom: 25px; 
+            font-size: 0.9rem; color: var(--primary); font-weight: 700; margin-bottom: 20px;
             background: var(--white); padding: 15px; border-radius: var(--radius-md);
             border-left: 5px solid var(--accent); box-shadow: var(--shadow); text-align: center;
         }
 
-        .catalogo-categoria-titulo { 
-            color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase; 
-            letter-spacing: 1.5px; margin-top: 35px; margin-bottom: 15px; padding-bottom: 8px;
-            border-bottom: 2px solid rgba(0,100,55,0.1); 
+        /* RESUMO ADM */
+        .adm-resumo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .adm-resumo-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 14px 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--primary);
+        }
+        .adm-resumo-num { font-size: 1.6rem; font-weight: 700; color: var(--primary); line-height: 1; }
+        .adm-resumo-label { font-size: 0.65rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+        /* BUSCA */
+        .busca-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .busca-container input {
+            width: 100%;
+            padding: 13px 15px 13px 42px;
+            border: 2px solid #edf2ef;
+            border-radius: 50px;
+            font-size: 15px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            margin: 0;
+        }
+        .busca-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 18px;
+            pointer-events: none;
         }
 
-        .livro-item { 
-            background: var(--white); padding: 20px; border-radius: var(--radius-md); 
-            margin-bottom: 15px; display: flex; flex-direction: column; 
-            border-left: 5px solid var(--primary); box-shadow: var(--shadow); 
+        .catalogo-categoria-titulo {
+            color: var(--primary); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 1.5px; margin-top: 30px; margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 2px solid rgba(0,100,55,0.1);
+        }
+
+        .livro-item {
+            background: var(--white); padding: 18px; border-radius: var(--radius-md);
+            margin-bottom: 12px; display: flex; flex-direction: column;
+            border-left: 5px solid var(--primary); box-shadow: var(--shadow);
         }
 
         .livro-topo { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 10px; }
-        .titulo-livro { font-weight: 700; color: var(--text); font-size: 1.15rem; line-height: 1.2; }
-        .disp-info { font-size: 0.8rem; margin-top: 8px; font-weight: 600; }
+        .titulo-livro { font-weight: 700; color: var(--text); font-size: 1.05rem; line-height: 1.3; }
+        .autor-livro { font-size: 0.8rem; color: var(--gray); margin-top: 2px; }
+        .disp-info { font-size: 0.78rem; margin-top: 8px; font-weight: 600; }
 
-        .btn-acao { 
-            background: var(--white); color: var(--primary); border: 2px solid var(--primary); 
-            padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; 
-            cursor: pointer; text-transform: uppercase;
+        .resumo-livro {
+            font-size: 0.82rem; color: var(--gray); margin-top: 10px;
+            border-top: 1px solid #edf2ef; padding-top: 10px; line-height: 1.5;
+            display: none;
+        }
+        .resumo-livro.visivel { display: block; }
+
+        .btn-resumo {
+            background: none; border: none; font-size: 0.75rem; color: var(--primary);
+            cursor: pointer; padding: 6px 0 0; font-weight: 600; text-align: left;
         }
 
-        .btn-grande { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
-            color: var(--white); border: none; padding: 18px; border-radius: 50px; 
-            font-weight: 800; width: 100%; cursor: pointer; font-size: 1.1rem; 
+        .btn-acao {
+            background: var(--white); color: var(--primary); border: 2px solid var(--primary);
+            padding: 8px 14px; border-radius: 20px; font-weight: 700; font-size: 0.72rem;
+            cursor: pointer; text-transform: uppercase; white-space: nowrap;
+        }
+        .btn-acao:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-grande {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white); border: none; padding: 18px; border-radius: 50px;
+            font-weight: 800; width: 100%; cursor: pointer; font-size: 1.1rem;
         }
 
-        .btn-principal { 
-            background: var(--primary); color: var(--white); border: none; padding: 15px; 
-            border-radius: var(--radius-md); font-weight: 700; width: 100%; cursor: pointer; 
+        .btn-principal {
+            background: var(--primary); color: var(--white); border: none; padding: 15px;
+            border-radius: var(--radius-md); font-weight: 700; width: 100%; cursor: pointer; font-size: 1rem;
         }
-        
-        .btn-secundario { background: var(--white); color: var(--gray); border: 2px solid #edf2ef; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; }
-        .btn-danger-small { border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; cursor: pointer; font-weight: 700; color: var(--white); background-color: var(--danger); }
 
-        nav { 
-            display: flex; background: rgba(255,255,255,0.98); position: fixed; bottom: 15px; 
-            left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 470px; 
+        .btn-secundario {
+            background: var(--white); color: var(--gray); border: 2px solid #edf2ef;
+            padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer;
+        }
+
+        .btn-danger-small {
+            border: none; padding: 5px 9px; border-radius: 6px; font-size: 0.7rem;
+            cursor: pointer; font-weight: 700; color: var(--white); background-color: var(--danger);
+        }
+
+        nav {
+            display: flex; background: rgba(255,255,255,0.98); position: fixed; bottom: 15px;
+            left: 50%; transform: translateX(-50%); width: calc(100% - 30px); max-width: 470px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.15); z-index: 2000; border-radius: 50px; padding: 5px;
         }
 
-        nav button { flex: 1; padding: 18px 0; border: none; background: none; font-weight: 700; color: #a4b0be; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; border-radius: 50px; }
+        nav button {
+            flex: 1; padding: 16px 0; border: none; background: none; font-weight: 700;
+            color: #a4b0be; font-size: 0.65rem; cursor: pointer; text-transform: uppercase; border-radius: 50px;
+        }
         nav button.active { color: var(--primary); background: rgba(0,100,55,0.08); }
 
-        .card { background: var(--white); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #edf2ef; border-radius: var(--radius-md); box-sizing: border-box; font-size: 16px; }
+        .card {
+            background: var(--white); padding: 22px; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow); margin-bottom: 18px;
+        }
+        .card h4 { color: var(--primary); font-weight: 700; margin: 0 0 15px; font-size: 1rem; }
+
+        input, select, textarea {
+            width: 100%; padding: 14px 15px; margin: 8px 0; border: 2px solid #edf2ef;
+            border-radius: var(--radius-md); box-sizing: border-box; font-size: 15px;
+            font-family: 'DM Sans', sans-serif;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--primary);
+        }
+
         .hidden { display: none !important; }
+
+        /* EMPRESTIMO VENCIDO */
+        .emp-vencido {
+            border-left: 4px solid var(--danger) !important;
+        }
+        .badge-vencido {
+            display: inline-block; background: #fff0f0; color: var(--danger);
+            font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
+            border-radius: 20px; margin-left: 6px;
+        }
+
+        /* MEUS EMPRESTIMOS */
+        .meu-emp-card {
+            background: var(--white); border-radius: var(--radius-md); padding: 15px;
+            margin-bottom: 12px; border-left: 4px solid var(--primary); box-shadow: var(--shadow);
+        }
+        .meu-emp-card.vencido { border-left-color: var(--danger); }
+
+        /* TAG de status */
+        .tag {
+            display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 3px 10px;
+            border-radius: 20px; margin-top: 6px;
+        }
+        .tag-ok { background: #e8f8f0; color: var(--primary); }
+        .tag-danger { background: #fdeaea; color: var(--danger); }
+
+        /* EXPORT BTN */
+        .btn-export {
+            background: none; border: 2px solid var(--primary); color: var(--primary);
+            padding: 10px 18px; border-radius: var(--radius-md); font-weight: 700;
+            font-size: 0.8rem; cursor: pointer; width: 100%; margin-bottom: 10px;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5); z-index: 5000;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.ativo { display: flex; }
+        .modal-box {
+            background: var(--white); border-radius: var(--radius-lg);
+            padding: 28px; width: 90%; max-width: 380px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-box h4 { margin: 0 0 8px; color: var(--text); font-size: 1.1rem; }
+        .modal-box p { color: var(--gray); font-size: 0.9rem; margin: 0 0 20px; }
+        .modal-acoes { display: flex; gap: 10px; }
+        .modal-acoes button { flex: 1; padding: 13px; border-radius: var(--radius-md); border: none; font-weight: 700; cursor: pointer; }
+        .btn-modal-confirm { background: var(--primary); color: var(--white); }
+        .btn-modal-cancel { background: #f4f7f5; color: var(--gray); }
+
+        /* PRAZO SELECTOR */
+        .prazo-opcoes { display: flex; gap: 10px; margin: 10px 0 18px; }
+        .prazo-btn {
+            flex: 1; padding: 12px; border: 2px solid #edf2ef; border-radius: var(--radius-md);
+            background: var(--white); font-weight: 700; color: var(--gray); cursor: pointer; font-size: 0.9rem;
+        }
+        .prazo-btn.selecionado { border-color: var(--primary); color: var(--primary); background: #f0faf5; }
+
+        .sem-resultado {
+            text-align: center; color: var(--gray); padding: 30px 0; font-size: 0.95rem;
+        }
+
+        .adm-busca { margin-bottom: 12px; }
+        .adm-busca input { margin: 0; }
+
+        /* CAPA DO LIVRO */
+        .livro-capa-mini {
+            width: 52px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+        }
+        .livro-capa-placeholder {
+            width: 52px;
+            height: 72px;
+            background: linear-gradient(135deg, #e8f4ee, #c8e6d4);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 1px solid rgba(0,100,55,0.15);
+        }
+        .livro-item { flex-direction: row !important; gap: 14px; align-items: flex-start; }
+        .livro-corpo { flex: 1; display: flex; flex-direction: column; }
+        .titulo-livro {
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: rgba(0,100,55,0.3);
+            text-underline-offset: 3px;
+        }
+        .titulo-livro:hover { color: var(--primary); }
+
+        /* MODAL DETALHES LIVRO */
+        .modal-detalhe-capa {
+            width: 90px;
+            height: 126px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 3px 3px 12px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .modal-detalhe-capa-placeholder {
+            width: 90px;
+            height: 126px;
+            background: linear-gradient(135deg, #e8f4ee, #c8e6d4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            flex-shrink: 0;
+        }
+        .modal-detalhe-topo {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .modal-detalhe-info { flex: 1; }
+        .modal-detalhe-titulo {
+            font-family: 'Lora', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 4px;
+            line-height: 1.3;
+        }
+        .modal-detalhe-autor {
+            font-size: 0.82rem;
+            color: var(--gray);
+            margin: 0 0 10px;
+        }
+        .modal-detalhe-resumo {
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.6;
+            border-top: 1px solid #edf2ef;
+            padding-top: 14px;
+            margin-top: 4px;
+        }
+        .modal-detalhe-sem-resumo {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-style: italic;
+            border-top: 1px solid #edf2ef;
+            padding-top: 14px;
+        }
+
+        /* SOCIEDADES */
+        .soc-tabs {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px;
+        }
+        .soc-tab {
+            padding: 7px 14px; border-radius: 20px; border: 2px solid #edf2ef;
+            background: var(--white); font-size: 0.75rem; font-weight: 700;
+            color: var(--gray); cursor: pointer; transition: var(--transition);
+        }
+        .soc-tab.active {
+            background: var(--primary); color: var(--white); border-color: var(--primary);
+        }
+        .soc-conteudo { display: none; animation: fadeIn 0.3s ease-out; }
+        .soc-conteudo.active { display: block; }
+
+        .soc-card {
+            background: var(--white); border-radius: var(--radius-md);
+            box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden;
+        }
+        .soc-card-header {
+            background: var(--primary); color: var(--white);
+            padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .soc-card-header-titulo { font-weight: 700; font-size: 0.95rem; }
+        .soc-card-header-data { font-size: 0.75rem; opacity: 0.85; }
+        .soc-card-body { padding: 14px 16px; }
+        .soc-card-texto { font-size: 0.88rem; line-height: 1.65; color: var(--text); white-space: pre-wrap; }
+        .soc-card-link {
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+            background: #f0faf5; color: var(--primary); border: 1px solid #c8e6d4;
+            padding: 8px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+            text-decoration: none; word-break: break-all;
+        }
+        .soc-vazio {
+            text-align: center; color: var(--gray); padding: 30px 10px; font-size: 0.9rem;
+        }
+
+        /* ADM SOCIEDADES */
+        .adm-soc-tabs {
+            display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px;
+        }
+        .adm-soc-tab {
+            padding: 6px 12px; border-radius: 20px; border: 2px solid #edf2ef;
+            background: var(--white); font-size: 0.72rem; font-weight: 700;
+            color: var(--gray); cursor: pointer;
+        }
+        .adm-soc-tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+        .adm-soc-form { display: none; }
+        .adm-soc-form.active { display: block; }
+        .adm-soc-post {
+            padding: 10px; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
+        }
+        .adm-soc-post-info { flex: 1; font-size: 0.82rem; }
+
+        /* TELA INICIAL RESUMO VIVO */
+        .inicio-versículo {
+            text-align: center; padding: 28px 10px 20px;
+        }
+        .inicio-cards {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+        }
+        .inicio-card {
+            background: var(--white); border-radius: var(--radius-md); padding: 16px;
+            box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);
+            border-top: 3px solid var(--primary); text-decoration: none;
+        }
+        .inicio-card:active { transform: scale(0.97); }
+        .inicio-card-icon { font-size: 24px; margin-bottom: 6px; }
+        .inicio-card-num { font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1; }
+        .inicio-card-label { font-size: 0.7rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; }
+        .inicio-card-sub { font-size: 0.75rem; color: var(--gray); margin-top: 4px; line-height: 1.3; }
+
+        .inicio-aviso-recente {
+            background: var(--white); border-radius: var(--radius-md); padding: 16px;
+            box-shadow: var(--shadow); margin-bottom: 12px; cursor: pointer;
+            border-left: 4px solid var(--primary);
+        }
+        .inicio-aviso-label { font-size: 0.68rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .inicio-aviso-titulo { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 3px; }
+        .inicio-aviso-data { font-size: 0.75rem; color: var(--gray); }
+
+        /* INDICADOR NOVIDADE NAV */
+        .nav-badge {
+            display: inline-block; width: 8px; height: 8px; background: var(--danger);
+            border-radius: 50%; position: absolute; top: 10px; right: calc(50% - 14px);
+        }
+        nav button { position: relative; }
+
+        /* FILA DE ESPERA */
+        .fila-info {
+            font-size: 0.78rem; color: var(--gray); margin-top: 8px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .fila-badge {
+            display: inline-block; background: #fff3e0; color: #e67e22;
+            font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+        }
+        .btn-fila {
+            background: none; border: 2px solid #e67e22; color: #e67e22;
+            padding: 7px 14px; border-radius: 20px; font-weight: 700;
+            font-size: 0.72rem; cursor: pointer; white-space: nowrap;
+        }
+        .btn-fila:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* MODAL FILA */
+        .modal-fila-pos {
+            text-align: center; padding: 14px 0 6px;
+            font-size: 2rem; font-weight: 800; color: var(--primary);
+        }
+        .modal-fila-txt {
+            text-align: center; font-size: 0.85rem; color: var(--gray); margin-bottom: 16px;
+        }
+            width: 60px;
+            height: 84px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 8px;
+            display: none;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+        }
+        .capa-preview-adm.visivel { display: block; }
     </style>
 </head>
 <body>
+
+<!-- MODAL FILA DE ESPERA -->
+<div class="modal-overlay" id="modal-fila">
+    <div class="modal-box">
+        <h4>⏳ Fila de Espera</h4>
+        <p id="modal-fila-livro" style="font-weight:700; color:var(--primary); font-size:0.95rem; margin-bottom:6px;"></p>
+        <div id="modal-fila-conteudo"></div>
+        <div class="modal-acoes" style="margin-top:16px;">
+            <button class="btn-modal-cancel" onclick="fecharModal('modal-fila')">Fechar</button>
+            <button class="btn-modal-confirm" id="btn-confirmar-fila" onclick="confirmarFila()">Entrar na fila</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DETALHES DO LIVRO -->
+<div class="modal-overlay" id="modal-detalhe">
+    <div class="modal-box" style="max-width:420px;">
+        <div class="modal-detalhe-topo">
+            <div id="modal-detalhe-capa-wrap"></div>
+            <div class="modal-detalhe-info">
+                <p class="modal-detalhe-titulo" id="modal-detalhe-titulo"></p>
+                <p class="modal-detalhe-autor" id="modal-detalhe-autor"></p>
+                <div id="modal-detalhe-disp"></div>
+            </div>
+        </div>
+        <div id="modal-detalhe-resumo-wrap"></div>
+        <div class="modal-acoes" style="margin-top:18px;">
+            <button class="btn-modal-cancel" onclick="fecharModal('modal-detalhe')">Fechar</button>
+            <button class="btn-modal-confirm" id="btn-detalhe-reservar" onclick="reservarDoDetalhe()">Reservar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE RESERVA -->
+<div class="modal-overlay" id="modal-reserva">
+    <div class="modal-box">
+        <h4>📚 Reservar Livro</h4>
+        <p id="modal-reserva-titulo" style="font-weight:700; color:var(--primary); font-size:1rem; margin-bottom:14px;"></p>
+        <p style="margin-bottom:6px; font-size:0.85rem; color:var(--gray);">Escolha o prazo de empréstimo:</p>
+        <div class="prazo-opcoes">
+            <button class="prazo-btn selecionado" onclick="selecionarPrazo(this, 15)">15 dias</button>
+            <button class="prazo-btn" onclick="selecionarPrazo(this, 20)">20 dias</button>
+            <button class="prazo-btn" onclick="selecionarPrazo(this, 30)">30 dias</button>
+        </div>
+        <div class="modal-acoes">
+            <button class="btn-modal-cancel" onclick="fecharModal('modal-reserva')">Cancelar</button>
+            <button class="btn-modal-confirm" onclick="confirmarReserva()">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BAIXA -->
+<div class="modal-overlay" id="modal-baixa">
+    <div class="modal-box">
+        <h4>✅ Confirmar Devolução</h4>
+        <p id="modal-baixa-txt">Confirmar devolução deste livro?</p>
+        <div class="modal-acoes">
+            <button class="btn-modal-cancel" onclick="fecharModal('modal-baixa')">Cancelar</button>
+            <button class="btn-modal-confirm" onclick="confirmarBaixa()">Confirmar</button>
+        </div>
+    </div>
+</div>
 
 <header id="main-header">
     <div class="banner-proporcional">
@@ -166,104 +582,227 @@
 </header>
 
 <div class="container" id="main-container">
-    
+
+    <!-- INÍCIO -->
     <section id="inicio" class="section active">
-        <div style="text-align: center; padding: 30px 10px;">
-            <h2 style="color: var(--primary); font-size: 1.3rem; line-height: 1.4; font-weight: 700;">“Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo.”</h2>
-            <p style="font-style: italic; color: var(--gray); margin-bottom: 40px;">2 Pedro 3:18</p>
-            <button class="btn-grande" onclick="mudarAba('catalogo')">Acessar o Acervo</button>
+        <div class="inicio-versículo">
+            <h2 style="font-family:'Lora',serif; color: var(--primary); font-size: 1.15rem; line-height: 1.5; font-weight: 700; margin-bottom: 4px;">"Antes crescei na graça e conhecimento de nosso Senhor e Salvador, Jesus Cristo."</h2>
+            <p style="font-style: italic; color: var(--gray); margin: 0 0 24px;">2 Pedro 3:18</p>
         </div>
+
+        <!-- Cards de resumo -->
+        <div class="inicio-cards">
+            <div class="inicio-card" onclick="mudarAba('catalogo')">
+                <div class="inicio-card-icon">📚</div>
+                <div class="inicio-card-num" id="home-livros-disp">—</div>
+                <div class="inicio-card-label">Livros disponíveis</div>
+                <div class="inicio-card-sub" id="home-livros-total"></div>
+            </div>
+            <div class="inicio-card" onclick="mudarAba('sociedades')">
+                <div class="inicio-card-icon">🔔</div>
+                <div class="inicio-card-num" id="home-avisos-num">—</div>
+                <div class="inicio-card-label">Avisos recentes</div>
+                <div class="inicio-card-sub" id="home-avisos-sub"></div>
+            </div>
+        </div>
+
+        <!-- Próximos avisos -->
+        <div id="home-avisos-lista"></div>
+
+        <button class="btn-grande" onclick="mudarAba('catalogo')" style="margin-top:8px;">Acessar o Acervo</button>
     </section>
 
+    <!-- CATÁLOGO -->
     <section id="catalogo" class="section">
         <h3>📖 Livros Disponíveis</h3>
         <div class="info-box homenagem">Homenagem ao Rev. Welison R. Ayres</div>
+        <div class="busca-container">
+            <span class="busca-icon">🔍</span>
+            <input type="text" id="busca-catalogo" placeholder="Buscar por título ou categoria..." oninput="filtrarCatalogo()">
+        </div>
         <div id="lista-catalogo">Carregando acervo...</div>
     </section>
 
+    <!-- CONTA -->
     <section id="conta" class="section">
         <div id="tela-login">
             <div class="card">
                 <h3>Acessar Conta</h3>
-                <input type="text" id="log-user" placeholder="Usuário (e-mail)">
+                <input type="text" id="log-user" placeholder="E-mail">
                 <input type="password" id="log-pass" placeholder="Senha">
                 <button class="btn-principal" onclick="loginMembro()">ENTRAR</button>
-                <center><button onclick="mostrarCadastro()" style="margin-top:10px; background:none; border:none; color:var(--primary); cursor:pointer;">Criar nova conta</button></center>
+                <center><button onclick="mostrarCadastro()" style="margin-top:12px; background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600;">Criar nova conta</button></center>
             </div>
         </div>
+
         <div id="tela-cadastro" style="display:none;">
             <div class="card">
                 <h3>Cadastro</h3>
                 <input type="text" id="cad-nome" placeholder="Nome Completo">
-                <input type="text" id="cad-user" placeholder="E-mail (Usuário)">
-                <input type="password" id="cad-pass" placeholder="Senha">
+                <input type="text" id="cad-user" placeholder="E-mail">
+                <input type="password" id="cad-pass" placeholder="Senha (mín. 6 caracteres)">
                 <input type="tel" id="cad-tel" placeholder="WhatsApp">
                 <button class="btn-principal" onclick="cadastrarMembro()">CADASTRAR</button>
-                <center><button onclick="mostrarLogin()" style="margin-top:10px; background:none; border:none; color:var(--primary); cursor:pointer;">Já tenho conta</button></center>
+                <center><button onclick="mostrarLogin()" style="margin-top:12px; background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600;">Já tenho conta</button></center>
             </div>
         </div>
+
         <div id="perfil-membro" style="display:none;">
             <div class="card">
-                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span></h3>
-                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top: 25px;">SAIR DA CONTA</button>
+                <h3>Olá, <span id="nome-exibicao" style="color: var(--primary);"></span> 👋</h3>
+                <div id="notif-fila-lista" style="margin-bottom:10px;"></div>
+                <div id="meus-emprestimos-lista" style="margin-top:10px;"></div>
+                <button onclick="logout()" class="btn-principal" style="background:var(--danger); margin-top:20px;">SAIR DA CONTA</button>
             </div>
         </div>
     </section>
 
+    <!-- ADMIN -->
     <section id="admin" class="section">
         <div id="area-adm-login" class="card">
-            <h3>Cadeado do Pastor 🔐</h3>
+            <h3>🔐 Painel do Pastor</h3>
             <input type="text" id="adm-user" placeholder="Usuário ADM">
             <input type="password" id="adm-pass" placeholder="Senha ADM">
             <button class="btn-principal" onclick="loginAdmin()">ACESSAR PAINEL</button>
         </div>
-        
-        <div id="painel-adm" style="display:none;">
-            <div class="card">
-                <h4>🏷️ Gestão de Categorias</h4>
-                <div id="lista-categorias-adm" style="margin-bottom: 10px; max-height: 150px; overflow-y:auto;"></div>
-                <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria">
-                <button class="btn-secundario" onclick="adicionarCategoria()">ADICIONAR CATEGORIA</button>
-            </div>
 
-            <div class="card" id="card-form-livro">
-                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
-                <input type="hidden" id="edit-livro-id" value="">
-                <input type="text" id="novo-titulo" placeholder="Título do Livro">
-                <select id="novo-categoria"><option value="" disabled selected>Selecione uma categoria</option></select>
-                <textarea id="novo-resumo" placeholder="Breve Resumo" rows="3"></textarea>
-                <input type="number" id="novo-qtd" placeholder="Quantidade Total" value="1">
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-principal" id="btn-salvar-livro" onclick="salvarLivro()">SALVAR LIVRO</button>
-                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background: var(--gray);" onclick="cancelarEdicao()">CANCELAR</button>
+        <div id="painel-adm" style="display:none;">
+
+            <!-- Resumo -->
+            <div class="adm-resumo">
+                <div class="adm-resumo-card">
+                    <div class="adm-resumo-num" id="res-livros">0</div>
+                    <div class="adm-resumo-label">Livros</div>
+                </div>
+                <div class="adm-resumo-card">
+                    <div class="adm-resumo-num" id="res-emp">0</div>
+                    <div class="adm-resumo-label">Empréstimos</div>
+                </div>
+                <div class="adm-resumo-card">
+                    <div class="adm-resumo-num" id="res-membros">0</div>
+                    <div class="adm-resumo-label">Membros</div>
                 </div>
             </div>
 
+            <!-- Categorias -->
+            <div class="card">
+                <h4>🏷️ Gestão de Categorias</h4>
+                <div id="lista-categorias-adm" style="margin-bottom:10px; max-height:150px; overflow-y:auto;"></div>
+                <input type="text" id="nova-categoria-nome" placeholder="Nome da nova categoria">
+                <button class="btn-secundario" onclick="adicionarCategoria()" style="width:100%; margin-top:4px;">ADICIONAR CATEGORIA</button>
+            </div>
+
+            <!-- Cadastro / Edição de Livro -->
+            <div class="card" id="card-form-livro">
+                <h4 id="form-livro-titulo">➕ Cadastrar Novo Livro</h4>
+                <input type="hidden" id="edit-livro-id" value="">
+                <input type="hidden" id="edit-livro-qtd-atual" value="">
+                <input type="text" id="novo-titulo" placeholder="Título do Livro">
+                <input type="text" id="novo-autor" placeholder="Autor (opcional)">
+                <select id="novo-categoria"><option value="" disabled selected>Selecione uma categoria</option></select>
+                <textarea id="novo-resumo" placeholder="Breve Resumo" rows="3"></textarea>
+                <input type="number" id="novo-qtd" placeholder="Quantidade Total" value="1" min="1">
+                <div style="margin: 8px 0;">
+                    <label style="font-size:0.82rem; color:var(--gray); font-weight:600; display:block; margin-bottom:6px;">📷 Capa do livro (opcional)</label>
+                    <div id="capa-upload-area" onclick="document.getElementById('novo-capa-file').click()"
+                        style="border:2px dashed #c8e6d4; border-radius:var(--radius-md); padding:18px; text-align:center; cursor:pointer; background:#f9fdf9; transition:var(--transition);">
+                        <div id="capa-upload-placeholder">
+                            <div style="font-size:28px;">🖼️</div>
+                            <div style="font-size:0.8rem; color:var(--gray); margin-top:4px;">Toque para escolher uma imagem</div>
+                            <div style="font-size:0.72rem; color:#b2bec3; margin-top:2px;">JPG, PNG, WEBP · máx. 500 KB</div>
+                        </div>
+                        <img id="capa-preview-adm" style="display:none; max-height:120px; max-width:100%; border-radius:6px; box-shadow:2px 2px 8px rgba(0,0,0,0.15);" alt="Preview">
+                    </div>
+                    <input type="file" id="novo-capa-file" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="processarImagemCapa(this)">
+                    <input type="hidden" id="novo-capa" value="">
+                    <button type="button" id="btn-remover-capa" onclick="removerCapa()" style="display:none; margin-top:6px; background:none; border:none; color:var(--danger); font-size:0.78rem; cursor:pointer; font-weight:600;">✕ Remover foto</button>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-principal" id="btn-salvar-livro" onclick="salvarLivro()">SALVAR LIVRO</button>
+                    <button class="btn-principal hidden" id="btn-cancelar-edit" style="background:var(--gray);" onclick="cancelarEdicao()">CANCELAR</button>
+                </div>
+            </div>
+
+            <!-- Acervo ADM -->
             <div class="card">
                 <h4>📚 Gestão do Acervo</h4>
-                <div id="gestao-livros-lista" style="max-height: 400px; overflow-y: auto;"></div>
+                <div class="adm-busca">
+                    <input type="text" placeholder="Buscar livro..." oninput="filtrarAcervoAdm(this.value)" style="margin:0;">
+                </div>
+                <div id="gestao-livros-lista" style="max-height:400px; overflow-y:auto;"></div>
             </div>
 
+            <!-- Empréstimos -->
             <div class="card">
-                <h4>📊 Empréstimos Ativos (Dar Baixa)</h4>
+                <h4>📊 Empréstimos Ativos</h4>
+                <button class="btn-export" onclick="exportarCSV()">⬇️ Exportar como CSV</button>
                 <div id="lista-adm">Nenhum empréstimo ativo.</div>
             </div>
-            
+
+            <!-- Membros -->
             <div class="card">
                 <h4>👥 Gestão de Membros</h4>
-                <div id="lista-membros-adm" style="max-height: 400px; overflow-y: auto;">Carregando membros...</div>
+                <div id="lista-membros-adm" style="max-height:400px; overflow-y:auto;">Carregando...</div>
             </div>
 
-            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top: 20px;">SAIR DO MODO ADM</button>
+            <button onclick="logoutAdmin()" class="btn-principal" style="background:var(--danger); margin-top:10px;">SAIR DO MODO ADM</button>
+
+            <!-- Sociedades ADM -->
+            <div class="card" style="margin-top:18px;">
+                <h4>⛪ Gestão de Sociedades & Avisos</h4>
+
+                <div class="adm-soc-tabs" id="adm-soc-tabs">
+                    <button class="adm-soc-tab active" onclick="trocarAdmSocTab(this,'adm-soc-UCP')">UCP</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-UMP')">UMP</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-UPH')">UPH</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-SAF')">SAF</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-UPA')">UPA</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-Conselho')">Conselho</button>
+                    <button class="adm-soc-tab" onclick="trocarAdmSocTab(this,'adm-soc-Boletim')">Boletim</button>
+                </div>
+
+                <!-- Um bloco por sociedade -->
+                <div id="adm-soc-UCP" class="adm-soc-form active" data-soc="UCP"></div>
+                <div id="adm-soc-UMP" class="adm-soc-form" data-soc="UMP"></div>
+                <div id="adm-soc-UPH" class="adm-soc-form" data-soc="UPH"></div>
+                <div id="adm-soc-SAF" class="adm-soc-form" data-soc="SAF"></div>
+                <div id="adm-soc-UPA" class="adm-soc-form" data-soc="UPA"></div>
+                <div id="adm-soc-Conselho" class="adm-soc-form" data-soc="Conselho"></div>
+                <div id="adm-soc-Boletim" class="adm-soc-form" data-soc="Boletim"></div>
+            </div>
         </div>
     </section>
+    <!-- SOCIEDADES -->
+    <section id="sociedades" class="section">
+        <h3>⛪ Sociedades & Avisos</h3>
+
+        <div class="soc-tabs" id="soc-tabs-publico">
+            <button class="soc-tab active" onclick="trocarSocTab(this,'soc-UCP')">UCP</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-UMP')">UMP</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-UPH')">UPH</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-SAF')">SAF</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-UPA')">UPA</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-Conselho')">Conselho</button>
+            <button class="soc-tab" onclick="trocarSocTab(this,'soc-Boletim')">Boletim</button>
+        </div>
+
+        <div id="soc-UCP" class="soc-conteudo active"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-UMP" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-UPH" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-SAF" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-UPA" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-Conselho" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+        <div id="soc-Boletim" class="soc-conteudo"><div class="soc-vazio">Carregando...</div></div>
+    </section>
+
 </div>
 
 <nav>
-    <button onclick="mudarAba('inicio')" id="nav-inicio" class="active">INÍCIO</button>
-    <button onclick="mudarAba('catalogo')" id="nav-catalogo">ACERVO</button>
-    <button onclick="mudarAba('conta')" id="nav-conta">CONTA</button>
-    <button onclick="mudarAba('admin')" id="nav-admin">ADM</button>
+    <button onclick="mudarAba('inicio')" id="nav-inicio" class="active">🏠<br>INÍCIO</button>
+    <button onclick="mudarAba('catalogo')" id="nav-catalogo">📖<br>ACERVO</button>
+    <button onclick="mudarAba('sociedades')" id="nav-sociedades">⛪<br>IGREJA<span id="nav-badge-igreja" class="nav-badge" style="display:none;"></span></button>
+    <button onclick="mudarAba('conta')" id="nav-conta">👤<br>CONTA</button>
+    <button onclick="mudarAba('admin')" id="nav-admin">🔐<br>ADM</button>
 </nav>
 
 <script>
@@ -279,7 +818,18 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function sanitizarEmail(email) { return email ? email.replace(/\./g, '_') : ""; }
+    // ---- UTILITÁRIOS ----
+    function sanitizarEmail(email) { return email ? email.replace(/\./g, '_').replace(/@/g, '_at_') : ""; }
+
+    function hashSenha(senha) {
+        // Hash simples via djb2 — para segurança real, use Firebase Auth
+        let hash = 5381;
+        for (let i = 0; i < senha.length; i++) {
+            hash = ((hash << 5) + hash) + senha.charCodeAt(i);
+            hash = hash & hash;
+        }
+        return 'h_' + Math.abs(hash).toString(36) + '_' + senha.length;
+    }
 
     function mudarAba(abaId) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -290,16 +840,146 @@
         if (botao) botao.classList.add('active');
         const header = document.getElementById('main-header');
         abaId === 'inicio' ? header.classList.remove('header-reduzido') : header.classList.add('header-reduzido');
-        window.scrollTo(0,0);
+        if (abaId === 'sociedades') {
+            localStorage.setItem(BADGE_KEY, Date.now().toString());
+            const badge = document.getElementById('nav-badge-igreja');
+            if (badge) badge.style.display = 'none';
+        }
+        window.scrollTo(0, 0);
     }
 
+    function hoje() { return new Date().toLocaleDateString('pt-BR'); }
+
+    function dataVencida(dataStr) {
+        if (!dataStr) return false;
+        const partes = dataStr.split('/');
+        if (partes.length !== 3) return false;
+        const data = new Date(parseInt(partes[2]), parseInt(partes[1]) - 1, parseInt(partes[0]));
+        return data < new Date();
+    }
+
+    // ---- ESTADO GLOBAL ----
+    let dadosGlobais = {};
+    let reservaPendente = { id: null, titulo: null, prazo: 15 };
+    let baixaPendente = { locId: null, livId: null };
+    let todosLivrosRaw = {};
+    const BADGE_KEY = 'ipb_ultima_visita_igreja';
+
+    // ---- LISTENER PRINCIPAL ----
+    db.ref().on('value', snap => {
+        dadosGlobais = snap.val() || {};
+        const livrosRaw = dadosGlobais.livros || {};
+        const locacoesRaw = dadosGlobais.locacoes || {};
+        const membros = dadosGlobais.membros || {};
+        const categoriasRaw = dadosGlobais.categorias || {};
+        todosLivrosRaw = livrosRaw;
+
+        const livrosAgrupados = processarLivros(livrosRaw);
+
+        // Resumo ADM
+        document.getElementById('res-livros').textContent = Object.keys(livrosRaw).length;
+        document.getElementById('res-emp').textContent = Object.keys(locacoesRaw).length;
+        document.getElementById('res-membros').textContent = Object.keys(membros).length;
+
+        // Catálogo
+        renderCatalogo(livrosAgrupados);
+
+        // Meus empréstimos
+        renderMeusEmprestimos(locacoesRaw);
+
+        // Gestão Acervo ADM
+        renderGestaoAcervo(livrosAgrupados, '');
+
+        // Sociedades
+        const socDados = dadosGlobais.sociedades || {};
+        renderSociedadesPublico(socDados);
+        renderAdmSociedades(socDados);
+
+        // Tela inicial
+        renderTelaInicial(livrosRaw, locacoesRaw, socDados);
+
+        // Badge novidades Igreja
+        atualizarBadgeIgreja(socDados);
+
+        // Notificações de fila do membro logado
+        const membroLocal = localStorage.getItem('ipb_membro');
+        if (membroLocal) {
+            const mem = JSON.parse(membroLocal);
+            renderNotificacoesFila(mem.user, livrosRaw);
+        }
+
+        // Categorias ADM
+        const listaCatAdm = document.getElementById('lista-categorias-adm');
+        const selectCat = document.getElementById('novo-categoria');
+        if (listaCatAdm && selectCat) {
+            listaCatAdm.innerHTML = '';
+            selectCat.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
+            for (let idCat in categoriasRaw) {
+                const catNome = categoriasRaw[idCat];
+                listaCatAdm.innerHTML += `<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #eee;align-items:center;"><small>${catNome}</small><button class="btn-danger-small" onclick="excluirCategoria('${idCat}')">X</button></div>`;
+                selectCat.innerHTML += `<option value="${catNome}">${catNome}</option>`;
+            }
+        }
+
+        // Empréstimos ADM
+        const listaEmp = document.getElementById('lista-adm');
+        if (listaEmp) {
+            listaEmp.innerHTML = '';
+            let temEmp = false;
+            for (let idLoc in locacoesRaw) {
+                temEmp = true;
+                const loc = locacoesRaw[idLoc];
+                const vencido = dataVencida(loc.dataDevolucao);
+                listaEmp.innerHTML += `
+                    <div style="padding:12px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;" class="${vencido ? 'emp-vencido' : ''}">
+                        <div>
+                            <strong>${loc.livroNome}</strong>
+                            ${vencido ? '<span class="badge-vencido">VENCIDO</span>' : ''}
+                            <br><small>${loc.membroNome}</small>
+                            <br><small style="color:${vencido ? 'var(--danger)' : 'var(--gray)'}">Devolução: ${loc.dataDevolucao}</small>
+                        </div>
+                        <button class="btn-acao" onclick="abrirModalBaixa('${idLoc}', '${loc.livroId}', '${(loc.livroNome||'').replace(/'/g, "\\'")}')">Baixa</button>
+                    </div>`;
+            }
+            if (!temEmp) listaEmp.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px 0;">Nenhum empréstimo ativo.</p>';
+        }
+
+        // Membros ADM
+        const listaMembros = document.getElementById('lista-membros-adm');
+        if (listaMembros) {
+            listaMembros.innerHTML = '';
+            let temMembro = false;
+            for (let chave in membros) {
+                temMembro = true;
+                const m = membros[chave];
+                const corStatus = m.bloqueado ? 'var(--danger)' : 'var(--accent)';
+                listaMembros.innerHTML += `
+                    <div style="padding:14px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <strong>${m.nome}</strong><br>
+                            <small>${m.user || ''} | ${m.tel || 'Sem Tel'}</small>
+                        </div>
+                        <div style="display:flex;gap:5px;">
+                            <button class="btn-acao" style="color:${corStatus};border-color:${corStatus};font-size:0.6rem;padding:5px 8px;"
+                                onclick="toggleBloqueioMembro('${chave}', ${!!m.bloqueado})">
+                                ${m.bloqueado ? 'DESBLOQUEAR' : 'BLOQUEAR'}
+                            </button>
+                            <button class="btn-danger-small" onclick="excluirMembro('${chave}')">X</button>
+                        </div>
+                    </div>`;
+            }
+            if (!temMembro) listaMembros.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px 0;">Nenhum membro cadastrado.</p>';
+        }
+    });
+
+    // ---- PROCESSAR LIVROS ----
     function processarLivros(livrosObj) {
         if (!livrosObj) return {};
-        let livrosArray = [];
-        for (let id in livrosObj) { livrosArray.push({ id: id, ...livrosObj[id] }); }
-        livrosArray.sort((a, b) => a.titulo.localeCompare(b.titulo));
+        let arr = [];
+        for (let id in livrosObj) arr.push({ id, ...livrosObj[id] });
+        arr.sort((a, b) => (a.titulo || '').localeCompare(b.titulo || ''));
         let agrupado = {};
-        livrosArray.forEach(livro => {
+        arr.forEach(livro => {
             const cat = livro.categoria || "Sem Categoria";
             if (!agrupado[cat]) agrupado[cat] = [];
             agrupado[cat].push(livro);
@@ -307,223 +987,733 @@
         return agrupado;
     }
 
-    db.ref().on('value', snap => {
-        const dados = snap.val() || {};
-        const livrosRaw = dados.livros || {};
-        const locacoesRaw = dados.locacoes || {};
-        const membros = dados.membros || {};
-        const categoriasRaw = dados.categorias || {}; 
-        const livrosAgrupados = processarLivros(livrosRaw);
-
-        // Render Catálogo Usuário
-        const listaCatalogo = document.getElementById('lista-catalogo');
-        listaCatalogo.innerHTML = '';
+    // ---- RENDER CATÁLOGO ----
+    function renderCatalogo(livrosAgrupados, filtro) {
+        const lista = document.getElementById('lista-catalogo');
+        if (!lista) return;
+        lista.innerHTML = '';
+        let algum = false;
         for (let categoria in livrosAgrupados) {
-            listaCatalogo.innerHTML += `<div class="catalogo-categoria-titulo">${categoria}</div>`;
-            livrosAgrupados[categoria].forEach(l => {
-                const estaEsgotado = l.qtdAtual <= 0;
-                listaCatalogo.innerHTML += `
+            let livrosFiltrados = livrosAgrupados[categoria];
+            if (filtro) {
+                const f = filtro.toLowerCase();
+                livrosFiltrados = livrosFiltrados.filter(l =>
+                    l.titulo.toLowerCase().includes(f) || categoria.toLowerCase().includes(f) || (l.autor||'').toLowerCase().includes(f)
+                );
+            }
+            if (livrosFiltrados.length === 0) continue;
+            algum = true;
+            lista.innerHTML += `<div class="catalogo-categoria-titulo">${categoria}</div>`;
+            livrosFiltrados.forEach(l => {
+                const esgotado = l.qtdAtual <= 0;
+                const capaHtml = l.capa
+                    ? `<img src="${l.capa}" class="livro-capa-mini" alt="Capa" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="livro-capa-placeholder" style="display:none">📖</div>`
+                    : `<div class="livro-capa-placeholder">📖</div>`;
+                lista.innerHTML += `
                     <div class="livro-item">
-                        <div class="livro-topo">
-                            <div class="titulo-livro">${l.titulo}</div>
-                            <button class="btn-acao" onclick="reservar('${l.id}', '${l.titulo.replace(/'/g, "\\'")}')" ${estaEsgotado ? 'disabled' : ''}>RESERVAR</button>
+                        ${capaHtml}
+                        <div class="livro-corpo">
+                            <div class="livro-topo">
+                                <div>
+                                    <div class="titulo-livro" onclick="abrirDetalhe('${l.id}')">${l.titulo}</div>
+                                    ${l.autor ? `<div class="autor-livro">${l.autor}</div>` : ''}
+                                </div>
+                                ${esgotado
+                                    ? `<button class="btn-fila" onclick="abrirFila('${l.id}','${(l.titulo||'').replace(/'/g,"\\'")}')">⏳ FILA</button>`
+                                    : `<button class="btn-acao" onclick="abrirModalReserva('${l.id}', '${(l.titulo||'').replace(/'/g,"\\'")}')">RESERVAR</button>`
+                                }
+                            </div>
+                            <div class="disp-info" style="color:${esgotado ? 'var(--danger)' : 'var(--accent)'};">
+                                ${esgotado ? '❌ Esgotado' : `✅ Disponível`} · ${l.qtdAtual}/${l.qtdTotal} exemplares
+                            </div>
+                            ${esgotado ? `<div class="fila-info" id="fila-info-${l.id}"></div>` : ''}
                         </div>
-                        <div class="disp-info" style="color: ${estaEsgotado ? 'var(--danger)' : 'var(--accent)'};">Disp: ${l.qtdAtual} / T: ${l.qtdTotal}</div>
                     </div>`;
             });
         }
+        if (!algum) lista.innerHTML = '<div class="sem-resultado">Nenhum livro encontrado.</div>';
+    }
 
-        // Render Gestão Acervo ADM
-        const listaGestao = document.getElementById('gestao-livros-lista');
-        if(listaGestao) {
-            listaGestao.innerHTML = '';
-            for (let categoria in livrosAgrupados) {
-                listaGestao.innerHTML += `<div style="background:#f4f7f5; padding:5px; font-weight:bold; color:var(--primary);">${categoria}</div>`;
-                livrosAgrupados[categoria].forEach(l => {
-                    listaGestao.innerHTML += `
-                        <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                            <div><strong>${l.titulo}</strong><br><small>T: ${l.qtdTotal} | D: ${l.qtdAtual}</small></div>
-                            <div style="display:flex; gap:5px;">
-                                <button class="btn-acao" style="padding:4px 8px;" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
-                                <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
-                            </div>
-                        </div>`;
-                });
-            }
+    function filtrarCatalogo() {
+        const filtro = document.getElementById('busca-catalogo').value;
+        const agrupado = processarLivros(todosLivrosRaw);
+        renderCatalogo(agrupado, filtro);
+    }
+
+    // ---- MODAL DETALHE DO LIVRO ----
+    let livroDetalhePendente = null;
+
+    function abrirDetalhe(id) {
+        const l = todosLivrosRaw[id];
+        if (!l) return;
+        livroDetalhePendente = { id, titulo: l.titulo };
+
+        // Capa
+        const capaWrap = document.getElementById('modal-detalhe-capa-wrap');
+        if (l.capa) {
+            capaWrap.innerHTML = `<img src="${l.capa}" class="modal-detalhe-capa" alt="Capa" onerror="this.outerHTML='<div class=modal-detalhe-capa-placeholder>📖</div>'">`;
+        } else {
+            capaWrap.innerHTML = `<div class="modal-detalhe-capa-placeholder">📖</div>`;
         }
 
-        // Render Categorias
-        const listaCatAdm = document.getElementById('lista-categorias-adm');
-        const selectCat = document.getElementById('novo-categoria');
-        if(listaCatAdm && selectCat) {
-            listaCatAdm.innerHTML = '';
-            selectCat.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
-            for(let idCat in categoriasRaw){
-                const catNome = categoriasRaw[idCat];
-                listaCatAdm.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #eee;"><small>${catNome}</small><button class="btn-danger-small" onclick="excluirCategoria('${idCat}')">X</button></div>`;
-                selectCat.innerHTML += `<option value="${catNome}">${catNome}</option>`;
-            }
-        }
+        document.getElementById('modal-detalhe-titulo').textContent = l.titulo;
+        document.getElementById('modal-detalhe-autor').textContent = l.autor ? `por ${l.autor}` : l.categoria || '';
 
-        // Render Empréstimos
-        const listaEmprestimos = document.getElementById('lista-adm');
-        if(listaEmprestimos){
-            listaEmprestimos.innerHTML = '';
-            for(let idLoc in locacoesRaw){
-                const loc = locacoesRaw[idLoc];
-                listaEmprestimos.innerHTML += `
-                    <div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                        <div><strong>${loc.livroNome}</strong><br><small>${loc.membroNome}<br>Devolução: ${loc.dataDevolucao}</small></div>
-                        <button class="btn-acao" onclick="darBaixaEmprestimo('${idLoc}', '${loc.livroId}')">Baixa</button>
+        const esgotado = l.qtdAtual <= 0;
+        document.getElementById('modal-detalhe-disp').innerHTML =
+            `<span class="tag ${esgotado ? 'tag-danger' : 'tag-ok'}">${esgotado ? '❌ Esgotado' : '✅ Disponível'}</span>
+             <span style="font-size:0.75rem;color:var(--gray);margin-left:6px;">${l.qtdAtual}/${l.qtdTotal}</span>`;
+
+        const resumoWrap = document.getElementById('modal-detalhe-resumo-wrap');
+        resumoWrap.innerHTML = l.resumo
+            ? `<div class="modal-detalhe-resumo">${l.resumo}</div>`
+            : `<div class="modal-detalhe-sem-resumo">Nenhum resumo cadastrado para este livro.</div>`;
+
+        const btnReservar = document.getElementById('btn-detalhe-reservar');
+        btnReservar.disabled = esgotado;
+        btnReservar.style.opacity = esgotado ? '0.4' : '1';
+
+        document.getElementById('modal-detalhe').classList.add('ativo');
+    }
+
+    function reservarDoDetalhe() {
+        fecharModal('modal-detalhe');
+        if (livroDetalhePendente) abrirModalReserva(livroDetalhePendente.id, livroDetalhePendente.titulo);
+    }
+
+    // ---- UPLOAD DE CAPA (Base64) ----
+    function processarImagemCapa(input) {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 500 * 1024) {
+            alert('Imagem muito grande! Use uma imagem de até 500 KB.\n\nDica: reduza o tamanho em sites como squoosh.app');
+            input.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64 = e.target.result;
+            document.getElementById('novo-capa').value = base64;
+            const img = document.getElementById('capa-preview-adm');
+            const placeholder = document.getElementById('capa-upload-placeholder');
+            img.src = base64;
+            img.style.display = 'block';
+            placeholder.style.display = 'none';
+            document.getElementById('btn-remover-capa').style.display = 'inline-block';
+            document.getElementById('capa-upload-area').style.borderColor = 'var(--primary)';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removerCapa() {
+        document.getElementById('novo-capa').value = '';
+        document.getElementById('novo-capa-file').value = '';
+        const img = document.getElementById('capa-preview-adm');
+        img.src = '';
+        img.style.display = 'none';
+        document.getElementById('capa-upload-placeholder').style.display = 'block';
+        document.getElementById('btn-remover-capa').style.display = 'none';
+        document.getElementById('capa-upload-area').style.borderColor = '#c8e6d4';
+    }
+
+    // ---- GESTÃO ACERVO ADM ----
+    function renderGestaoAcervo(livrosAgrupados, filtro) {
+        const lista = document.getElementById('gestao-livros-lista');
+        if (!lista) return;
+        lista.innerHTML = '';
+        for (let cat in livrosAgrupados) {
+            let livros = livrosAgrupados[cat];
+            if (filtro) {
+                const f = filtro.toLowerCase();
+                livros = livros.filter(l => l.titulo.toLowerCase().includes(f) || cat.toLowerCase().includes(f));
+            }
+            if (livros.length === 0) continue;
+            lista.innerHTML += `<div style="background:#f4f7f5;padding:6px 8px;font-weight:700;color:var(--primary);font-size:0.8rem;">${cat}</div>`;
+            livros.forEach(l => {
+                lista.innerHTML += `
+                    <div style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
+                        <div><strong>${l.titulo}</strong><br><small>Total: ${l.qtdTotal} | Disp: ${l.qtdAtual}</small></div>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn-acao" style="padding:5px 10px;" onclick="carregarDadosParaEditar('${l.id}')">✏️</button>
+                            <button class="btn-danger-small" onclick="excluirLivro('${l.id}')">X</button>
+                        </div>
+                    </div>`;
+            });
+        }
+    }
+
+    function filtrarAcervoAdm(filtro) {
+        const agrupado = processarLivros(todosLivrosRaw);
+        renderGestaoAcervo(agrupado, filtro);
+    }
+
+    // ---- MEUS EMPRÉSTIMOS ----
+    function renderMeusEmprestimos(locacoesRaw) {
+        const el = document.getElementById('meus-emprestimos-lista');
+        if (!el) return;
+        const mLocal = localStorage.getItem('ipb_membro');
+        if (!mLocal) return;
+        const membro = JSON.parse(mLocal);
+        el.innerHTML = '<p style="font-weight:700;margin-bottom:10px;">📚 Meus empréstimos ativos:</p>';
+        let temEmp = false;
+        for (let id in locacoesRaw) {
+            const loc = locacoesRaw[id];
+            if (loc.membroUser === membro.user) {
+                temEmp = true;
+                const vencido = dataVencida(loc.dataDevolucao);
+                el.innerHTML += `
+                    <div class="meu-emp-card ${vencido ? 'vencido' : ''}">
+                        <strong>${loc.livroNome}</strong><br>
+                        <small>Devolução: ${loc.dataDevolucao}</small>
+                        <span class="tag ${vencido ? 'tag-danger' : 'tag-ok'}">${vencido ? '⚠️ Vencido' : '✅ Em dia'}</span>
                     </div>`;
             }
         }
-
-        // --- LÓGICA DE LISTAGEM DE MEMBROS ADICIONADA ---
-        const listaMembrosAdm = document.getElementById('lista-membros-adm');
-        if(listaMembrosAdm) {
-            listaMembrosAdm.innerHTML = '';
-            for(let chaveMembro in membros) {
-                const m = membros[chaveMembro];
-                const corStatus = m.bloqueado ? 'var(--danger)' : 'var(--accent)';
-                listaMembrosAdm.innerHTML += `
-                    <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${m.nome}</strong><br>
-                            <small>${m.user} | ${m.tel || 'Sem Tel'}</small>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn-acao" style="color:${corStatus}; border-color:${corStatus}; font-size:0.6rem; padding:4px;" 
-                                onclick="toggleBloqueioMembro('${chaveMembro}', ${m.bloqueado})">
-                                ${m.bloqueado ? 'DESBLOQUEAR' : 'BLOQUEAR'}
-                            </button>
-                            <button class="btn-danger-small" onclick="excluirMembro('${chaveMembro}')">X</button>
-                        </div>
-                    </div>`;
-            }
-        }
-    });
-
-    // --- FUNÇÕES DE MEMBROS ---
-    function toggleBloqueioMembro(chave, statusAtual) {
-        db.ref('membros/' + chave).update({ bloqueado: !statusAtual });
+        if (!temEmp) el.innerHTML += '<p style="color:var(--gray);font-size:0.9rem;">Nenhum empréstimo ativo no momento.</p>';
     }
 
-    function excluirMembro(chave) {
-        if(confirm("Deseja excluir permanentemente este membro?")) {
-            db.ref('membros/' + chave).remove();
-        }
-    }
-
-    function reservar(id, titulo) {
+    // ---- MODAL RESERVA ----
+    function abrirModalReserva(id, titulo) {
         const s = localStorage.getItem('ipb_membro');
-        if(!s) { alert("Faça login!"); mudarAba('conta'); return; }
+        if (!s) { alert("Faça login para reservar!"); mudarAba('conta'); return; }
+
+        // Verificar se já tem empréstimo ativo
+        const locacoes = dadosGlobais.locacoes || {};
+        const membro = JSON.parse(s);
+        const jaTemEmprestimo = Object.values(locacoes).some(l => l.membroUser === membro.user);
+        if (jaTemEmprestimo) {
+            alert("Você já possui um empréstimo ativo. Devolva antes de reservar outro.");
+            return;
+        }
+
+        reservaPendente = { id, titulo, prazo: 15 };
+        document.getElementById('modal-reserva-titulo').textContent = titulo;
+        document.querySelectorAll('.prazo-btn').forEach(b => b.classList.remove('selecionado'));
+        document.querySelectorAll('.prazo-btn')[0].classList.add('selecionado');
+        document.getElementById('modal-reserva').classList.add('ativo');
+    }
+
+    function selecionarPrazo(btn, prazo) {
+        document.querySelectorAll('.prazo-btn').forEach(b => b.classList.remove('selecionado'));
+        btn.classList.add('selecionado');
+        reservaPendente.prazo = prazo;
+    }
+
+    function confirmarReserva() {
+        fecharModal('modal-reserva');
+        const { id, titulo, prazo } = reservaPendente;
+        const s = localStorage.getItem('ipb_membro');
+        if (!s) return;
         const mLocal = JSON.parse(s);
 
-        const prazo = prompt("Escolha o prazo de empréstimo: 15, 20 ou 30 dias", "15");
-        if(!["15", "20", "30"].includes(prazo)) return alert("Escolha inválida. Digite 15, 20 ou 30.");
-
         const dataDev = new Date();
-        dataDev.setDate(dataDev.getDate() + parseInt(prazo));
+        dataDev.setDate(dataDev.getDate() + prazo);
 
         db.ref('livros/' + id).transaction(l => {
-            if(l && l.qtdAtual > 0) { l.qtdAtual--; return l; }
+            if (l && l.qtdAtual > 0) { l.qtdAtual--; return l; }
         }).then(result => {
-            if(result.committed) {
+            if (result.committed) {
                 db.ref('locacoes').push({
                     livroId: id,
                     livroNome: titulo,
                     membroNome: mLocal.nome,
                     membroUser: mLocal.user,
-                    dataDevolucao: dataDev.toLocaleDateString('pt-BR')
+                    dataDevolucao: dataDev.toLocaleDateString('pt-BR'),
+                    dataReserva: hoje()
                 });
-                alert("Reservado! Devolução: " + dataDev.toLocaleDateString('pt-BR'));
+                alert(`✅ Reservado! Devolução até ${dataDev.toLocaleDateString('pt-BR')}`);
+            } else {
+                alert("Livro indisponível no momento.");
             }
         });
     }
 
+    // ---- MODAL BAIXA ----
+    function abrirModalBaixa(locId, livId, livNome) {
+        baixaPendente = { locId, livId };
+        document.getElementById('modal-baixa-txt').textContent = `Confirmar devolução de "${livNome}"?`;
+        document.getElementById('modal-baixa').classList.add('ativo');
+    }
+
+    function confirmarBaixa() {
+        fecharModal('modal-baixa');
+        const { locId, livId } = baixaPendente;
+        db.ref('livros/' + livId).transaction(l => { if (l) { l.qtdAtual++; return l; } });
+        db.ref('locacoes/' + locId).remove();
+        // Verificar fila de espera e notificar primeiro da fila
+        db.ref('filas/' + livId).orderByChild('ts').limitToFirst(1).once('value').then(snap => {
+            if (!snap.val()) return;
+            const entries = Object.entries(snap.val());
+            if (entries.length === 0) return;
+            const [filaId, proximo] = entries[0];
+            // Remover da fila
+            db.ref('filas/' + livId + '/' + filaId).remove();
+            // Registrar notificação pendente para o membro
+            db.ref('notificacoes/' + sanitizarEmail(proximo.membroUser)).push({
+                tipo: 'fila_disponivel',
+                livroId: livId,
+                mensagem: `Um livro da sua fila de espera está disponível!`,
+                ts: Date.now(),
+                lido: false
+            });
+        });
+    }
+
+    function fecharModal(id) {
+        document.getElementById(id).classList.remove('ativo');
+    }
+
+    // ---- LIVROS ----
     function salvarLivro() {
         const id = document.getElementById('edit-livro-id').value;
-        const t = document.getElementById('novo-titulo').value;
+        const qtdAtualSalva = document.getElementById('edit-livro-qtd-atual').value;
+        const t = document.getElementById('novo-titulo').value.trim();
+        const a = document.getElementById('novo-autor').value.trim();
         const c = document.getElementById('novo-categoria').value;
-        const r = document.getElementById('novo-resumo').value;
+        const r = document.getElementById('novo-resumo').value.trim();
         const q = parseInt(document.getElementById('novo-qtd').value);
-        if(!t || !c) return alert("Preencha Título e Categoria");
-        if(id) db.ref('livros/'+id).update({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
-        else db.ref('livros').push({titulo:t, categoria:c, resumo:r, qtdTotal:q, qtdAtual:q});
+        const capa = document.getElementById('novo-capa').value.trim();
+        if (!t || !c) return alert("Preencha Título e Categoria.");
+        if (isNaN(q) || q < 1) return alert("Quantidade deve ser ao menos 1.");
+
+        if (id) {
+            const qtdAtualNum = parseInt(qtdAtualSalva) || 0;
+            const livroAtual = todosLivrosRaw[id];
+            const qtdTotalAnterior = livroAtual ? livroAtual.qtdTotal : q;
+            const emprestados = qtdTotalAnterior - qtdAtualNum;
+            const novoAtual = Math.max(0, q - emprestados);
+            db.ref('livros/' + id).update({ titulo: t, autor: a, categoria: c, resumo: r, qtdTotal: q, qtdAtual: novoAtual, capa: capa || '' });
+        } else {
+            db.ref('livros').push({ titulo: t, autor: a, categoria: c, resumo: r, qtdTotal: q, qtdAtual: q, capa: capa || '' });
+        }
         cancelarEdicao();
     }
 
     function carregarDadosParaEditar(id) {
-        db.ref('livros/'+id).once('value').then(snap => {
+        db.ref('livros/' + id).once('value').then(snap => {
             const l = snap.val();
             document.getElementById('edit-livro-id').value = id;
-            document.getElementById('novo-titulo').value = l.titulo;
-            document.getElementById('novo-categoria').value = l.categoria;
-            document.getElementById('novo-resumo').value = l.resumo;
+            document.getElementById('edit-livro-qtd-atual').value = l.qtdAtual;
+            document.getElementById('novo-titulo').value = l.titulo || '';
+            document.getElementById('novo-autor').value = l.autor || '';
+            document.getElementById('novo-resumo').value = l.resumo || '';
             document.getElementById('novo-qtd').value = l.qtdTotal;
+            // Carregar capa existente no preview
+            document.getElementById('novo-capa').value = l.capa || '';
+            if (l.capa) {
+                const img = document.getElementById('capa-preview-adm');
+                img.src = l.capa;
+                img.style.display = 'block';
+                document.getElementById('capa-upload-placeholder').style.display = 'none';
+                document.getElementById('btn-remover-capa').style.display = 'inline-block';
+                document.getElementById('capa-upload-area').style.borderColor = 'var(--primary)';
+            } else {
+                removerCapa();
+            }
+            const sel = document.getElementById('novo-categoria');
+            for (let i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value === l.categoria) { sel.selectedIndex = i; break; }
+            }
             document.getElementById('form-livro-titulo').innerText = "✏️ Editar Livro";
             document.getElementById('btn-cancelar-edit').classList.remove('hidden');
+            document.getElementById('card-form-livro').scrollIntoView({ behavior: 'smooth' });
         });
     }
 
     function cancelarEdicao() {
         document.getElementById('edit-livro-id').value = '';
+        document.getElementById('edit-livro-qtd-atual').value = '';
         document.getElementById('novo-titulo').value = '';
+        document.getElementById('novo-autor').value = '';
         document.getElementById('novo-resumo').value = '';
+        document.getElementById('novo-qtd').value = 1;
+        removerCapa();
         document.getElementById('form-livro-titulo').innerText = "➕ Cadastrar Novo Livro";
         document.getElementById('btn-cancelar-edit').classList.add('hidden');
     }
 
-    function excluirLivro(id) { if(confirm("Excluir livro?")) db.ref('livros/'+id).remove(); }
-    function adicionarCategoria() { const n = document.getElementById('nova-categoria-nome').value; if(n) db.ref('categorias').push(n); }
-    function excluirCategoria(id) { db.ref('categorias/'+id).remove(); }
-    function darBaixaEmprestimo(locId, livId) {
-        db.ref('livros/'+livId).transaction(l => { if(l) l.qtdAtual++; return l; });
-        db.ref('locacoes/'+locId).remove();
+    function excluirLivro(id) {
+        if (confirm("Deseja excluir este livro permanentemente?")) db.ref('livros/' + id).remove();
     }
 
+    function adicionarCategoria() {
+        const n = document.getElementById('nova-categoria-nome').value.trim();
+        if (n) {
+            db.ref('categorias').push(n);
+            document.getElementById('nova-categoria-nome').value = '';
+        }
+    }
+
+    function excluirCategoria(id) {
+        if (confirm("Excluir esta categoria?")) db.ref('categorias/' + id).remove();
+    }
+
+    // ---- MEMBROS ----
+    function toggleBloqueioMembro(chave, statusAtual) {
+        db.ref('membros/' + chave).update({ bloqueado: !statusAtual });
+    }
+
+    function excluirMembro(chave) {
+        if (confirm("Excluir este membro permanentemente?")) db.ref('membros/' + chave).remove();
+    }
+
+    // ---- LOGIN ADM (credenciais no Firebase para não ficarem no código) ----
     function loginAdmin() {
         const u = document.getElementById('adm-user').value;
         const p = document.getElementById('adm-pass').value;
-        if(u === "ipb" && p === "ipbbrasil") { sessionStorage.setItem('adm_ativo', "Master"); location.reload(); }
-        else alert("Erro ADM");
-    }
-
-    function loginMembro() {
-        const u = document.getElementById('log-user').value.toLowerCase();
-        const p = document.getElementById('log-pass').value;
-        db.ref('membros/'+sanitizarEmail(u)).once('value', snap => {
-            const m = snap.val();
-            if(m && m.pass === p) {
-                if(m.bloqueado) return alert("Conta bloqueada pelo administrador.");
-                localStorage.setItem('ipb_membro', JSON.stringify(m)); 
-                location.reload(); 
-            } else alert("Dados incorretos");
+        // Busca credenciais ADM salvas no Firebase (nó protegido por regras)
+        db.ref('config/adm').once('value').then(snap => {
+            const cfg = snap.val();
+            if (cfg && u === cfg.user && hashSenha(p) === cfg.passHash) {
+                sessionStorage.setItem('adm_ativo', "Master");
+                location.reload();
+            } else if (!cfg && u === "ipb" && p === "ipbbrasil") {
+                // fallback inicial — troque as credenciais pelo painel do Firebase
+                sessionStorage.setItem('adm_ativo', "Master");
+                location.reload();
+            } else {
+                alert("Usuário ou senha incorretos.");
+            }
         });
     }
 
-    function cadastrarMembro() {
-        const n = document.getElementById('cad-nome').value;
-        const e = document.getElementById('cad-user').value.toLowerCase();
-        const p = document.getElementById('cad-pass').value;
-        const t = document.getElementById('cad-tel').value;
-        if(n && e && p) db.ref('membros/'+sanitizarEmail(e)).set({nome:n, user:e, pass:p, tel:t, bloqueado: false}).then(() => { alert("OK!"); mostrarLogin(); });
+    // ---- LOGIN MEMBRO ----
+    function loginMembro() {
+        const u = document.getElementById('log-user').value.trim().toLowerCase();
+        const p = document.getElementById('log-pass').value;
+        if (!u || !p) return alert("Preencha e-mail e senha.");
+        db.ref('membros/' + sanitizarEmail(u)).once('value', snap => {
+            const m = snap.val();
+            if (!m) return alert("Usuário não encontrado.");
+            // Suporte a senha em hash (novos) e texto puro (antigos migrados)
+            const senhaOk = m.passHash ? (m.passHash === hashSenha(p)) : (m.pass === p);
+            if (!senhaOk) return alert("Senha incorreta.");
+            if (m.bloqueado) return alert("Conta bloqueada pelo administrador.");
+            const dadosSeguros = { nome: m.nome, user: m.user, tel: m.tel };
+            localStorage.setItem('ipb_membro', JSON.stringify(dadosSeguros));
+            location.reload();
+        });
     }
 
+    // ---- CADASTRO MEMBRO ----
+    function cadastrarMembro() {
+        const n = document.getElementById('cad-nome').value.trim();
+        const e = document.getElementById('cad-user').value.trim().toLowerCase();
+        const p = document.getElementById('cad-pass').value;
+        const t = document.getElementById('cad-tel').value.trim();
+        if (!n || !e || !p) return alert("Preencha nome, e-mail e senha.");
+        if (p.length < 6) return alert("Senha deve ter ao menos 6 caracteres.");
+        const chave = sanitizarEmail(e);
+        db.ref('membros/' + chave).once('value').then(snap => {
+            if (snap.val()) return alert("Este e-mail já está cadastrado.");
+            db.ref('membros/' + chave).set({
+                nome: n, user: e, tel: t,
+                passHash: hashSenha(p),  // senha em hash — sem texto puro
+                bloqueado: false
+            }).then(() => { alert("Cadastro realizado! Faça login."); mostrarLogin(); });
+        });
+    }
+
+    // ---- EXPORTAR CSV ----
+    function exportarCSV() {
+        const locacoes = dadosGlobais.locacoes || {};
+        let csv = "Livro,Membro,Data Devolução,Vencido\n";
+        for (let id in locacoes) {
+            const l = locacoes[id];
+            const venc = dataVencida(l.dataDevolucao) ? "Sim" : "Não";
+            csv += `"${l.livroNome}","${l.membroNome}","${l.dataDevolucao}","${venc}"\n`;
+        }
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'emprestimos.csv'; a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ---- TELA INICIAL ----
+    function renderTelaInicial(livrosRaw, locacoesRaw, socDados) {
+        // Contar disponíveis
+        let disponiveis = 0, totalLivros = 0;
+        for (let id in livrosRaw) {
+            totalLivros++;
+            if ((livrosRaw[id].qtdAtual || 0) > 0) disponiveis++;
+        }
+        const elDisp = document.getElementById('home-livros-disp');
+        const elTotal = document.getElementById('home-livros-total');
+        if (elDisp) elDisp.textContent = disponiveis;
+        if (elTotal) elTotal.textContent = `de ${totalLivros} no acervo`;
+
+        // Coletar todos os avisos recentes de todas as sociedades
+        let todosAvisos = [];
+        for (let soc in socDados) {
+            for (let id in socDados[soc]) {
+                todosAvisos.push({ soc, id, ...socDados[soc][id] });
+            }
+        }
+        todosAvisos.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+        const elAvisosNum = document.getElementById('home-avisos-num');
+        const elAvisosSub = document.getElementById('home-avisos-sub');
+        if (elAvisosNum) elAvisosNum.textContent = todosAvisos.length;
+        if (elAvisosSub) elAvisosSub.textContent = todosAvisos.length > 0 ? `Último: ${todosAvisos[0].soc}` : 'Nenhum aviso';
+
+        // Mostrar até 3 avisos recentes
+        const elLista = document.getElementById('home-avisos-lista');
+        if (elLista) {
+            if (todosAvisos.length === 0) {
+                elLista.innerHTML = '';
+                return;
+            }
+            elLista.innerHTML = '<p style="font-size:0.78rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;">🔔 Avisos Recentes</p>' +
+                todosAvisos.slice(0, 3).map(a => `
+                    <div class="inicio-aviso-recente" onclick="mudarAba('sociedades')" style="border-left-color:${SOC_CORES[a.soc]||'var(--primary)'}">
+                        <div class="inicio-aviso-label">${a.soc}</div>
+                        <div class="inicio-aviso-titulo">${a.titulo || '(sem título)'}</div>
+                        ${a.data ? `<div class="inicio-aviso-data">📅 ${a.data}</div>` : ''}
+                    </div>`).join('');
+        }
+    }
+
+    // ---- BADGE NOVIDADES IGREJA ----
+    function atualizarBadgeIgreja(socDados) {
+        const badge = document.getElementById('nav-badge-igreja');
+        if (!badge) return;
+        const ultimaVisita = parseInt(localStorage.getItem(BADGE_KEY) || '0');
+        let temNovo = false;
+        for (let soc in socDados) {
+            for (let id in socDados[soc]) {
+                if ((socDados[soc][id].ts || 0) > ultimaVisita) { temNovo = true; break; }
+            }
+            if (temNovo) break;
+        }
+        badge.style.display = temNovo ? 'inline-block' : 'none';
+    }
+
+    // ---- FILA DE ESPERA ----
+    let filaPendente = { livroId: null, livroTitulo: null };
+
+    function abrirFila(livroId, livroTitulo) {
+        const s = localStorage.getItem('ipb_membro');
+        if (!s) { alert('Faça login para entrar na fila!'); mudarAba('conta'); return; }
+        const membro = JSON.parse(s);
+        filaPendente = { livroId, livroTitulo };
+        document.getElementById('modal-fila-livro').textContent = livroTitulo;
+
+        db.ref('filas/' + livroId).once('value').then(snap => {
+            const fila = snap.val() || {};
+            const lista = Object.values(fila);
+            const posicao = lista.length + 1;
+            const jaEstaNaFila = lista.some(f => f.membroUser === membro.user);
+            const conteudo = document.getElementById('modal-fila-conteudo');
+            const btnConfirmar = document.getElementById('btn-confirmar-fila');
+
+            if (jaEstaNaFila) {
+                const pos = lista.findIndex(f => f.membroUser === membro.user) + 1;
+                conteudo.innerHTML = `
+                    <div class="modal-fila-pos">${pos}º</div>
+                    <div class="modal-fila-txt">Você já está na fila nesta posição.<br>Será avisado quando o livro ficar disponível.</div>`;
+                btnConfirmar.style.display = 'none';
+            } else {
+                conteudo.innerHTML = `
+                    <div class="modal-fila-pos">${posicao}º</div>
+                    <div class="modal-fila-txt">Você ficará na posição <strong>${posicao}</strong> da fila.<br>${lista.length > 0 ? `Há ${lista.length} pessoa(s) na frente.` : 'Você será o primeiro!'}</div>`;
+                btnConfirmar.style.display = 'block';
+            }
+            document.getElementById('modal-fila').classList.add('ativo');
+        });
+    }
+
+    function confirmarFila() {
+        const s = localStorage.getItem('ipb_membro');
+        if (!s) return;
+        const membro = JSON.parse(s);
+        db.ref('filas/' + filaPendente.livroId).push({
+            membroNome: membro.nome,
+            membroUser: membro.user,
+            ts: Date.now()
+        }).then(() => {
+            fecharModal('modal-fila');
+            alert(`✅ Você entrou na fila de "${filaPendente.livroTitulo}"!\nSerá o primeiro a ser avisado quando disponível.`);
+            // Atualizar info da fila no card
+            atualizarInfoFila(filaPendente.livroId);
+        });
+    }
+
+    function atualizarInfoFila(livroId) {
+        db.ref('filas/' + livroId).once('value').then(snap => {
+            const el = document.getElementById('fila-info-' + livroId);
+            if (!el) return;
+            const qtd = snap.val() ? Object.keys(snap.val()).length : 0;
+            el.innerHTML = qtd > 0
+                ? `<span class="fila-badge">⏳ ${qtd} na fila</span>`
+                : '';
+        });
+    }
+
+    // ---- NOTIFICAÇÕES DE FILA ----
+    function renderNotificacoesFila(userEmail, livrosRaw) {
+        const el = document.getElementById('notif-fila-lista');
+        if (!el) return;
+        db.ref('notificacoes/' + sanitizarEmail(userEmail))
+            .orderByChild('lido').equalTo(false)
+            .once('value').then(snap => {
+                const notifs = snap.val();
+                if (!notifs) { el.innerHTML = ''; return; }
+                const lista = Object.entries(notifs);
+                el.innerHTML = lista.map(([id, n]) => {
+                    const livro = livrosRaw[n.livroId];
+                    const tituloLivro = livro ? livro.titulo : 'um livro';
+                    return `
+                        <div style="background:#f0faf5;border-left:4px solid var(--primary);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                            <div>
+                                <div style="font-weight:700;font-size:0.88rem;color:var(--primary);">📬 Livro disponível!</div>
+                                <div style="font-size:0.82rem;color:var(--text);margin-top:3px;"><strong>${tituloLivro}</strong> está disponível para reserva.</div>
+                            </div>
+                            <button class="btn-acao" style="font-size:0.65rem;padding:6px 10px;" onclick="irParaLivro('${n.livroId}','${id}','${sanitizarEmail(userEmail)}')">VER</button>
+                        </div>`;
+                }).join('');
+            });
+    }
+
+    function irParaLivro(livroId, notifId, chaveUser) {
+        db.ref('notificacoes/' + chaveUser + '/' + notifId).update({ lido: true });
+        mudarAba('catalogo');
+        setTimeout(() => abrirDetalhe(livroId), 400);
+    }
+
+    const SOCIEDADES = ['UCP','UMP','UPH','SAF','UPA','Conselho','Boletim'];
+
+    const SOC_CORES = {
+        UCP: '#3498db', UMP: '#9b59b6', UPH: '#e67e22',
+        SAF: '#e91e8c', UPA: '#27ae60', Conselho: '#006437', Boletim: '#636e72'
+    };
+
+    function trocarSocTab(btn, id) {
+        document.querySelectorAll('.soc-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.soc-conteudo').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(id).classList.add('active');
+    }
+
+    function trocarAdmSocTab(btn, id) {
+        document.querySelectorAll('.adm-soc-tab').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.adm-soc-form').forEach(f => f.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(id).classList.add('active');
+    }
+
+    function renderSociedadesPublico(socDados) {
+        SOCIEDADES.forEach(soc => {
+            const el = document.getElementById('soc-' + soc);
+            if (!el) return;
+            const posts = socDados[soc] || {};
+            const lista = Object.entries(posts)
+                .map(([id, p]) => ({ id, ...p }))
+                .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+            if (lista.length === 0) {
+                el.innerHTML = `<div class="soc-vazio">Nenhum aviso publicado ainda.</div>`;
+                return;
+            }
+            el.innerHTML = lista.map(p => `
+                <div class="soc-card">
+                    <div class="soc-card-header" style="background:${SOC_CORES[soc] || 'var(--primary)'};">
+                        <span class="soc-card-header-titulo">${p.titulo || soc}</span>
+                        <span class="soc-card-header-data">${p.data || ''}</span>
+                    </div>
+                    <div class="soc-card-body">
+                        <div class="soc-card-texto">${p.texto || ''}</div>
+                        ${p.link ? `<a class="soc-card-link" href="${p.link}" target="_blank">🔗 ${p.linkLabel || 'Ver anexo / link'}</a>` : ''}
+                    </div>
+                </div>`).join('');
+        });
+    }
+
+    function renderAdmSociedades(socDados) {
+        SOCIEDADES.forEach(soc => {
+            const el = document.getElementById('adm-soc-' + soc);
+            if (!el) return;
+            const posts = socDados[soc] || {};
+            const lista = Object.entries(posts)
+                .map(([id, p]) => ({ id, ...p }))
+                .sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+            const cor = SOC_CORES[soc] || 'var(--primary)';
+            el.innerHTML = `
+                <div style="border-left:4px solid ${cor}; padding-left:12px; margin-bottom:16px;">
+                    <p style="font-size:0.8rem;color:var(--gray);margin:0 0 8px;">Novo aviso para <strong>${soc}</strong>:</p>
+                    <input type="text" id="soc-titulo-${soc}" placeholder="Título do aviso">
+                    <input type="date" id="soc-data-${soc}" style="margin:6px 0;">
+                    <textarea id="soc-texto-${soc}" placeholder="Texto / agenda / resolução..." rows="4"></textarea>
+                    <input type="url" id="soc-link-${soc}" placeholder="Link ou URL de anexo (opcional)">
+                    <input type="text" id="soc-linklabel-${soc}" placeholder="Nome do link (ex: Ver agenda completa)">
+                    <button class="btn-principal" style="margin-top:6px;" onclick="publicarAviso('${soc}')">📢 PUBLICAR</button>
+                </div>
+                <div style="max-height:300px;overflow-y:auto;">
+                    ${lista.length === 0 ? '<p style="color:var(--gray);font-size:0.82rem;text-align:center;padding:10px 0;">Nenhum aviso publicado.</p>' :
+                        lista.map(p => `
+                        <div class="adm-soc-post">
+                            <div class="adm-soc-post-info">
+                                <strong>${p.titulo || '(sem título)'}</strong>
+                                ${p.data ? `<span style="color:var(--gray);margin-left:6px;font-size:0.75rem;">${p.data}</span>` : ''}
+                                <br><span style="color:var(--gray);">${(p.texto||'').substring(0,80)}${(p.texto||'').length>80?'...':''}</span>
+                            </div>
+                            <button class="btn-danger-small" onclick="excluirAviso('${soc}','${p.id}')">X</button>
+                        </div>`).join('')
+                    }
+                </div>`;
+        });
+    }
+
+    function publicarAviso(soc) {
+        const titulo = document.getElementById('soc-titulo-' + soc).value.trim();
+        const data = document.getElementById('soc-data-' + soc).value;
+        const texto = document.getElementById('soc-texto-' + soc).value.trim();
+        const link = document.getElementById('soc-link-' + soc).value.trim();
+        const linkLabel = document.getElementById('soc-linklabel-' + soc).value.trim();
+        if (!titulo && !texto) return alert('Preencha ao menos o título ou o texto.');
+        // Formatar data para pt-BR se preenchida
+        let dataFormatada = '';
+        if (data) {
+            const [y, m, d] = data.split('-');
+            dataFormatada = `${d}/${m}/${y}`;
+        }
+        db.ref('sociedades/' + soc).push({
+            titulo, data: dataFormatada, texto, link, linkLabel, ts: Date.now()
+        }).then(() => {
+            document.getElementById('soc-titulo-' + soc).value = '';
+            document.getElementById('soc-data-' + soc).value = '';
+            document.getElementById('soc-texto-' + soc).value = '';
+            document.getElementById('soc-link-' + soc).value = '';
+            document.getElementById('soc-linklabel-' + soc).value = '';
+            alert('Aviso publicado com sucesso!');
+        });
+    }
+
+    function excluirAviso(soc, id) {
+        if (confirm('Excluir este aviso?')) db.ref('sociedades/' + soc + '/' + id).remove();
+    }
+
+    // ---- OUTROS ----
     function logout() { localStorage.removeItem('ipb_membro'); location.reload(); }
     function logoutAdmin() { sessionStorage.removeItem('adm_ativo'); location.reload(); }
-    function mostrarCadastro() { document.getElementById('tela-login').style.display='none'; document.getElementById('tela-cadastro').style.display='block'; }
-    function mostrarLogin() { document.getElementById('tela-cadastro').style.display='none'; document.getElementById('tela-login').style.display='block'; }
+    function mostrarCadastro() { document.getElementById('tela-login').style.display = 'none'; document.getElementById('tela-cadastro').style.display = 'block'; }
+    function mostrarLogin() { document.getElementById('tela-cadastro').style.display = 'none'; document.getElementById('tela-login').style.display = 'block'; }
 
-    if(localStorage.getItem('ipb_membro')) {
-        document.getElementById('tela-login').style.display='none';
-        document.getElementById('perfil-membro').style.display='block';
-        document.getElementById('nome-exibicao').innerText = JSON.parse(localStorage.getItem('ipb_membro')).nome;
+    // Fechar modal clicando fora
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+        m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('ativo'); });
+    });
+
+    // ---- SESSÃO ----
+    if (localStorage.getItem('ipb_membro')) {
+        document.getElementById('tela-login').style.display = 'none';
+        document.getElementById('perfil-membro').style.display = 'block';
+        const membro = JSON.parse(localStorage.getItem('ipb_membro'));
+        document.getElementById('nome-exibicao').innerText = membro.nome;
     }
-    if(sessionStorage.getItem('adm_ativo')) {
-        document.getElementById('area-adm-login').style.display='none';
-        document.getElementById('painel-adm').style.display='block';
+    if (sessionStorage.getItem('adm_ativo')) {
+        document.getElementById('area-adm-login').style.display = 'none';
+        document.getElementById('painel-adm').style.display = 'block';
     }
 </script>
 </body>
