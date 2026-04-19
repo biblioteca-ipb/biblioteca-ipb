@@ -1293,6 +1293,7 @@ function abrirBiblioteca() {
 function abrirAdmin() {
     document.getElementById('portal').style.display = 'none';
     document.getElementById('app-admin').style.display = 'block';
+    inicializarFirebase(); // garante que db/storage estejam prontos no painel admin
 }
 
 function voltarPortal() {
@@ -1323,6 +1324,19 @@ function inicializarFirebase() {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     storage = firebase.storage();
+
+    // Carregar logo do Firebase (compartilhado entre todos os usuários)
+    db.ref('configuracoes/logo').on('value', snap => {
+        const logoFirebase = snap.val();
+        if (logoFirebase) {
+            localStorage.setItem('ipb_logo_custom', logoFirebase);
+            aplicarLogoPortal(logoFirebase);
+        } else {
+            // Se não tem logo no Firebase, verifica localStorage (compatibilidade)
+            const logoLocal = localStorage.getItem('ipb_logo_custom');
+            aplicarLogoPortal(logoLocal || null);
+        }
+    });
 
     // Listener principal
     db.ref().on('value', snap => {
@@ -2153,6 +2167,7 @@ function processarPDF(input) {
     const file = input.files[0];
     if (!file) return;
     if (file.size > 20 * 1024 * 1024) { mostrarStatusPDF('erro', '❌ PDF muito grande! Máximo 20 MB.'); input.value = ''; return; }
+    if (!storage) { mostrarStatusPDF('erro', '❌ Firebase Storage não iniciado. Abra a Biblioteca primeiro ou verifique as regras do Storage no console Firebase.'); return; }
     const livroId = document.getElementById('edit-livro-id').value || ('novo_' + Date.now());
     const caminho = 'pdfs/' + livroId + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
     const ref = storage.ref(caminho);
@@ -2161,7 +2176,13 @@ function processarPDF(input) {
     mostrarStatusPDF('ok', '⏳ Enviando PDF...');
     task.on('state_changed',
         snap => { const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100); document.getElementById('pdf-progress-fill').style.width = pct + '%'; },
-        err => mostrarStatusPDF('erro', '❌ Erro: ' + err.message),
+        err => {
+            if (err.code === 'storage/unauthorized') {
+                mostrarStatusPDF('erro', '❌ Sem permissão no Storage. No Firebase Console → Storage → Regras, mude para: allow read, write: if true;');
+            } else {
+                mostrarStatusPDF('erro', '❌ Erro: ' + err.message);
+            }
+        },
         () => {
             task.snapshot.ref.getDownloadURL().then(url => {
                 document.getElementById('novo-pdf-url').value = url;
@@ -2271,13 +2292,32 @@ function processarNovoLogo(input) {
 
 function salvarLogo() {
     if (!novoLogoBase64) return;
-    localStorage.setItem('ipb_logo_custom', novoLogoBase64);
-    aplicarLogoPortal(novoLogoBase64);
     const status = document.getElementById('logo-status');
     status.style.display = 'block';
-    status.style.color = '#16a34a';
-    status.innerHTML = '<i class="fas fa-check-circle"></i> Logo salvo e aplicado com sucesso!';
-    setTimeout(() => { status.style.display = 'none'; }, 3000);
+    status.style.color = '#ea580c';
+    status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+    // Salva localmente (cache imediato)
+    localStorage.setItem('ipb_logo_custom', novoLogoBase64);
+    aplicarLogoPortal(novoLogoBase64);
+
+    // Salva no Firebase para todos os usuários verem
+    if (db) {
+        db.ref('configuracoes/logo').set(novoLogoBase64)
+            .then(() => {
+                status.style.color = '#16a34a';
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Logo salvo e aplicado com sucesso!';
+                setTimeout(() => { status.style.display = 'none'; }, 3000);
+            })
+            .catch(err => {
+                status.style.color = '#dc2626';
+                status.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro ao salvar no servidor: ' + err.message;
+            });
+    } else {
+        status.style.color = '#16a34a';
+        status.innerHTML = '<i class="fas fa-check-circle"></i> Logo aplicado localmente!';
+        setTimeout(() => { status.style.display = 'none'; }, 3000);
+    }
 }
 
 function removerLogo() {
@@ -2290,6 +2330,8 @@ function removerLogo() {
     document.getElementById('logo-upload-placeholder').style.display = 'block';
     document.getElementById('btn-salvar-logo').style.display = 'none';
     aplicarLogoPortal(null);
+    // Remove do Firebase também
+    if (db) db.ref('configuracoes/logo').remove().catch(() => {});
     const status = document.getElementById('logo-status');
     status.style.display = 'block';
     status.style.color = '#dc2626';
