@@ -1147,6 +1147,7 @@
                                                 <th style="text-align:right;">Valor</th>
                                                 <th style="text-align:center;">Oficial</th>
                                                 <th style="text-align:center;">Comp.</th>
+                                                <th style="text-align:center;" class="no-print">Del.</th>
                                             </tr>
                                         </thead>
                                         <tbody id="lista-corpo"></tbody>
@@ -1325,40 +1326,48 @@ function inicializarFirebase() {
 
     // Listener principal
     db.ref().on('value', snap => {
-        dadosGlobais = snap.val() || {};
-        const livrosRaw = dadosGlobais.livros || {};
-        const locacoesRaw = dadosGlobais.locacoes || {};
-        const membros = dadosGlobais.membros || {};
-        todosLivrosRaw = livrosRaw;
+        try {
+            dadosGlobais = snap.val() || {};
+            const livrosRaw = dadosGlobais.livros || {};
+            const locacoesRaw = dadosGlobais.locacoes || {};
+            const membros = dadosGlobais.membros || {};
+            todosLivrosRaw = livrosRaw;
 
-        const livrosAgrupados = processarLivros(livrosRaw);
-        document.getElementById('res-livros').textContent = Object.keys(livrosRaw).length;
-        document.getElementById('res-emp').textContent = Object.keys(locacoesRaw).length;
-        document.getElementById('res-membros').textContent = Object.keys(membros).length;
+            const livrosAgrupados = processarLivros(livrosRaw);
+            document.getElementById('res-livros').textContent = Object.keys(livrosRaw).length;
+            document.getElementById('res-emp').textContent = Object.keys(locacoesRaw).length;
+            document.getElementById('res-membros').textContent = Object.keys(membros).length;
 
-        renderCatalogo(livrosAgrupados);
-        renderMeusEmprestimos(locacoesRaw);
-        renderGestaoAcervo(livrosAgrupados, '');
+            renderCatalogo(livrosAgrupados);
+            renderMeusEmprestimos(locacoesRaw);
+            renderGestaoAcervo(livrosAgrupados, '');
 
-        const socDados = dadosGlobais.sociedades || {};
-        renderSociedadesPublico(socDados);
-        renderAdmSociedades(socDados);
-        limparAvisosVencidos(socDados);
-        renderTelaInicial(livrosRaw, locacoesRaw, socDados);
-        atualizarBadgeIgreja(socDados);
+            const socDados = dadosGlobais.sociedades || {};
+            renderSociedadesPublico(socDados);
+            renderAdmSociedades(socDados);
+            limparAvisosVencidos(socDados);
+            renderTelaInicial(livrosRaw, locacoesRaw, socDados);
+            atualizarBadgeIgreja(socDados);
 
-        const membroLocal = localStorage.getItem('ipb_membro');
-        if (membroLocal) {
-            const membro = JSON.parse(membroLocal);
-            const emailSan = sanitizarEmail(membro.email);
-            renderNotifFila(locacoesRaw, livrosRaw, emailSan);
+            const membroLocal = localStorage.getItem('ipb_membro');
+            if (membroLocal) {
+                try {
+                    const membro = JSON.parse(membroLocal);
+                    const emailSan = sanitizarEmail(membro.email);
+                    renderNotifFila(locacoesRaw, livrosRaw, emailSan);
+                } catch(e) { console.warn('renderNotifFila:', e); }
+            }
+
+            const catRaw = dadosGlobais.categorias || {};
+            renderCategoriasAdm(catRaw);
+            preencherSelectCategoria(catRaw);
+            renderListaMembrosAdm(membros);
+            renderListaAdm(locacoesRaw);
+        } catch(e) {
+            console.error('Erro no listener Firebase:', e);
         }
-
-        const catRaw = dadosGlobais.categorias || {};
-        renderCategoriasAdm(catRaw);
-        preencherSelectCategoria(catRaw);
-        renderListaMembrosAdm(membros);
-        renderListaAdm(locacoesRaw);
+    }, err => {
+        console.error('Erro Firebase (permissão ou conexão):', err);
     });
 
     if (localStorage.getItem('ipb_membro')) {
@@ -2084,12 +2093,15 @@ function removerImagemAviso(soc) {
 }
 
 function limparAvisosVencidos(socDados) {
+    // Só remove avisos que tenham um campo 'expira' explícito e já vencido.
+    // NÃO usa tsData pois esse campo é apenas a data do evento, não a data de expiração.
     const agora = Date.now();
     SOCIEDADES.forEach(soc => {
         const posts = socDados[soc] || {};
         Object.entries(posts).forEach(([id, p]) => {
-            const ts = parsarData(p);
-            if (ts > 0 && ts < agora) db.ref('sociedades/' + soc + '/' + id).remove();
+            if (p.expira && p.expira < agora) {
+                db.ref('sociedades/' + soc + '/' + id).remove();
+            }
         });
     });
 }
@@ -2410,7 +2422,7 @@ function atualizarUI() {
     let saldoFinalReal = saldoInicialManual;
     let entP = 0, saiP = 0, entAnt = 0, saiAnt = 0;
     let saldosSoc = { UPA:0, UPH:0, SAF:0, UCP:0, UMP:0 };
-    movimentacoes.forEach(t => {
+    movimentacoes.forEach((t, realIndex) => {
         const dataT = new Date(t.data + "T00:00:00");
         const anoT = dataT.getFullYear().toString();
         const mesT = (dataT.getMonth() + 1).toString().padStart(2,'0');
@@ -2424,12 +2436,17 @@ function atualizarUI() {
             const compBtn = t.comprovante
                 ? `<button onclick="verComprovante('${btoa(t.comprovante).replace(/'/g,"\\'")}','${(t.descricao||'').replace(/'/g,"\\'")} - ${t.data}')" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;padding:4px 8px;border-radius:8px;cursor:pointer;font-size:0.65rem;font-weight:700;" title="Ver comprovante"><i class="fas fa-image"></i></button>`
                 : `<span style="color:#e5e7eb;font-size:0.7rem;">—</span>`;
+            const ePresbitero = currentUser && currentUser.cargo === 'presbitero';
+            const delBtn = ePresbitero
+                ? `<button onclick="excluirLancamento(${realIndex})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:0.85rem;padding:2px 6px;" title="Excluir lançamento">🗑</button>`
+                : `<span></span>`;
             corpo.innerHTML += `<tr>
                 <td class="py-2 text-xs">${t.data.split('-').reverse().join('/')}</td>
                 <td><p style="font-weight:700;font-size:0.75rem;">${t.descricao}</p><p style="font-size:0.6rem;color:#9ca3af;text-transform:uppercase;">${t.categoria}</p></td>
                 <td style="text-align:right;font-weight:900;font-size:0.75rem;color:${t.tipo==='entrada'?'#16a34a':'#dc2626'};">R$ ${t.valor.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
                 <td style="text-align:center;font-size:0.65rem;color:#9ca3af;font-style:italic;">${t.responsavel.split(' ')[0]}</td>
                 <td style="text-align:center;">${compBtn}</td>
+                <td style="text-align:center;" class="no-print">${delBtn}</td>
             </tr>`;
         }
         const anoPassado = (new Date().getFullYear() - 1).toString();
@@ -2538,6 +2555,20 @@ function gravarLancamento() {
     document.getElementById('data-lan').valueAsDate = new Date();
     removerComprovante();
     filtraCat();
+}
+
+function excluirLancamento(i) {
+    if (!currentUser || currentUser.cargo !== 'presbitero') {
+        return alert('Apenas o Presbítero pode excluir lançamentos.');
+    }
+    const t = movimentacoes[i];
+    if (!t) return;
+    const desc = t.descricao || 'sem descrição';
+    const valor = 'R$ ' + t.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    if (!confirm(`Excluir este lançamento?\n\n${t.data.split('-').reverse().join('/')} — ${desc} — ${valor}\n\nEsta ação não pode ser desfeita.`)) return;
+    movimentacoes.splice(i, 1);
+    localStorage.setItem('ipb_movimentos', JSON.stringify(movimentacoes));
+    atualizarUI();
 }
 
 function processarComprovante(input) {
