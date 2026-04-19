@@ -600,8 +600,8 @@
     </div>
 
     <div class="portal-hero">
-        <div class="portal-emblema">
-            <img src="logo.png" alt="Logo IPB" onerror="this.parentElement.innerHTML='<span class=\'portal-emblema-icon\'>✝</span>'">
+        <div class="portal-emblema" id="portal-emblema-wrap">
+            <span class="portal-emblema-icon">✝</span>
         </div>
 
         <div class="portal-tag">Igreja Presbiteriana do Brasil</div>
@@ -1026,7 +1026,7 @@
     <!-- Login -->
     <div id="login-screen-adm">
         <div class="login-box-adm">
-            <img src="logo.png" alt="Logo IPB" onerror="this.style.display='none'">
+            <img id="adm-login-logo" src="" alt="Logo IPB" style="display:none;">
             <h1>Igreja Presbiteriana do Bairro Petrópolis</h1>
             <input type="text" id="login-user" placeholder="Usuário">
             <input type="password" id="login-pass" placeholder="Senha">
@@ -1040,7 +1040,7 @@
         <nav class="adm-nav no-print">
             <div class="adm-nav-inner">
                 <div class="adm-nav-logo">
-                    <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+                    <img id="adm-nav-logo-img" src="" alt="Logo" style="display:none;">
                     <div>
                         <div class="adm-nav-titulo">IPB Bairro Petrópolis</div>
                         <div id="adm-user-display" class="adm-nav-sub"></div>
@@ -2321,7 +2321,7 @@ function salvarLogo() {
 }
 
 function removerLogo() {
-    if (!confirm('Restaurar o logo padrão (logo.png)?')) return;
+    if (!confirm('Restaurar o logo padrão?')) return;
     localStorage.removeItem('ipb_logo_custom');
     novoLogoBase64 = '';
     document.getElementById('logo-file-input').value = '';
@@ -2340,18 +2340,26 @@ function removerLogo() {
 }
 
 function aplicarLogoPortal(src) {
-    const img = document.querySelector('#portal .portal-emblema img');
-    if (!img) return;
-    if (src) {
-        img.src = src;
-        img.onerror = null;
-    } else {
-        img.src = 'logo.png';
-        img.onerror = function() { this.parentElement.innerHTML = '<span class=\'portal-emblema-icon\'>✝</span>'; };
+    const emblema = document.getElementById('portal-emblema-wrap');
+    if (emblema) {
+        if (src) {
+            emblema.innerHTML = '<img src="' + src + '" style="width:60px;height:60px;object-fit:contain;filter:brightness(1.2);" alt="Logo">';
+        } else {
+            emblema.innerHTML = '<span class="portal-emblema-icon">✝</span>';
+        }
     }
-    // Também atualiza logo na nav do admin
-    const navLogo = document.querySelector('#app-admin .adm-nav-logo img');
-    if (navLogo) navLogo.src = src || 'logo.png';
+    // Atualiza logo na tela de login do admin
+    const loginLogo = document.getElementById('adm-login-logo');
+    if (loginLogo) {
+        if (src) { loginLogo.src = src; loginLogo.style.display = 'block'; }
+        else { loginLogo.style.display = 'none'; }
+    }
+    // Atualiza logo na nav do admin
+    const navLogo = document.getElementById('adm-nav-logo-img');
+    if (navLogo) {
+        if (src) { navLogo.src = src; navLogo.style.display = 'block'; }
+        else { navLogo.style.display = 'none'; }
+    }
 }
 
 // Carregar logo customizado ao iniciar
